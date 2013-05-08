@@ -1,0 +1,175 @@
+ORACLE
+
+
+Cuando estemos creando tablas(relaciones) en Oracle (en el cliente SQLPlus de Hendrix)  y nos ocurra que Oracle nos marca un error de la forma:
+
+CREATE TABLE Administrador (
+                           *
+ERROR at line 1:
+ORA-00922: missing or invalid option
+
+
+Oracle nos marca el error en el paréntesis, el problema real es que en la tabla que queríamos crear nos falta o sobra
+alguna coma al final de alguna columna.
+Por ejemplo, en nuestro caso, el error es el siguiente:
+
+SQL> CREATE TABLE Administrador (
+  2    nickAdmin          VARCHAR2(10)   CONSTRAINT  nickAdmin_PK              PRIMARY KEY,
+  3    DNI               VARCHAR2(9)    CONSTRAINT  DNIA_UN                 UNIQUE
+  4                                     CONSTRAINT  DNIA_NN                 NOT NULL,
+  5    nombreApell       VARCHAR2(50)   CONSTRAINT  nombreApellA_NN         NOT NULL
+  6    sexo              VARCHAR2(1)    CONSTRAINT  sexoA_NN                NOT NULL,
+
+
+Como se puede apreciar, nos falta la coma en la línea 5 detrás del NOT NULL.
+
+
+
+http://www.ora-code.com/
+
+
+Es una página donde están los errores que salen en Oracle. Si por
+ejemplo, te sale el error 00904, te metes en:
+http://ora-00904.ora-code.com/
+y te lo explica, y así con todos.
+
+
+Si queréis saber que atributos tiene una tabla:
+
+SQL> desc <nombretabla>
+
+Y os aparecerá una lista con todas las columnas de la tabla y los tipos de datos de cada una
+
+
+Para ejecutar comandos Unix:
+
+SQL> host <comandoUnix>
+
+Por ejemplo si ponemos
+
+SQL> host ll
+
+Se listarían los archivos que tenemos en el directorio en el que estamos
+
+
+Para guardar los resultados en un archivo en el directorio (si no los resultados se muestran solo por pantalla)
+
+SQL> spool <file>
+
+Por ejemplo
+
+SQL> spool consultas
+
+Guardara todos los resultados de las consultas que hagamos en el archivo "consultas"
+
+Cuando acabemos ponemos:
+
+SQL> spool off
+
+
+Para ver que tablas teneis creadas:
+
+SQL> select * from TAB;
+
+Os mostrará los nombres de éstas.
+
+Esto es interesante porque a veces tienes archivos .sql que te borran todas las tablas y a lo mejor tienes alguna constante
+ajena y no te deja borrar una tabla en concreto y no te das cuenta del error mostrado, y al ir a crear otra vez la tabla no te 
+deja. Con este comando puedes ver lo que tienes (además hay que tener en cuenta que tenemos limitado el espacio de la cuenta y 
+que si empezamos a crear tablas y tablas sin borrarlas mal plan).
+
+
+
+- Distingue mayúsculas de minúsculas (case-sensitive), es decir, un nick 'BloOdHooD' es diferente de 'bloodhood'.
+
+- En las consultas no se pueden poner constantes tomadas de un fichero de macros, es decir, puestas como defines en ficheros.h, 
+por ejemplo:
+
+
+  .... WHERE dadoAlta = FALSE es inválido (teniendo definido #define FALSE 0 en un fichero de macros.h)
+
+ En su lugar, hay que poner WHERE dadoAlta = 0 ( en este caso es entero, si fuera caracter '0', etc)
+
+
+- Recordar que tras cada operación INSERT, UPDATE o DELETE hay que validar la transacción para que la operación se lleve
+ efectivamente a cabo. Esto se hace poniendo la siguiente sentencia SQL: 
+
+EXEC SQL COMMIT WORK; /* Ejecuta las SQL pendientes (que estén en el buffer) */
+
+Una transacción es una operación de la que podemos verificar su consistencia, es decir, que se ha ejecutado correctamente
+ como nosotros esperábamos. Una transacción se inicia de forma implícita con las operaciones que estemos haciendo sobre la B.D. 
+ (INSERT, UPDATE, DELETE, etc).
+Además, es importante tener cuidado ya que en modo interactivo, los sistemas gestores de bases de datos (SGBD en adelante) pueden
+ estar haciendo de forma implícita COMMITs (validar las transacciones) sin que nos enteremos.
+
+
+También puede ocurrir que si tenemos que hacer 2 INSERT, el primero se realice de forma correcta y el segundo no. 
+En este caso, para deshacer transacciones pendientes, es decir, para impedir que cuando hagamos COMMIT despues de los 2 
+INSERT solo uno (el primero en nuestro caso) se realice de forma correcta, podemos hacer un ROLLBACK
+ (sirve para anular la transacción), de la forma siguiente:
+
+
+EXEC SQL ROLLBACK; /* Devuelve la Base de Datos al estado inmediatamente anterior de la ejecución de la SQL */
+
+
+También podemos establecer puntos de salvaguarda: SAVEPOINT nombre
+
+Con estos puntos podemos volver luego a este punto deshaciendo las transacciones pendientes poniendo: ROLLBACK to savePoint;
+
+
+- Para poder definir tipos de datos de Oracle (como por ejemplo VARCHAR) en un .h de C, es necesario que el include del .h se haga de una forma diferente a la habitual, que sería #include "lalala.h" en el fichero de definicion del modulo, lalala.c, y también en los programas que lo usen, suponiendo que lalala esté en nuestro directorio de trabajo, de ahí las comillas en el include en lugar de los < > ya que estos se ponen cuando estamos incluyendo una biblioteca estándar, por ejemplo #include <stdio.h>, la biblioteca de entrada/salida estándar en C. Esta forma es la siguiente:
+
+EXEC SQL INCLUDE lalala;
+
+- Una página buena para el manejo con los tipos de datos fecha y hora (date) en Oracle:
+
+
+
+
+- Cuando consultamos el sqlca.sqlcode, este se pone a cero, es decir, si
+hacemos:
+
+
+if (sqlca.sqlcode != 0) printf("%d",sqlca.sqlcode); nos pondra un cero, podemos
+hacer:
+
+if ((mi_code = sqlca.sqlcode)!=0) printf("%d",micode);	
+
+
+
+
+Idiomas
+
+
+ALTER SESION SET NLS_LANGUAGE = SPANISH;
+ALTER SESION SET NLS_DATE_LANGUAGE = SPANISH;
+ALTER SESION SET NLS_SORT = SPANISH;
+ALTER SESION NLS_LANG SPANISH_SPAIN.WE8ISO8859P1
+
+SQL> SELECT * FROM NLS_SESSION_PARAMETERS;
+
+PARAMETER                      VALUE
+------------------------------ ----------------------------------------
+NLS_LANGUAGE                   SPANISH
+NLS_TERRITORY                  AMERICA
+NLS_CURRENCY                   $
+NLS_ISO_CURRENCY               AMERICA
+NLS_NUMERIC_CHARACTERS         .,
+NLS_CALENDAR                   GREGORIAN
+NLS_DATE_FORMAT                DD-MON-RR
+NLS_DATE_LANGUAGE              SPANISH
+NLS_SORT                       SPANISH
+NLS_TIME_FORMAT                HH.MI.SSXFF AM
+NLS_TIMESTAMP_FORMAT           DD-MON-RR HH.MI.SSXFF AM
+
+PARAMETER                      VALUE
+------------------------------ ----------------------------------------
+NLS_TIME_TZ_FORMAT             HH.MI.SSXFF AM TZH:TZM
+NLS_TIMESTAMP_TZ_FORMAT        DD-MON-RR HH.MI.SSXFF AM TZH:TZM
+NLS_DUAL_CURRENCY              $
+NLS_COMP                       BINARY
+NLS_LENGTH_SEMANTICS           BYTE
+NLS_NCHAR_CONV_EXCP            FALSE
+
+17 rows selected.
+

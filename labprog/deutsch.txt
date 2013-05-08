@@ -1,0 +1,434 @@
+volver: Zuruck ins letzten Menu.
+reg: Mich anmelden
+ini_ses: Mich einloggen
+olv_pass: Password vergessen?
+most_ult_nov: Letzte Neuheiten zeigen
+most_adv_leg: Legale Warnungen zeigen
+salir: Programm beenden
+ing: Einkommen
+cob: Ausenstande
+rev_hist: Verlauf schauen
+ver_det_per: Personliche  Einzelheiten
+most_pref: Vorlieben zeigen
+camb_pass: Password verandern
+camb_preg_seg: Geheimnisse Frage verandern
+ev_y_ap: Ereignisse und Wetten
+jueg: Spiele
+darse_baja: Mich abmelden
+logout: Mich ausloggen
+intro_nuevos_eventos: Neue Ereignisse hinzufugen
+get_usu: Users verhandeln
+inf_nego: Geschaftbericht
+gest_bonos: Tickets hinzufugen/retirieren
+tareas_pend: Hangende Arbeite tun
+esc_user: Username schreiben
+esc_pass: Password schreiben
+log_correcto: Login OK
+log_mal: Schlechtes Login, mochten Sie das wieder versuchen? (S/N)
+escribe_cuenta: Schreiben Sie bitte ihre Kontonummer (20 Nummer)
+escribe_cantidad_ingresar: Schreiben Sie die Einzahl zum hinzufugen.
+cuenta_mal: arbeitsunfahig Transferleistungdateien 
+euros: (Euros)
+dolares: (Dolars)
+datos_mal: Arbeitsunfahige Dateien. Mochten Sie das wieder versuchen?(S/N) 
+exito_transferencia: Transferleitung wurde ohne Probleme gemacht
+escribe_cantidad_retirar: Schreiben Sie de Einzahl zum retirieren
+mostrando_datos: OK, ihre personliche Dateien sind
+hay_error: Was schlechtes ist passiert
+pon_pass_actual: Schreiben Sie bitte ihre Password
+pon_pass_nuevo: Schreiben Sie bitte ihre neues Password
+pass_mal: Unfahiges Password
+error: Error
+pon_pass: Geben Sie ihre Password bitte ein
+pon_nueva_preg: Schreiben Sie ihre neue geheimnisse Frage
+pon_nueva_resp: Schreiben Sie ihre neue geheimnisse Antwort
+most_ev: Neue Ereignisse zeigen
+most_ap_pend: Hangende Wette zeigen
+ir_menu_anterior: Zuruck ins letzten Menu
+futbol: Fussbal
+f1: Formula 1
+volver_menu: Zuruck ins letzten Menu
+quieres_apostar: Mochten Sie an einem Ereignis wetten?(S/N)
+que_evento: An welchen Ereignis interessieren Sie sich? (Geben Sie bitte sein ID)
+que_resultado: An welchen Ergebnis mochten Sie wetten?
+pon_cant_apostar: Geben Sie bitte die Einzahl zum wetten ein
+ap_correcta: Wette wurde korrekt verhandelt
+error_apuesta: Wette wurde schlecht realisiert
+no_saldo: Saldo nicht genug oder arbeits unfahige Einzahl eingegeben
+id_invalido: Arbeitsunfahiges ID
+evento_ok: Ereignis wurde korrekt eingegeben
+error_intro_ev: Ereignis wurde nicht eingegeben
+cons_datos_us: Userdateien konsultieren
+ver_altas_pend: Hangende Anmeldungen sehen
+dar_baja_us: User ausmelden
+volver_menu_ant: Zuruck ins letzten Menu
+elige_op: Wahlen Sie
+intro_ofert: Neue Angeboten eingeben
+ret_ofert: Angeboten eliminieren
+list_ofer: Angeboten zeigen
+list_ofer_int: Angeboten in einem Zwischenzeit zeigen
+pyg_of: Abnahme und Ausbeute wegen der Angebote
+volv_menu_ant: Zuruck ins letzten Menu
+pon_nick: Geben Sie bitte ihren Username
+poner_preg: Ihre geheimnisse Frage ist
+pon_resp: Geben Sie bitte das Antwort
+poner_pass: Ihre Password ist
+resp_inc: Unfahiges Antwort
+ya_existe_nick: Dieser Username gibt es nicht
+seguro_baja: Sind Sie sicher dass Sie sich abmelden wollen? (S/N)
+baja_ok: Abmeldung wurde korrekt verhandelt
+pass_mal: Schlechtes password
+ult_nov: Letzte Neuheiten
+adv1: Achtung: Wetten impliziert ein Risiko.
+adv2: Unkontrolliertes Spiel impliziert Geldabnahmen und
+adv3: psychologische Probleme. Sie sollen verantwortungsvoll spielen
+adv4: Mit uns zu spielen, sollen Sie zu mindest  18 Jahre alt sein.
+adv5: Das Spiel kann Sucht machen.
+adv6: Wir sind nicht haftbar auf Geldabnahmen.
+bienvenido: WILLKOMMEN IN APOSTOPOLIS
+idiomas_disp: Verfugbare Sprachen
+span: Espanyol
+eng: English
+deu: Deutsch
+intro_idio: Welche Sprachennummer mochten Sie?
+error_por: Error wegen
+otra_vez: Mochten sie das wieder schreiben? (S/N)
+intro_sig_dat: Geben Sie die folgende Dateien ein
+nick_usado: Diser Username gibt es schon
+preg_pass: Password (Nummern und Buchstaben)
+dni_mal: DNIformat nicht fahig
+pedir_nomap: Name und Nachname
+mal_nomap: Name und Nachname sind nicht fahig
+pedir_sexo: Geschlecht (0 weiblich, 1 mannlich)
+dir: Addresse
+dir_mal: Unfahige Addresse
+cp: Postal Code
+cp_mal: Unfahiges Postal Code
+localidad: Stadt
+localidad_mal: Unfahige Stadt
+pais: Land
+pais_mal: Unfahiges Land
+fecha_nac: Geburtsdatum (TT-MM-JJJJ)
+fecha_nac_mal: Unfahiges Geburtsdatum
+email_mal: E-mail addresse nicht fahig
+preg_priv: Geheimnisse Frage
+preg_priv_mal: Unfahige geheimnisse frage
+resp_priv: Geheimnisse Antwort
+resp_priv_mal: Geheimnisse Antwort nicht fahig
+divisa: Wappenspruch (1 sind Euros, 2 sind Dollars)
+divisa_mal: Unfahigen Wappenspruch
+idioma: Sprache (0 Spanisch, 1 English, 2 Deutsch)
+nac: Nationalitat
+nac_mal: Unfahige Nationalitat
+bienv: Willkommen
+tu_saldo: Ihrer Saldo ist
+jug_rul: Roulette spielen
+jug_dad: Wurfelspiel
+jug_cma: Hochtes Karte spielen
+jug_bj:  BlackJack spielen
+ap_dados: Verfugbare Wurfelspielwetten
+dad_ex: Zum genauen Ergebnis wetten
+dad_par:  Zum paaren Ergebnis wetten
+dad_impar: Zum impaaren Ergebnis wetten
+dad_inst: Spielanleitungen zeigen
+volv_jueg: Zuruck ins Principalspielmenu
+ap_rul: Verfugbare Roulettewetten
+rul_ex: Zum genauen Ergebnis wetten
+rul_par: Zum paaren Ergebnis wetten
+rul_impar: Zum impaaren Ergebnis wetten
+rul_rojo: Zum roten Ergebnis wetten
+rul_negro: Zum schwarzen Ergebnis wetten
+rul_d1: Zum ersten Dutzend wetten (1-12)
+rul_d2: Zum zweiten Dutzend wetten (13-24)
+rul_d3: Zum dritten Dutzend wetten (25-36)
+rul_inst: Spielanleitungen zeigen
+g1_dad: Mit dieser Wette konnen Sie ihre Wetteeinzahl verdoppeln
+g2_dad: Mit dieser Wette konnen Sie ihre Wetteeinzahl elf mal multiplizieren
+ped_num_dad: Geben Sie ihre Wette (2-12)
+dad_intro_cant: Einzahl fur die Wette (zu mindest 2,5)
+puls_ent_lanz: Schlagen Sie 'enter' bitte an, wenn sie die Wurfel werfen mochten
+res_dados: Das Ergebnis ist
+dado: Wurfel
+resultado: Ergebnis
+su_ap_era: Ihren Wetteeinzahl war 
+eur_a: euros nach
+dol_a: dollars nach
+res_acert: Ergebnis
+res_par: Paares Ergebnis 
+g1_rul: Mit dieser Wette konnen Sie ihre Wetteeinzahl funfunddreizig mal multiplizieren
+g2_rul: Mit dieser Wette konnen Sie ihre Wetteeinzahl drei mal multiplizieren
+rul_cant: Geben Sie ihre Wette(0-36)
+rul_res: Die Rouletteergebnisse sind
+num: Nummer
+col: Farb
+num_par: Paar Nummer
+num_impar: Impaar Nummer
+color_rojo: Rotes Farb
+prim_doc: Ersten Dutzend (1-12)
+seg_doc: Zweiten Dutzend (13-24)
+ter_doc: Dritten Dutzend (25-36)
+color_negro: Schwarzes Farb.
+res_impar: Impaares Ergebnis 
+ha_ganado: Gluckwunsch, Sie haben gewonnen!
+ha_perdido: Es tut uns Leid, dass Sie verspielen haben
+puls_enter: Schlagen Sie 'enter' bitte an...
+fin_registro: Register beendet. Warten Sie bitte auf ihre Benutzerbestatigung durch e-mail
+idioma_configurado: Die Sprache ihres Profiles wurde gespeichert
+transferencia_mal: Transferleitung wurde nick OK gemacht
+error_historico: Etwas wurde missgelingen wahrend der Beratung der Entwicklungsgeschichtlichbericht
+error_preferencias:  Etwas wurde missgelingen wahrend der Beratung der Vorliebe
+ganancia_potencial: Der mogliche Erwerb ist
+ha_selecc: Sie wahlten
+result: Ergebnis(se)
+puede_realizar: Sie konnen
+ap_simple: Einfaltige Wette
+ap_comb: Kombinierte Wette
+ap_sis: Systematische Wette
+escoge_opcion: Wahlen Sie ihre Einstellung
+opcion_mal: Fehlerhafte Einstellung
+apuesta_ok: Wette wurde korrekt angefullt
+apuesta_mal: Die Wette konnte nicht angefullt werden
+dinero_mal: Fehlerhafte Geldmenge
+cuanto_apostar: Wie viel mochten Sie wetten?
+intro_min_resul: Was ist die kleinste Ergebnismenge die getroffen werden sollen?
+num_resul_mal: Fehlerhaft Ergebnisnummer
+ganancias_son: Die mogliche Erwerben sind
+lo_sentimos_resul: Es tut uns Leid dass keine mehr Ergebnisse eingelassen werden durfen
+ver_mas_resul: Mochten Sie mehr Ergebnisse sehen (J/N)? 
+incluir_mas_resul: Mochten Sie einige Ergebnisse dieses Ereignis in ihrer Wette einlassen (J/N)?
+agregar_mas_resul: Mochten Sie noch ein Ergebnis in ihrer Wette einlassen (J/N)?
+list_us_fech: Benutzer und Datum zeigen
+nick_us_consult: Lassen Sie bitte den Nick der Benutzer ein
+mostrando_datos: Personaldateien wurden gezogen
+no_existe_us: Dieser Benutzer gibt es nicht
+dado_baja_ok: Benutzer wurde definitiv abgemeldet
+mostrando_registrados: Registrierten Benutzer wurden gezogen
+informe_mensual: Monatlich Geschaftbericht konsultieren
+informe_global: Globales Geschaftbericht konsultieren
+intro_mes: Lassen Sie das Monat ein (MM)
+intro_anyo: Lassen das Jahr ein (JJJJ)
+recibir_informe_mail: Mochten Sie den letzten Bericht durch email bekommen (J/N)?
+retirar_ofertas: Angeboten eliminieren
+listar_ofertas: Angeboten zeigen
+perd_gan_of: Abgange und Erwerbe durch Angeboten
+oferta_no_introducida: Das Angebot konnte nicht eingelassen werden
+oferta_introducida: Das Angebot wurde korrekt eingelassen
+oferta_borrada: Das Angebot wurde korrekt eliminiert
+oferta_no_borrada: Das Angebot konnte nicht eliminiert werden
+introducir_resultados: Ergebnisse einlassen
+altas_pendientes: Hangende Anmeldungen
+eventos_resul_intro: Ereignisse die schon beendet sind
+no_eventos_termin: Keine Ereignisse ist erst beendet
+usuario_menor_edad: Achtung! Der Benutzer ist erst ein Kind!
+quiere_dar_alta: Mochten Sie diesen Benutzer anmelden (J/N)?
+comprobar_mas_us: Mochsten Sie mehr Benutzer uberprufen (J/)?
+no_altas_pend: Keine Benutzer brauchen angemeldet sein
+pass_enviado_mail: Ihre Password wurde an Ihnen durch email gesendet
+invitado: Gast
+social: gesselschaftlich
+div: Wappenspruch
+dolar: dollar
+idio: Sprache
+ingles: Englisch
+aleman: Deutsch
+fecha_creacion: Erfindungdatum der Konto
+fecha_ult_log: Datum des letztes Login
+credito: Kredit
+evento: Ereignis
+fecha_fin: Schluss Datum
+dinero_ap: Gewottenes Geld
+ap_form_dia: Wette wurde am tag formalisiert
+res_min_ac: Kleinste Ergebnismenge die getroffen werden sollen
+mas: Mehr
+res_asoc_ev: Gesselte Ergebnisse am selektierten Ereignis
+no_quiero_apostar: An diesem Ereignis will ich nicht wetten
+evento_may: EREIGNIS
+res_may: ERGEBNIS
+la_prob_es: Die Wahrscheinlichkeit dieses Ergebnis ist
+agreg_res_ap: Mochten Sie noch dieses Ergebnis in ihrer Wette einlassen (J/N)?
+intro_cant_ap: Geben Sie die Wettemenge ein
+minimo: Minimal
+ap_minima_es: Die kleinste Wette ist
+no_dispone: Diese Wette konnen Sie sich nicht leisten
+su_carta_es: Ihre Karte ist
+carta_maq: Die Karte der Computer ist 
+enter_carta: Schlagen Sie 'enter' bitte an um ihre Karte zu bekommen
+enter_cartas: Schlagen Sie 'enter' bitte an um mehr Karten zu bekommen
+calificado_riesgo: Sie wurden als ein grad Benutzer bewertet
+te_gusta_futbol: Sie entschieden dass Sie Fussball mogen
+no_gusta_futbol: Sie entschieden dass Sie kein Fussball mogen
+te_gusta_f1: Sie entschieden dass Sie Formula 1 mogen
+no_gusta_f1: Sie entschieden dass Sie kein Formula 1 mogen
+te_gusta_social: Sie entschieden dass Sie gesselschaftlich Betreffe mogen
+no_gusta_social: Sie entschieden dass Sie kein gesselschaftlich Betreffe mogen
+has_hecho: Sie tan
+x_ap_fut: Wette(n) uber Fussball
+x_ap_f1: Wette(n) uber F1
+x_ap_soc: Wette(n) uber gesselschsftlich Ereignis(se)
+has_jugado: Sie spielten
+veces_rul: Mal an der Roulette
+veces_dad: Mal an den Wurfel
+veces_carta: Mal an der hochsten Karte
+veces_black: Mal an Blackjack
+ha_realiz: Sie formalisierten
+ap_arriesg: gefahrliche Wetten
+ap_conserv: konservative Wetten
+ap_simples: einfaltige Wetten
+ap_combs: Kombinierte Wetten
+ap_siss: Systematische Wetten
+equip_fav: Lieblingsteam
+pil_fav: Lieblingspilot
+esc_fav: Lieblingsformulaeinsmarke
+tiene_eq_fav: Haben Sie ein Lieblingsfussbalteam (J/N)?
+otro_eq_fav: Haben Sie noch mehr Lieblingsfussbalteams (J/N)?
+tiene_pil_fav: Haben Sie ein Lieblingsformulaeinspilot (J/N)?
+otro_pil_fav:  Haben Sie noch mehr Lieblingsformulaeinspiloten (J/N)?
+tiene_esc_fav:  Haben Sie ein Lieblingsformulaeinsmarke (J/N)?
+otra_esc_fav:  Haben Sie noch mehr Lieblingsformulaeinsmarken (J/N)?
+pon_su_nom: Geben Sie ihre Name ein
+preg_gusta_fut: Mogen Sie Fussball (J/N)?
+preg_gusta_f1: Mogen Sie Formula 1 (J/N)?
+preg_gusta_soc: Mogen Sie gesselschaftliche Ereignisse (J/N)?
+ev_aposto: Ereignis an dem Sie gewetten haben
+res_predijo: Ergebnis an dem Sie gewetten haben
+cant_apost: Gewettenes Menge
+ust_gano: Sie gewonnen
+ust_perdio: Sie verlierten
+en_su_est: Wahrend ihrer Verweilen in APOSTOPOLIS
+ust_ha: Sie haben
+ganado: gewonnen
+perdido: verloren
+en_ap: wegen Wetten
+en_jueg: wegen Spielen
+deb_ofert: wegen Angeboten
+inf_ec_ref: Geschaftbericht des Monates 
+del_an: des Jahres
+inf_ec_glob: Globales geschaftbericht
+res_glob_mes: Globales monatlichesergebnis
+ing_glob_mes: Globales monatlicheserwerben
+perd_glob_mes: Globales monatlichesabgangen
+res_glob_ap: Global Wettenergebnis
+ing_der_ap: Erweben wegen Wetten
+per_der_ap: Abgange wegen Wetten
+res_glob_ju: Globales spielergebnis
+ing_der_ju: Erweben wegen Spielen
+per_der_ju: Abgangen wegen Spielen
+per_der_of: Abgangen wegen Angeboten
+des_camb_dir: Mochten Sie ihre Adresse verandern (J/N)?
+des_camb_cp: Mochten Sie ihre Postal Code verandern (J/N)?
+des_camb_loc: Mochten Sie ihren Stadt verandern (J/N)?
+des_camb_pais: Mochten Sie ihre Wohnland verandern (J/N)?
+des_camb_div: Mochten Sie ihre Wappenspruch verandern (J/N)?
+des_camb_id: Mochten Sie ihre Sprache verandern (J/N)?
+preg_desc_ev: Ereignisinfo
+desc_inc: Fehlerhaft info
+preg_tipo_ev: Ereignisart (F1, Fussball, gesselchaftlich)
+tip_mal: Fehlerhaft Art
+pop: Popularitat
+pop_mal: Popularitatgrat nicht gultig
+max_ap: Hochste Menge zu wetten
+max_mal: Hochste Menge nicht korrekt
+fecha_hora: Datum und Zeit (tt/mm/jj ss:mm:ss)
+fecha_hora_mal: Fehlerhafte Datum und Zeit
+preg_desc_res: Lassen Sie info uber dieses Ergebnis
+desc_mal: Fehlerhaftes info
+preg_cot: Lassen Sie die Schatzung dieses Ergebnis
+cot_mal: Fehlerhafte Schatzung
+preg_intro_mas: Mochten Sie mehr Ergebnisse eingeben (J/N)?
+intro_resp_bien: Geben Sie ein gultiges Antwort
+sig_res: Nachstes Ergebnis wurde eingelasst...
+fin_intro_ev: End der Ereignisse einlassung
+res_mod_ok: Ergebnis wurde korrekt verandert
+fallo_mod: Ergebnis konnte nicht verandert werden
+ev_marc_ok: Ereignis wurde als 'passiert' verandert
+salir_2: Ausgehen
+ev_soc: Gesselschaftliche Ereignisse
+fut_y_f1: Fussball und Formula 1
+fut_y_soc: Fussball und gesselschaftliche Ereignisse
+f1_y_soc: Formula 1 und gesselschaftliche Ereignisse
+todos: Fussball, F1 und gesselschaftliche Ereignisse
+cons_as: Wetteberater befragen
+apostar: Wetten
+list_pers: Personalzeigung
+mas_nuev: Neuste Ereignisse
+ev_viej: Alteste Ereignisse
+menos_pop: Weniger popular Ereignisse
+mas_pop: Mehr popular Ereignisse
+cad_pron: Ereignisse die fruh beenden
+cad_tad: Ereignisse die spat beenden
+ad_mas: Ereignisse die hohen Wetten akzeptieren
+ev_viejos: Alte Ereignisse
+no_ev_viej: Es gibt keine Ereignisse zum zeigen
+no_ap_pen: Es gibt keine hangende Wetten
+otra_vez_pass: Lassen Sie den Password wieder ein:
+vuelta_pronto: Danke, kommen Sie wieder zuruck!
+mod_dat_pers: Personaldateien verandern
+tu_sexo: Geschlecht
+hombre: mann
+mujer: frau
+ayuda: Hilfe
+tu_nick: Nick
+tu_dni: DNI
+puls_enter_maq: Schlagen Sie enter bitte an um eine Karte zu bekommen
+as: Eins
+sot: Zehn
+cab: Pferd
+rey: Konig	
+ha_sal: Das war das
+de_diam: der Diamanten
+de_cor: der Herzen
+de_treb: der Kreuzen
+de_pic: der Piken
+comen_black: BlackJack beginnt...
+barajando: Karten wurden gemischt
+us_may: BENUTZER
+maq_may: COMPUTER
+dos_cart: Benutzer bekommt zwei Karten
+dos_cart_maq: Computer bekommt zwei Karten
+punt_maq: Die Maschine's Punktzahl ist
+emp_black: BlackJacks Unentschieden!
+maq_blak: Die Maschine hat BlackJack!
+maq_g_punt: Die Maschine gewinnt mit Punktzahl
+us_pierde_punt: Benutzer verliert mit Punktzahl
+us_black: Der Benutzer hat BlackJack!
+us_g_punt: Der Benutzer gewinnt mit Punktzahl
+maq_p_punt: Die Maschine verliert mit Punktzahl
+pierden_ambos: Benutzer und Maschine verlieren durch ubermassige Punktzahl
+pierde_jug: Benutzer verliert durch ubermassige Punktzahl
+punt_us: Die Punktzahl des Benutzers ist
+maq_pierde: Die Maschine verliert durch ubermassige Punktzahl
+jug_g_black: Spieler gewinnt mit BlackJack
+empate_punt: Unentschieden mit Punktzahl
+nueva_carta: Mochten Sie eine neue Karte (J/N)?
+cart_nuev_jug: Neue Karte des Spielers
+nuev_cart_maq: Neue Karte der Computer
+fin_black: Ende des BlackJacks
+no_ev_asesor: Entschuldigung, aber es gibt keine Ergebnisse die ihrem Profil anpassen
+datos_act_ok: Dateien wurden aktualisiert
+of_pued_act: Angeboten die aktiviert werden konnen in Apostopolis
+sel_of: Wahlen Sie ein Angebot (ID zwischen
+sel_rank: Wahlen sie einen gultigen Ranking ein (zwischen
+exist: Es gibt
+ofert_disp: verfugtbare(n) Angebot(en) zur Zeit in
+reg_ini_ac: Willkommen Geschenk (aktiv)
+reg_ini_no: Willkommen Geschenk (inaktiv)
+reg_ef_ac: Scheck senden (aktiv)
+reg_ef_no: Scheck senden (inaktiv)
+reg_an_ac: Jahrestag Geschenk (aktiv)
+reg_an_no: Jahrestag Geschenk (inaktiv)
+reg_cump_ac: Geburtstag Geschenk (aktiv)
+reg_cump_no: Geburtstag Geschenk (inaktiv)
+desc_oferta_regalo_inicial: Angebot um das Willkommen einem neuen Benutzer zu geben
+desc_oferta_regalo_efectivo: Angebot um Schecks senden zu konnen
+desc_oferta_premiado_permanencia: Preis fur diese Benutzer die mit uns langer als ein Jahr gewesen sind
+desc_oferta_cumpleanyos: Angebot furs Benutzer, damit er seine Wunsche beachten kann
+vuelva_pronto: Danke schon, kommen Sie wieder zuruck und haben Sie einen guten Tag!
+tu_cumple: Geburtsdatum
+of_reg_us: Ein Scheck einem Kunde einlosen
+cheq_nom_us: Name der user
+cheq_no_reg: Dieser Kunde ist in Apostopolis unregistriert.
+cheq_cant: Menge in der Check einzuzahlen.
+cheq_cant_inc: Fehlerhafte Menge.
+rank_mal: Ungultiges ranking.
+of_mal: Ungultiges angebot.
+idioma_mal: Falsche Sprache.

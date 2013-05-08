@@ -1,0 +1,3423 @@
+/* MODULO DE INTERFAZ
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas. Laboratorio de Programacion.
+   DESCRIPCION: Fichero de definicion del modulo de interfaz */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+#include "escape.h"
+#include <termio.h> 
+#include <time.h>
+#include <synch.h>
+
+EXEC SQL INCLUDE interfaz;
+
+/* Variables globales */
+FILE *f; 
+char trad[400];
+sema_t mutex;
+int ANCHO_BOTON;
+/* Fin variables globales */
+
+/*--------------------------------------------------------------*/
+/*-------Funciones para configuracion del terminal -------------*/
+/*--------------------------------------------------------------*/
+struct termios oculto(void) { 
+/* Post: Cambia la configuracion del terminal para que no muestre
+   el texto escrito y para que el buffer de lectura de la entrada
+   estandar no sea line buffered. Devuelve la configuracion 
+   anterior al cambio */
+    struct termios stored_settings; 
+    struct termios new_settings; 
+    tcgetattr(0,&stored_settings); 
+    new_settings = stored_settings; 
+    new_settings.c_lflag &= ~(ICANON | ECHO); 
+    new_settings.c_cc[VTIME] = 0; 
+    tcgetattr(0,&stored_settings); 
+    new_settings.c_cc[VMIN] = 1; 
+    tcsetattr(0,TCSANOW,&new_settings); 
+    return stored_settings;
+} 
+
+
+void no_oculto(struct termios *stored_settings) { 
+/* Pre: stored_settings almacena una configuracion valida del
+        terminal.
+  Post: establece la configuracion que inidica stored_settings */
+  
+    tcsetattr(0,TCSANOW,stored_settings); 
+} 
+
+
+int potencia (int base, int exp)
+/* Pre: base >=0 and exp >= 0
+   Post: devuelve base^exp */
+{
+  int i,res = 1;
+
+  if (exp == 0) return 1;
+  else
+    for(i=1;i<=exp;i++)
+      res = res*base;
+  return res;
+}
+
+
+
+
+/*.-------------------------------------------------------------------------------- */
+/* ---------------------- Funciones de combinatoria ------------------------------- */
+/* -------------------------------------------------------------------------------- */
+
+void free_combinations(Combinations vp)
+/* Pre: --
+   Post: Libera la memoria dinamica que ocupa la escructura permutaciones pasada
+         como parametro */
+{
+  combinations_t *combo = (combinations_t *) vp;
+  int i;
+  if (combo != NULL) {
+    if (combo->combos != NULL) {
+      for (i=0; i<combo->nelem; i++)
+        if (combo->combos[i] != NULL)
+          free(combo->combos[i]);
+      free(combo->combos);
+    }
+    free(combo);
+  }
+}
+
+
+Combinations init_combinations(int nuniv, int nelem)
+/* Pre: nuniv <= nelem
+   Post: Devuelve una estructura que contiene todos los posibles subconjuntos de
+         cardinalidad nelem de un conjunto de cardinalidad nuniv  */
+{
+  combinations_t *combo;
+  int ncombo;
+  int i, j;
+
+  if (nelem > nuniv)
+    return NULL;
+  ncombo = 1;
+  for (i=0; i<nelem; i++) {	
+    ncombo *= nuniv - i;
+    ncombo /= i + 1;
+  }
+  combo = (combinations_t *) malloc(sizeof(combinations_t));
+  if (combo == NULL)
+    return NULL;
+  combo->nelem = nelem;
+  combo->ncombo = ncombo;
+  combo->combos = (int **) malloc(combo->nelem * sizeof(int *));
+  if (combo->combos == NULL) {
+    free_combinations(combo);
+    return NULL;
+  }
+  for (i=0; i<combo->nelem; i++) {
+    combo->combos[i] = (int *) malloc(combo->ncombo * sizeof(int));
+    if (combo->combos[i] == NULL) {
+      free_combinations(combo);
+      return NULL;
+    }
+  }
+  /* initialize first element */
+  for (i=0; i<combo->nelem; i++)
+    combo->combos[i][0] = i;
+  for (j=1; j<combo->ncombo; j++) {
+    int firstIncr = -1;
+    for (i=combo->nelem-1; i>=0; i--) {
+      if (combo->combos[i][j-1] + 1 <= nuniv - (nelem - i)) {
+        combo->combos[i][j] = combo->combos[i][j-1] + 1;
+        firstIncr = i;
+        break;
+      }
+    }
+    if (firstIncr == -1) { printf("BUG!\n"); exit(1); }
+    for (i=0; i<firstIncr; i++)
+      combo->combos[i][j] = combo->combos[i][j-1];
+    for (i=firstIncr+1; i<combo->nelem; i++)
+      combo->combos[i][j] = combo->combos[i-1][j] + 1;
+  }
+  return (Combinations) combo;
+}
+
+
+int num_combinations(Combinations vp)
+/* Pre: vp tiene que contener un conjunto de permutaciones 
+   Post: devuelve el numero de subconjuntos que contiene la estructura vp,
+         es decir, el numero combinatorio de la cardinalidad del conjunto
+	 sobre la cardinalidad de los subconjuntos */
+{
+  combinations_t *combo = (combinations_t *) vp;
+  return combo->ncombo;
+}
+
+
+void get_combination(Combinations vp, int cnum, int *elems)
+/* Pre: vp tiene que contener un conjunto de permutaciones
+        cnum < num_combinations (vp) 
+   Post: Escribe en el espacio apuntado por el puntero elems el conjunto
+         indicado por cnum. Cada elemento del conjunto se escribe
+	 como un entero. */
+{
+  combinations_t *combo = (combinations_t *) vp;
+  int i;
+  for (i=0; i<combo->nelem; i++)
+    elems[i] = combo->combos[i][cnum];
+}
+
+
+
+
+/* -------------------------------------------------------------------------------- */
+/* ------------------------- Funciones de internacionalizacion -------------------- */
+/* -------------------------------------------------------------------------------- */
+
+
+void configurar_idioma(int opcion)
+{
+ /* Pre: opcion tiene que ser uno de los idiomas predeinidos
+   Post: establece como idioma de la aplicacion el idioma
+   seleccionado */
+ switch(opcion)
+ {
+   case ESP:
+     f = fopen("spanish.txt","r");
+     break;
+   case ING:
+     f = fopen("english.txt","r");
+     break;
+   case ALE:
+     f = fopen("deutsch.txt","r");
+     break;
+   default: ;    
+ }
+}
+
+
+
+char *frase(char *cad)
+{
+/* Pre: El idioma debe estar configurado 
+   Post: Devuelve un puntero que apunta a la frase asociada a la cadena
+         pasada como argumento */
+
+  char tag[20];
+  int contador;
+  fseek(f,0L,SEEK_SET);
+  
+  while(1)
+  {
+    contador = 0;
+    do
+    {
+      tag[contador] = getc(f);
+      if (tag[contador] == EOF) 
+      {
+        perror(cad); 
+	exit(-1);
+      }
+      contador++;
+    }while(tag[contador-1]!=':');
+    tag[contador-1] = '\0';
+    if(!strcmp(tag,cad)) break;
+    else while (getc(f)!='\n');
+  }
+  contador = 0;
+  getc(f);
+  do
+  {
+    trad[contador] = getc(f);
+    contador++;
+  }while(trad[contador-1]!='\n');
+  trad[contador-1]='\0';
+  return trad;
+}
+
+
+
+
+
+/*---------------------------------------------------------------*/
+/*-------Funciones para el manejo de botones mediante listas-----*/
+/*---------------------------------------------------------------*/
+
+int obtener_flecha() 
+/* Pre: --
+   Post: lee por pantalla una tecla, si se ha pulsado una tecla
+         de scroll devuelve su valor, en caso contrario devuelve -1 */
+{ 
+  int c1,c2,c3; 
+  struct termios conf;
+
+  conf = oculto(); 
+  __fpurge(stdin);
+  c1 = getchar(); 
+  if (c1 == 10) { no_oculto(&conf); return c1;}
+  if (c1 != 27) {no_oculto(&conf); return -1;}
+  c2 = getchar();
+  if (c2 != 91) {no_oculto(&conf); return -1;}
+  c3 = getchar();
+  if(c3>=65 && c3<=68) { no_oculto(&conf); return c3; }
+    else {no_oculto(&conf); return -1;}
+} 
+
+
+void iluminar (char *texto, int opcion)
+/* Pre: opcion debe ser una de las opciones que se muestran por 
+        pantalla
+  Post: cambia al color de iluminacion la opcion especificada */
+{
+
+  int x,y,i;
+
+  /* Cada opcion sera un cuadro de ANCHO_BOTON x 3 */  
+  if ((opcion % 2) == 1) /* Impar, columna izquierda */
+  { 
+     x = (120-2*ANCHO_BOTON)/4;
+     y = 7 + 2*(opcion -1);
+  }
+  else
+  {
+    x = 3*(120-2*ANCHO_BOTON)/4 + ANCHO_BOTON;
+    y = 7 + 2* (opcion - 2);
+  }
+  csem();
+  posicionar_cursor(x,y);
+  color_texto(TEXTO_ILUMINADO,FONDO_ILUMINADO);
+  for (i=1; i<=ANCHO_BOTON; i++) putchar(' ');
+  posicionar_cursor(x,y+1);
+    
+  /* Ahora toca poner el texto */
+  printf("  ");
+  if (strlen(texto) > (ANCHO_BOTON-4)) 
+    for(i=1;i <=(ANCHO_BOTON-4); i++) putchar(texto[i-1]);
+  else /* Hay que centrar la cadena */
+  {
+    for (i=1;i<=((ANCHO_BOTON - 4)-strlen(texto))/2;i++)
+      putchar(' ');
+    printf("%s",texto);
+    for (i=1;i<=((ANCHO_BOTON - 4)-strlen(texto))/2;i++)
+      putchar(' ');
+  }  
+  if ((strlen(texto)%2 == 1) && strlen(texto) <= (ANCHO_BOTON-4)) putchar(' ');    
+  printf("  ");  
+  posicionar_cursor(x,y+2);
+  for (i=1; i<=ANCHO_BOTON; i++) putchar(' '); 
+  color_texto(TEXTO_NORMAL,FONDO_NORMAL);
+  fflush(stdout); 
+  posicionar_cursor(60,1);
+  lsem();
+}
+
+
+
+void desiluminar (char *texto, int opcion)
+/* Pre: opcion debe ser una de las opciones que se muestran por 
+        pantalla
+  Post: cambia al color de no iluminacion la opcion especificada */
+{
+
+  int x,y,i;
+
+  /* Cada opcion sera un cuadro de ANCHO_BOTON x 3 */
+
+ 
+  if ((opcion % 2) == 1) /* Impar, columna izquierda */
+  { 
+     x = (120-2*ANCHO_BOTON)/4;
+     y = 7 + 2* (opcion -1 );
+  }
+  else
+  {
+    x = 3*(120-2*ANCHO_BOTON)/4 + ANCHO_BOTON;
+    y = 7 + 2* (opcion - 2);
+  }
+  csem();
+  posicionar_cursor(x,y);
+  color_texto(TEXTO_BOTON,FONDO_BOTON);
+  for (i=1; i<=ANCHO_BOTON; i++) putchar(' ');
+  posicionar_cursor(x,y+1);
+  
+  /* Ahora toca poner el texto */
+  printf("  ");
+  if (strlen(texto) > (ANCHO_BOTON-4)) 
+    for(i=1;i <=(ANCHO_BOTON-4); i++) putchar(texto[i-1]);
+  else /* Hay que centrar la cadena */
+  {
+    for (i=1;i<=((ANCHO_BOTON - 4)-strlen(texto))/2;i++)
+      putchar(' ');
+    printf("%s",texto);
+    for (i=1;i<=((ANCHO_BOTON - 4)-strlen(texto))/2;i++)
+      putchar(' ');
+  }  
+  
+  if (strlen(texto)%2 == 1 && strlen(texto) <= (ANCHO_BOTON-4)) putchar(' ');   
+  printf("  ");  
+  posicionar_cursor(x,y+2);
+  for (i=1; i<=ANCHO_BOTON; i++) putchar(' ');
+  lsem();
+  color_texto(TEXTO_NORMAL,FONDO_NORMAL);
+  fflush(stdout);
+}
+
+
+
+void nueva_lista (lista_opciones *l)
+/* Pre: --
+   Post: Crea una nueva lista de botones */
+{
+  l->numop = 0;
+
+}
+
+
+void agregar_opcion (lista_opciones *l, char *opcion) { 
+/* Pre: la lista l debe contener menos del maximo de opciones
+   Post: Agrega la opcion indicada como segundo parametro a la lista */
+
+  l->vectop[l->numop] = (char *)malloc(strlen(opcion));
+  strcpy(l->vectop[l->numop],opcion);
+  l->numop++;
+
+}
+
+
+int es_vacia (lista_opciones l)
+/* Pre: --
+   Post: Devuelve 1 si la lista esta vacia y 0 en caso contrario */
+{   
+   return (l.numop == 0);
+}
+
+
+void destruir_lista_op (lista_opciones *l)
+/* Pre --
+   Post: libera la memoria dinamica que ocupa la lista */
+{
+  int i;
+ 
+  for (i=1;i<=l->numop;i++)
+    free(l->vectop[i-1]);
+
+}
+
+
+int elegir_opcion (lista_opciones l)
+/* Pre: es_vacia(l) = false
+   Post: muestra por pantalla la lista y gestion la eleccion de
+         una opcion por parte del usuario devolviendo la opcion
+	 elegida como su posicion (en orden de introduccion) 
+	 en la lista */
+
+{
+  /* El numero de opciones sera l.numop */
+  int opcion = 1, i, pulsada;
+  
+  ANCHO_BOTON = 34;
+  for (i=1;i<=l.numop-1;i++)
+  {
+     if (strlen(l.vectop[i]) > ANCHO_BOTON)
+       ANCHO_BOTON = strlen(l.vectop[i]);
+  }
+  if (ANCHO_BOTON > 34) ANCHO_BOTON = 34;
+  
+  if (es_vacia(l)) return 0;
+  {    
+     for (i=2;i<=l.numop;i++)
+       desiluminar(l.vectop[i-1],i);
+     iluminar(l.vectop[opcion-1],1);  
+     fflush(stdout);
+     pulsada = obtener_flecha();
+     while (pulsada != '\n')
+     {
+       if (pulsada != -1)  
+       fflush(stdout);
+       switch (pulsada)
+       {
+         case ARRIBA:
+           if (opcion > 2)
+             { 
+	       desiluminar(l.vectop[opcion-1],opcion);
+	       opcion = opcion - 2; 
+	       iluminar(l.vectop[opcion-1],opcion); 
+	       fflush(stdout);
+	       break;
+	     }
+         case ABAJO: 
+           if(opcion <= l.numop - 2) 
+             { 
+	       desiluminar(l.vectop[opcion-1],opcion);
+	       opcion = opcion + 2; 
+	       iluminar(l.vectop[opcion-1],opcion); 
+	       fflush(stdout);}
+	       break;
+         case IZQUIERDA:
+           if (opcion % 2 == 0)
+      	     { 
+	       desiluminar(l.vectop[opcion-1],opcion);
+	       opcion--; 
+	       iluminar(l.vectop[opcion-1],opcion); 
+	       fflush(stdout);
+	       break;
+	     }
+         case DERECHA:
+           if (opcion % 2 != 0 && (opcion < l.numop))
+  	     { 
+	       desiluminar(l.vectop[opcion-1],opcion);
+	       opcion++; 
+	       iluminar(l.vectop[opcion-1],opcion); 
+	       fflush(stdout);
+	       break;
+	     }
+	}
+        pulsada = obtener_flecha();
+      }
+      return opcion;
+  }
+}
+
+
+/*--------------------------------------------------------------*/
+/*---------------Funciones de lecturas por teclado--------------*/
+/*--------------------------------------------------------------*/
+
+void leer_pass(char * cadena,int x, int y) {
+/* Pre:x, y son las coordenadas desde donde se debe leer el pass,
+       tienen que ser coordenadas utiles de la pantalla.
+   Post: Almacena en las posiciones consecutivas de memoria donde
+         apunta cadena el password leido. Lee el password de forma
+	 no visible por pantalla */
+    char leido = 0;
+    int pos = 0, mi_x = x;
+    struct termios conf;
+
+  
+    posicionar_cursor(x,y);
+    conf = oculto();
+    while (leido != '\n')
+    {
+      leido = getchar();
+      if (leido == 127) /* Caracter de borrar */
+      {
+        if ((mi_x > x) && (pos!=0))
+	{
+	  mi_x--;
+	  pos--;
+	  csem();
+	  posicionar_cursor(mi_x,y);
+	  no_oculto(&conf);
+	  putchar(' ');
+	  oculto(); 
+	  posicionar_cursor(mi_x,y);
+	  lsem();
+	}
+      }
+      else
+      {
+        if((pos < PASS_LEN) && 
+	  (leido>='a' && leido <='z') || (leido>='A' && leido <='Z') || (leido>='0' && leido <='9'))
+	{
+	  cadena[pos] = leido;
+	  pos++;
+	  csem();
+	  posicionar_cursor(mi_x,y);
+	  no_oculto(&conf);
+	  putchar('*');
+	  oculto();
+	  mi_x++;
+	  posicionar_cursor(mi_x,y);
+	  lsem();
+	}
+      }
+    }
+    no_oculto(&conf);
+    cadena[pos]='\0';
+}
+
+
+char leer_caracter_oculto()
+/* Pre: --
+   Post: Lee un caracter de la entrada estandar sin mostrarlo por
+         pantalla y sin necesidad de pulsar enter */
+
+{
+   char car;
+   struct termios conf;
+   
+   conf = oculto();
+   car = getchar();
+   no_oculto(&conf);
+   return car;
+}
+
+
+void preguntarVARCHAR (char *msg, VARCHAR *dest, short max) 
+/* Pre: --
+   Post: Lee de teclado una cadena y la transforma a formato VARCHAR */
+{
+  int i;
+  int longitud;
+  char *pt;
+  
+  printf(msg); printf(": "); fflush(stdout);
+  longitud = leer_cadena_cota(dest->arr,max);
+  dest->len = longitud;
+  __fpurge(stdin);
+  fflush(stdout);
+} 
+
+
+
+char leer_caracter (void)
+/* Pre: --
+   Post: Lee un caracter de la entrada estandar */
+{
+  fd_set myset;
+  char c = 0;
+  struct termios conf;
+  int valido = 0;
+
+  FD_ZERO(&myset);
+  FD_SET(0,&myset);
+  while (!valido)
+  {
+    conf = oculto();
+    if(select(1,&myset,NULL,NULL,NULL))
+    {
+      csem();
+        c = getchar();
+        no_oculto(&conf);
+	if (c == 127)
+	  printf("\x1b[1D");
+	else if (c==27) exit(0);
+	else
+        { putchar(c); valido = 1;}
+      lsem();
+    }
+    fflush(stdout);
+  }    
+  return c;
+}
+
+
+int leer_cadena_cota (char *cadena, int cota)
+/* Pre: --
+   Post: Lee una cadena de longitud <= cota */
+{
+  fd_set myset;
+  int contador, salir = 0;
+  struct timeval tiempo;
+  struct termios conf;
+  char c;
+  
+  contador = 0;
+  csem();
+  color_texto("verde","negro");
+  putchar(' ');
+  color_texto("blanco","negro");
+  lsem();
+  while (!salir)
+  {
+    FD_ZERO(&myset);
+    FD_SET(0,&myset);
+    conf = oculto();
+    select(1,&myset,NULL,NULL,NULL);
+    if(FD_ISSET(0,&myset))
+    {
+      cadena[contador] = getchar();
+      csem();
+      no_oculto(&conf);
+      switch(cadena[contador])
+      {
+       case 127:
+         if(contador>0)
+         {
+	   putchar(' ');
+	   contador--;
+           printf("\x1b[3D");
+	   color_texto("verde","verde"); 
+	   putchar(' ');
+	   color_texto("blanco","negro"); 
+  	 }
+	 lsem();
+         break;
+       case 27: lsem(); exit(0);
+       case '\n': 
+         salir = 1;
+	 lsem();
+	 break;
+       default:
+         if(contador<cota) 
+	 {
+	   printf("\x1b[1D");
+	   contador++; 
+	   putchar(cadena[contador-1]);
+	   color_texto("verde","verde");
+	   putchar(' ');
+	   color_texto("blanco","negro");
+  	 }
+	 lsem();
+      }
+    }
+    fflush(stdout);
+  }
+  csem();
+  printf("\x1b[1D");
+  putchar(' ');
+  putchar('\n');
+  lsem();
+  cadena[contador]='\0';
+
+  return contador;
+}
+
+
+int leer_cadena (char *cadena)
+/* Pre: --
+   Post: lee una cadena de teclado */
+{
+  fd_set myset;
+  int contador, salir = 0;
+  struct timeval tiempo;
+  struct termios conf;
+  char c;
+  
+  contador = 0;
+  csem();
+  color_texto("verde","negro");
+  putchar(' ');
+  color_texto("blanco","negro");
+  lsem();
+  while (!salir)
+  {
+    FD_ZERO(&myset);
+    FD_SET(0,&myset);
+    conf = oculto();
+    select(1,&myset,NULL,NULL,NULL);
+    if(FD_ISSET(0,&myset))
+    {
+      cadena[contador] = getchar();
+      csem();
+      no_oculto(&conf);
+      switch(cadena[contador])
+      {
+       case 127:
+         if(contador>0)
+         {
+	   putchar(' ');
+	   contador--;
+           printf("\x1b[3D");
+	   color_texto("verde","verde"); 
+	   putchar(' ');
+	   color_texto("blanco","negro"); 
+  	 }
+	 lsem();
+         break;
+       case 27: lsem(); exit(0);
+       case '\n': 
+         salir = 1;
+	 lsem();
+	 break;
+       default:
+	 printf("\x1b[1D");
+	 contador++; 
+	 putchar(cadena[contador-1]);
+	 color_texto("verde","verde");
+	 putchar(' ');
+	 color_texto("blanco","negro");
+	 lsem();
+      }
+    }
+    fflush(stdout);
+  }
+  csem();
+  printf("\x1b[1D");
+  putchar(' ');
+  putchar('\n');
+  lsem();
+  cadena[contador]='\0';
+
+  return contador;
+}
+
+
+
+void leer_entero (int *num)
+/* Pre: --
+   Post: lee un entero de teclado */
+{
+  char cad[30];
+  
+  leer_cadena(cad);
+  *num = atoi(cad);  
+
+}
+
+
+void leer_float (float *num)
+/* Pre: --
+   Post: lee un real de teclado */
+{
+  char cad[30];
+  
+  leer_cadena(cad);
+  *num = atof(cad);
+
+}
+
+
+
+/*--------------------------------------------------------------------------*/
+/*----------------------- Funciones de manejo de divisas -------------------*/
+/*--------------------------------------------------------------------------*/
+/* Valores de divisa a 16 de noviembre de 2007 */
+
+float a_dolar (float euros)
+/* Pre: --
+   Post: devuelve la cantidad en dolares del numero de euros pasado*/
+{
+
+  return (euros * EUROS_DOLAR);
+
+}
+
+float a_euros (float dolares)
+/* Pre: --
+   Post: devuelve la cantidad en euros del numero de euros pasado*/
+{
+  return (dolares * DOLARES_EURO);
+}
+
+
+void mostrar_saldo (float cantidad, int divisa) 
+/* Post: muestra por pantalla una cantidad de dinero con su 
+         correspondiente divisa */
+{
+  csem();
+  if (divisa == EURO)  printf("%7.2f EUR",cantidad);
+  else printf("%7.2f $",a_dolar(cantidad));
+  lsem();
+}
+
+
+/*------------------------------------------------------------------------*/
+/*-----------------Funciones para verificacion de datos-------------------*/
+/*------------------------------------------------------------------------*/
+
+int pos_punto(char *cadena)
+/* Devuelve la posicion del primer punto en la cadena. */
+{
+  int i;
+  for(i=0;i<=10;i++)
+    if(cadena[i]=='.') return i;
+  return -1;
+}
+
+
+int obtener_numero_dni (char *dni)
+{
+   int i, resul = 0;
+   
+   for (i=7;i>=0;i--)
+     resul = resul + (dni[i]-'0')*potencia(10,7-i);
+   return resul;
+}
+
+int comprobar_dni (char *dni) {
+/* Post: comprueba la validez de un dni en su formato.
+         Devuelve 1 si es correcto y 0 en caso contrario */
+
+   int i, letra, numero;
+   
+
+   if (strlen(dni)!=9) return 0;
+
+   for(i=0; i<=7; i++)
+   {
+        if(!(dni[i]>='0' && dni[i]<='9')) return 0;
+   }
+
+   if(!((dni[8]>='a' && dni[8]<='z') || (dni[8]>='A' && dni[8]<='Z')))
+     return 0;
+
+   numero = obtener_numero_dni(dni);
+   
+   letra = numero % 23;  /* Numero asociado a la letra */
+
+   switch (letra)
+   {
+     case 0: if ((dni[8] != 'T') && (dni[8] != 't')) return 0; break;
+     case 1: if ((dni[8] != 'R') && (dni[8] != 'r')) return 0; break;
+     case 2: if ((dni[8] != 'W') && (dni[8] != 'w')) return 0; break;
+     case 3: if ((dni[8] != 'A') && (dni[8] != 'a')) return 0; break;
+     case 4: if ((dni[8] != 'G') && (dni[8] != 'g')) return 0; break;
+     case 5: if ((dni[8] != 'M') && (dni[8] != 'm')) return 0; break;
+     case 6: if ((dni[8] != 'Y') && (dni[8] != 'y')) return 0; break;
+     case 7: if ((dni[8] != 'F') && (dni[8] != 'f')) return 0; break;
+     case 8: if ((dni[8] != 'P') && (dni[8] != 'p')) return 0; break;
+     case 9:  if ((dni[8] != 'D') && (dni[8] != 'd')) return 0; break;
+     case 10: if ((dni[8] != 'X') && (dni[8] != 'x')) return 0; break;
+     case 11: if ((dni[8] != 'B') && (dni[8] != 'b')) return 0; break;
+     case 12: if ((dni[8] != 'N') && (dni[8] != 'n')) return 0; break;
+     case 13: if ((dni[8] != 'J') && (dni[8] != 'j')) return 0; break;
+     case 14: if ((dni[8] != 'Z') && (dni[8] != 'z')) return 0; break;
+     case 15: if ((dni[8] != 'S') && (dni[8] != 's')) return 0; break;
+     case 16: if ((dni[8] != 'Q') && (dni[8] != 'q')) return 0; break;
+     case 17: if ((dni[8] != 'V') && (dni[8] != 'v')) return 0; break;
+     case 18: if ((dni[8] != 'H') && (dni[8] != 'h')) return 0; break;
+     case 19: if ((dni[8] != 'L') && (dni[8] != 'l')) return 0; break;
+     case 20: if ((dni[8] != 'C') && (dni[8] != 'c')) return 0; break;
+     case 21: if ((dni[8] != 'K') && (dni[8] != 'k')) return 0; break;
+     case 22: if ((dni[8] != 'E') && (dni[8] != 'e')) return 0; break;
+     default: ; 
+
+   }
+
+   return 1;
+
+}
+
+
+int es_si(char eleccion)
+{
+  return (eleccion == 's' || eleccion == 'S' ||
+         eleccion == 'J' || eleccion == 'j' ||
+	 eleccion == 'Y' || eleccion == 'y');
+}
+
+int es_no(char eleccion)
+{
+  return (eleccion =='n' || eleccion == 'N');
+}
+
+int eleccion_correcta(char eleccion)
+{
+  return (es_si(eleccion) || es_no(eleccion));
+}
+
+int es_correcta(char *cuenta)
+/* Post: comprueba si una prueba es correcta, es decir, un numero de
+         20 digitos. Si es correcta devuelve 1, en caso contrario
+	 devuelve 0*/
+{
+
+  int i;
+  if(strlen(cuenta)!=20) return 0;
+  for(i=0; i<=19; i++)
+  {
+    if(!isdigit(cuenta[i]))
+      return 0;
+  }
+  return 1;
+}
+
+
+int es_numero (VARCHAR *cad)
+{
+   int i;
+   for (i=0;i<=cad->len-1;i++)
+     if(!(cad->arr[i] >= '0' && cad->arr[i] <= '9')) return 0;
+   return 1;
+}
+
+
+int mail_correcto (VARCHAR *cad)
+{
+   int i;
+   
+   for (i=0;i<=cad->len;i++)
+     if (cad->arr[i] == '@') break;
+   if (i == cad->len) return 0;
+   for (i++;i<=cad->len;i++)
+     if (cad->arr[i] == '.' && i!=cad->len) return 1;
+   return 0;
+}
+
+int formato_correcto_pass (VARCHAR *cad)
+{
+   int i;
+   if (cad->len == 0) return 0;
+   for (i=0;i<=cad->len-1;i++)
+     if(!( ((cad->arr[i]>='a') && (cad->arr[i]<='z')) ||
+           ((cad->arr[i]>='A') && (cad->arr[i]<='Z')) ||
+	   ((cad->arr[i]>='0') && (cad->arr[i]<='9')) ))
+	  return 0;
+   return 1;
+}
+
+
+int esBisiesto (int anyo) 
+{
+  return ((anyo % 4 == 0) && (!(anyo % 100 == 0))) || (anyo % 400 == 0);
+}
+
+
+int obtener_dia(VARCHAR *fecha)
+{
+/* Post: devuelve el dia de una fecha en el formato dd-mm-aaaa */
+  int dia;
+  
+  dia = (fecha->arr[0]-'0')*10;
+  dia = dia + fecha->arr[1]-'0';
+  return dia;
+}
+
+int obtener_mes(VARCHAR *fecha)
+{
+/* Post: devuelve el mes de una fecha en el formato dd-mm-aaaa */
+  int mes;
+
+  mes = (fecha->arr[3] -'0')*10;
+  mes = mes + fecha->arr[4]-'0';
+  return mes;
+
+}
+
+int obtener_anyo(VARCHAR *fecha)
+{
+/* Post: devuelve el anyo de una fecha en el formato dd-mm-aaaa */
+  int anyo;
+  
+  anyo = (fecha->arr[6]-'0')*1000;
+  anyo = anyo + (fecha->arr[7]-'0')*100;
+  anyo = anyo + (fecha->arr[8]-'0')*10;
+  anyo = anyo + fecha->arr[9] - '0';
+  return anyo;
+}
+
+
+void fecha_actual(int *dia, int *mes, int *anyo)
+/* Post: Escribe por pantalla la fecha y la hora actuales del sistema
+   en el formato:
+   Dia de la semana - Dia del mes - Mes - Anyo - Hora - Minutos */
+{
+  char cad[24];
+
+  time_t hora;
+  time(&hora);
+  strcpy(cad,ctime(&hora));
+  *dia = 0;
+  if (cad[8]>='0' && cad[8]<='9')
+  *dia = (cad[8]-'0')*10;
+  *dia = *dia+(cad[9]-'0');
+  switch (cad[4]) 
+  {
+    case 'J':
+      if (cad[5] == 'a')  *mes = 1;
+      else
+      {
+        if (cad[6] == 'n')  *mes = 6;
+        else *mes = 7;
+      }
+      break;
+    case 'F':  *mes = 2;  break;
+    case 'M':
+      if (cad[6] == 'r') *mes = 3;
+      else  *mes = 5;
+      break;
+    case 'A':
+      if (cad[5] == 'p') *mes = 4;
+      else  *mes = 8;
+      break;
+    case 'S': *mes = 9;
+      break;
+    case 'O': *mes = 10;
+      break;
+    case 'N': *mes = 11;
+      break;
+    case 'D': *mes = 12;
+      break;
+    default: ;
+  }
+ 
+  *anyo = (cad[20]-'0')*1000;
+  *anyo = *anyo + (cad[21]-'0')*100;
+  *anyo = *anyo + (cad[22]-'0')*10;
+  *anyo = *anyo + cad[23]-'0';
+}
+
+
+int formato_correcto_fecha (VARCHAR *fecha)
+{
+  return     ((fecha->len == 10) && (fecha->arr[0] >='0' && fecha->arr[0]<='9') && 
+              (fecha->arr[1] >='0' && fecha->arr[1]<='9') && (fecha->arr[2]='-') &&
+	      (fecha->arr[3] >='0' && fecha->arr[3]<='9') &&
+	      (fecha->arr[4] >='0' && fecha->arr[4]<='9') && (fecha->arr[5]='-') &&
+	      (fecha->arr[6] >='0' && fecha->arr[6]<='9') &&
+	      (fecha->arr[7] >='0' && fecha->arr[7]<='9') &&
+	      (fecha->arr[8] >='0' && fecha->arr[8]<='9') &&
+	      (fecha->arr[9] >='0' && fecha->arr[9]<='9'));	      
+}
+
+
+
+int comprobarFecha (VARCHAR *fecha)
+{
+  int mes, anyo, dia, exito = 0;
+  int mes_actual, anyo_actual, dia_actual;
+   
+   
+  anyo = obtener_anyo(fecha); 
+  mes = obtener_mes(fecha); 
+  dia = obtener_dia(fecha);
+  
+  if (!formato_correcto_fecha(fecha)) {printf("Error 1\n"); return 0;}
+  
+  fecha_actual(&dia_actual,&mes_actual,&anyo_actual);
+  
+  if (anyo>anyo_actual) return 0;
+  if ((anyo == anyo_actual) && (mes>mes_actual)) return 0;
+  if ((anyo == anyo_actual) && (mes == mes_actual) && (dia > dia_actual)) return 0;
+  
+  switch (mes)
+  {
+    case 1: case 3: case 5: case 7:
+    case 8: case 10: case 12: 
+      exito = (dia >= 1) && (dia <= 31);
+      break;
+    
+    case 4: case 6: case 9: case 11:
+      exito = (dia >=1) && (dia <= 30);
+      break;
+	 
+    case 2: if (!(esBisiesto(anyo)))  exito = (dia >= 1) && (dia <= 28);
+	    else exito = (dia >= 1) && (dia <= 29);
+	    break;
+	
+    default: ;
+  }  
+  if (exito == 0) printf("Error 4\n");
+  return exito;
+}
+
+
+int fecha_hora_correctas (char *cad)
+{
+  int correcto;
+  
+  correcto = strlen(cad) == 17 &&
+             cad[0]>='0' && cad[0]<='9' &&
+             cad[1]>='0' && cad[1]<='9' &&
+	     cad[2]=='/' &&
+	     cad[3]>='0' && cad[3]<='9' &&
+	     cad[4]>='0' && cad[4]<='9' &&
+	     cad[5]>='/' &&
+	     cad[6]>='0' && cad[6]<='9' &&
+	     cad[7]>='0' && cad[7]<='9' &&
+	     cad[8]==' ' &&
+	     cad[9]>='0' && cad[9]<='9' &&
+	     cad[10]>='0' && cad[10]<='9' &&
+	     cad[11]==':' &&
+	     cad[12]>='0' && cad[12]<='9' &&
+	     cad[13]>='0' && cad[13]<='9' &&
+	     cad[14]==':' &&
+	     cad[15]>='0' && cad[15]<='9' &&
+	     cad[16]>='0' && cad[16]<='9';
+  return correcto;	      	 
+}
+	     
+	     
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+/*------------------Funciones para el manejo de cadenas----------------------*/
+/*---------------------------------------------------------------------------*/
+
+
+int num_palabras (VARCHAR *cad)
+{
+  int i, n = 1;
+  char anterior;
+  
+  anterior = cad->arr[0];
+  for(i=1;i<=cad->len;i++)
+  {
+    if(anterior == ' ' && cad->arr[i]!=' ')  n++; 
+    anterior = cad->arr[i]; 
+  }
+  return n;
+}
+
+
+int rellenarVARCHAR (char *msg, VARCHAR *dest, short max) 
+{ 
+  int i;
+  char *pt, *pt2;
+  pt = (char *) &dest->arr;
+  pt2 = (char *) &msg;
+  for (i=0; i<max; i++) {
+    *pt = *pt2;
+    pt++; pt2++;
+  }
+  *pt = '\0';
+  dest->len = (unsigned short) strlen((char *) dest->arr);
+  return(dest->len);
+}  
+
+
+void mostrarVARCHAR (VARCHAR *msg)
+{
+  msg->arr[msg->len] = '\0';
+  csem();
+  printf("%s\n",msg);
+  lsem();
+}
+
+
+void stringToVARCHAR (char *origen, VARCHAR *destino) 
+/* Post: almacena en el espacio de memoria apuntado por destino
+   la cadena apuntada por origen en formato VARCHAR */
+{
+  strcpy((char *) destino->arr, origen);
+  destino->len = (unsigned short) strlen(origen);
+}
+
+
+
+
+/*------------------------------------------------------------------------*/
+/*---------------Funciones de peticion de informacion---------------------*/
+/*------------------------------------------------------------------------*/
+
+int seguir(char *fallo)
+/* Pre: --
+   Post: Informa al usuario de que se ha producido un error debido a la 
+         causa que se pasa como parametro (una cadena). Pregunta al 
+	 usuario si quiere volver a intentarlo, en cuya afirmacion
+	 devuelve un 1. Devuelve 0 en caso contrario */
+{
+   char c, aux[30];
+   strcpy(aux,fallo);
+   csem();
+   printf("\n\t %s %s",frase("error_por"),aux);
+   printf(" %s ",frase("otra_vez")); fflush(stdout);
+   lsem();
+   __fpurge(stdin);
+   c = leer_caracter_oculto();
+   printf("\n");
+   if(es_si(c))  return 1;
+   else return 0;
+}
+
+
+int preguntar_datos_personales(tuplaUsuario *datos)
+/* Pre: --
+   Post: Interactua con el usuario preguntandole sus datos
+         personales para una posterior alta. Si esto se 
+	 realiza con exito devuelve 1. Devuelve 0 en caso
+	 contrario */
+{
+
+  int correcto;
+  char pass_aux[PASS_LEN];
+
+  posicionar_cursor(1,7);
+  csem();
+  printf("%s: \n",frase("intro_sig_dat")); 
+  lsem();
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR("Nick", (VARCHAR *)&datos->nickUser, NICK_LEN);
+    datos->nickUser.arr[datos->nickUser.len]='\0';
+    if(!existeNick(datos->nickUser.arr) && strlen(datos->nickUser.arr) != 0) correcto = 1;
+    else if(!seguir(frase("nick_usado"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR("DNI", (VARCHAR *)&datos->DNI, DNI_LEN);
+    datos->DNI.arr[datos->DNI.len]='\0';
+    if(comprobar_dni(datos->DNI.arr)) correcto = 1;
+    else if(!seguir(frase("dni_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("pedir_nomap"), (VARCHAR *)&datos->nombreApell, NAME_LEN);
+    if(num_palabras((VARCHAR *)&datos->nombreApell) >= 2) correcto = 1;
+    else if(!seguir(frase("mal_nomap"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    csem();
+    printf("%s: ",frase("pedir_sexo")); fflush(stdout);
+    lsem();
+    leer_entero(&datos->sexo);
+    __fpurge(stdin); 
+    if (datos->sexo == 0 || datos->sexo == 1) correcto = 1;
+    else if(!seguir(frase("sexo_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+     __fpurge(stdin);
+     preguntarVARCHAR(frase("dir"), (VARCHAR *)&datos->direccion, DIR_LEN); 
+     if(datos->direccion.len != 0) correcto = 1;
+     else if(!seguir(frase("dir_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+     __fpurge(stdin);
+     preguntarVARCHAR(frase("cp"), (VARCHAR *)&datos->CP, CP_LEN); 
+     if (es_numero((VARCHAR *)&datos->CP) && datos->CP.len != 0) correcto = 1;
+     else if(!seguir(frase("cp_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("localidad"), (VARCHAR *)&datos->localidad, LOC_LEN); 
+    if (datos->direccion.len != 0) correcto = 1;
+    else if(!seguir(frase("localidad_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("pais"), (VARCHAR *)&datos->pais, PAIS_LEN); 
+    if (datos->pais.len != 0) correcto = 1;
+    else if(!seguir(frase("pais_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("fecha_nac"), (VARCHAR *)&datos->fechaNac, FECHA_LEN);  
+    if (comprobarFecha((VARCHAR *)&datos->fechaNac)) correcto = 1;
+    else if(!seguir(frase("fecha_nac_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR("E-mail", (VARCHAR *)&datos->email, MAIL_LEN); 
+    if(mail_correcto((VARCHAR *)&datos->email)) correcto = 1;
+    else if(!seguir(frase("email_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("preg_priv"), (VARCHAR *)&datos->preguntaPrivada, PREG_PRIVADA_LEN); 
+    if (datos->preguntaPrivada.len != 0) correcto = 1;
+    else if(!seguir(frase("preg_priv_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("resp_priv"), (VARCHAR *)&datos->respuestaPrivada, RESP_PRIVADA_LEN); 
+    if (datos->respuestaPrivada.len != 0) correcto = 1;
+    else if(!seguir(frase("resp_priv_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    csem();
+    printf("%s: ",frase("divisa"));  fflush(stdout);
+    lsem();
+    leer_entero(&datos->divisa);
+    if (datos->divisa == 1 || datos->divisa == 2) correcto = 1;
+    else if(!seguir(frase("divisa_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    csem();
+    printf("%s: ",frase("idioma")); fflush(stdout);
+    lsem();
+    leer_entero(&datos->idioma); 
+    __fpurge(stdin);
+    if (datos->idioma == 0 || datos->idioma == 1 || datos->idioma == 2) correcto = 1;
+    else if(!seguir("Idioma incorrecto")) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    __fpurge(stdin);
+    preguntarVARCHAR(frase("nac"), (VARCHAR *)&datos->nacionalidad, NAC_LEN); 
+    if (datos->nacionalidad.len != 0) correcto = 1;
+    else if(!seguir(frase("nac_mal"))) return 0;
+  }
+  correcto = 0;
+  while (!correcto)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera_sin_login();
+    csem();
+    posicionar_cursor(10,10);
+    printf("%s:\n",frase("preg_pass"));
+    lsem();
+    leer_pass(datos->pass.arr,53,10);
+    datos->pass.len = strlen(datos->pass.arr);
+    if (formato_correcto_pass((VARCHAR *)&datos->pass) != 0) correcto = 1;
+    else 
+    {
+      if(!seguir(frase("pass_mal"))) return 0;
+      else continue;
+    }
+    csem();
+    posicionar_cursor(10,15);
+    printf("%s: \n",frase("otra_vez_pass"));
+    lsem();
+    leer_pass(pass_aux,49,15);
+    correcto = (!(strcmp(datos->pass.arr,pass_aux)));
+    if (!correcto)
+    {
+      if (!seguir(frase("pass_mal"))) return 0;
+      else continue;
+    }
+  }
+  datos->gananciasJuegos = 0.0; datos->gananciasTotales = 0.0; datos->credito = 0.0;
+  datos->dadoAlta = 0; datos->ranking = 0; datos->totalJuegos = 0.0;
+  datos->gananciasOfertas = 0.0;
+  return 1;
+}  
+
+
+
+void obtener_nick_pass(char *nick, char *pass)
+/* Pre: --
+   Post: pregunta por pantalla el nick y el password de un usuario
+         y los guarda en las direcciones de memoria apuntadas por 
+	 los correspondientes punteros pasados como parametro */
+{
+     csem();
+     posicionar_cursor(1,10);
+     printf("     %s: ",frase("esc_user")); fflush(stdout);
+     lsem();
+     leer_cadena_cota(nick,NICK_LEN);
+     csem();
+     printf("     %s: ",frase("esc_pass")); fflush(stdout);
+     lsem();
+     leer_pass(pass,27,11);
+}
+
+
+int pedir_datos_ingresos (struct usuario *user, float *cantidad)
+/* Pre: --
+   Post: pide al usuario los datos necesarios para hacer un ingreso
+         (numero de cuenta y cantidad). Si la interaccion se hace 
+	 con exito devuelve 1. Devuelve 0 en caso contrario */
+{
+    char cuenta[20], opcion;
+    int correcto = 0;
+
+  while (!correcto)
+  {
+     limpiar_pantalla();
+     mostrar_cabecera_sin_login();
+     csem();
+     posicionar_cursor(1,10);
+     printf("\t\t%s: ",frase("escribe_cuenta")); 
+     fflush(stdout);
+     lsem();
+     leer_cadena_cota(cuenta,20);
+     correcto = es_correcta(cuenta);
+     if (correcto)
+     {
+       csem();
+       printf("\t\t%s ",frase("escribe_cantidad_ingresar"));
+       if (user->divisa == EURO) printf(" %s: ",frase("euros"));
+       else printf(" %s: ",frase("dolares"));
+       fflush(stdout);
+       lsem();
+       __fpurge(stdin);
+       leer_float(cantidad);
+       if(*cantidad <= 0.0) correcto = 0;
+     } /* if (correcto) */
+     else
+       if(!seguir(frase("cuenta_mal"))) return 0;
+      /* if (!correcto) */
+   }  
+   return 1;
+}
+
+
+
+int pedir_datos_cobros (struct usuario *user, float *cantidad)
+/* Pre: --
+   Post: pide al usuario los datos necesarios para hacer una retirada de
+         dinero (numero de cuenta y cantidad). Si la interaccion se hace 
+	 con exito devuelve 1. Devuelve 0 en caso contrario */
+{
+    char cuenta[20], opcion;
+    int correcto = 0;
+
+  while (!correcto)
+  {
+     limpiar_pantalla();
+     mostrar_cabecera_sin_login();
+     csem();
+     posicionar_cursor(1,10);
+     printf("\t\t%s: ",frase("escribe_cuenta")); 
+     fflush(stdout);
+     lsem();
+     leer_cadena_cota(cuenta,20);
+     correcto = es_correcta(cuenta);
+     if (correcto)
+     {
+       csem();
+       printf("\t\t%s: ",frase("escribe_cantidad_retirar"));
+       if (user->divisa == EURO) printf("%s: ",frase("euros"));
+       else printf(" %s: ",frase("dolares"));
+       fflush(stdout);
+       lsem();
+       leer_float(cantidad);
+       if(*cantidad <= 0) correcto = 0;
+     } /* if (correcto) */
+     else
+       if(!seguir(frase("cuenta_mal"))) return 0;
+   }  
+   return 1;
+}
+  
+  
+/*----------------------------------------------------------------------------------------*/
+/*-------------------------------Funciones para mostrar datos-----------------------------*/
+/*----------------------------------------------------------------------------------------*/
+
+void escribir_hora(int idioma)
+/* Pre: --
+   Post: Escribe por pantalla la fecha y la hora actuales del sistema
+   en el formato:
+   Dia de la semana - Dia del mes - Mes - Anyo - Hora - Minutos 
+   y en el correspondiente idioma */
+{
+  char cad[24];
+
+  time_t hora;
+  time(&hora);
+  strcpy(cad,ctime(&hora));
+  if (idioma != ESP) 
+  {
+    printf("%s",cad);
+    fflush(stdout);
+    return;
+  }
+  
+  switch (cad[0])  
+  {
+    case 'S': 
+      if (cad[1] == 'u')
+        printf("Domingo");
+      else
+        printf("Sabado");
+      break;	
+    case 'M':
+      printf("Lunes");
+      break;
+    case 'T':
+      if (cad[1] == 'u')
+        printf("Martes");
+      else
+        printf("Jueves");
+      break;
+    case 'W':
+      printf("Miercoles");
+      break;
+    case 'F':
+      printf("Viernes");
+      break;
+    default: ;
+  }
+  printf(" %c%c de ",cad[8],cad[9]);
+  switch (cad[4]) 
+  {
+    case 'J':
+      if (cad[5] == 'a')
+        printf("Enero");
+      else
+      {
+        if (cad[6] == 'n')
+          printf("Junio");
+        else
+          printf("Julio");
+      }
+      break;
+    case 'F': 
+      printf("Febrero");
+      break;
+    case 'M':
+      if (cad[6] == 'r')
+        printf("Marzo");
+      else 
+        printf("Mayo");
+      break;
+    case 'A':
+      if (cad[5] == 'p')
+        printf("Abril");
+      else
+        printf("Agosto");
+      break;
+    case 'S':
+      printf("Septiembre");
+      break;
+    case 'O':
+      printf("Octubre");
+      break;
+    case 'N':
+      printf("Noviembre");
+      break;
+    case 'D':
+      printf("Diciembre");
+      break;
+    default: printf("Error"); ;
+  }
+  printf(" de %c%c%c%c ",cad[20],cad[21],cad[22],cad[23]);
+  cad[19]='\0';
+  printf("%s",cad+11);
+  fflush(stdout);
+
+}
+
+
+  
+void mostrar_cabecera_sin_login()
+/* Pre: --
+   Post: muestra la cabecera de la aplicacion en los momentos en que el usuario
+         no ha iniciado sesion. Tanto para usuarios como para administradores */
+{
+   csem();
+   posicionar_cursor(33,3);
+   color_texto("rojo","negro");
+   printf("APOSTOPOLIS");
+   color_texto("blanco","negro");
+   fflush(stdout);
+   lsem();
+}
+
+void mostrar_cabecera (int tipo, struct usuario *user)
+/* Pre: --
+   Post: muestra la cabecera de la aplicacion en los momentos en los que la 
+         sesion se ha iniciado, tanto para usuarios como para administradores */
+{
+   csem();
+   posicionar_cursor(33,3);
+   color_texto("rojo","negro");
+   printf("APOSTOPOLIS");
+   color_texto("blanco","negro");
+   posicionar_cursor(4,5);
+   printf("%s: %s",frase("bienv"),user->nick);
+   if (user->tipo_user == cliente)
+   {
+     printf("\t\t%s ",frase("tu_saldo"));
+     lsem();
+     mostrar_saldo(user->saldo,user->divisa);
+   } /* if (user->tipo_user == cliente) */
+   else lsem();
+} /* mostrar_cabecera */
+
+
+void mostrar_datos_personales (tuplaUsuario *user)
+/* Pre: --
+   Post: muestra por pantalla los datos personales del usuario 
+   los cuales se pasan como parametro */
+{
+  csem();
+  user->nickUser.arr[user->nickUser.len] = '\0';
+  user->DNI.arr[user->DNI.len] = '\0';
+  user->CP.arr[user->CP.len] = '\0';
+  user->localidad.arr[user->localidad.len] = '\0';
+  user->pais.arr[user->pais.len] = '\0';
+  user->email.arr[user->email.len] = '\0';
+  user->preguntaPrivada.arr[user->preguntaPrivada.len] = '\0';
+  user->respuestaPrivada.arr[user->respuestaPrivada.len] = '\0';
+  user->nacionalidad.arr[user->nacionalidad.len] = '\0';
+  user->nombreApell.arr[user->nombreApell.len] = '\0';
+  user->direccion.arr[user->direccion.len] = '\0'; 
+  user->fechaNac.arr[user->fechaNac.len] = '\0';
+  user->fechaCreacion.arr[user->fechaCreacion.len] = '\0';
+  user->fechaUltLogin.arr[user->fechaUltLogin.len] = '\0';     
+  printf("\t%s: %s\n",frase("tu_nick"), user->nickUser.arr);
+  printf("\t%s: %s\n",frase("tu_dni"), user->DNI.arr);
+  printf("\t%s: %s\n",frase("pedir_nomap"), user->nombreApell.arr);
+  printf("\t%s: ",frase("tu_sexo"), user->sexo);
+  if (user->sexo == 0) printf("%s\n",frase("mujer"));
+  else printf("%s\n",frase("hombre"));
+  printf("\t%s: %s\n",frase("dir"),user->direccion.arr);
+  printf("\t%s: %s\n",frase("cp"),user->CP.arr);
+  printf("\t%s: %s\n",frase("localidad"),user->localidad.arr);
+  printf("\t%s: %s\n",frase("pais"),user->pais.arr);
+  printf("\t%s: %s\n",frase("tu_cumple"),user->fechaNac.arr);
+  printf("\tE-mail: %s\n", user->email.arr);
+  printf("\t%s: %s\n",frase("preg_priv"), user->preguntaPrivada.arr);
+  printf("\t%s: %s\n",frase("resp_priv"), user->respuestaPrivada.arr);
+  printf("\t%s: ",frase("div"));
+  if (user->divisa == EURO) printf("Euro\n");
+  else printf("%s\n",frase("dolar"));
+  printf("\t%s: ",frase("idio"));
+  if (user->idioma == ESP) printf("%s\n",frase("span"));
+  else if (user->idioma == ING) printf("%s\n",frase("ingles"));
+  else if (user->idioma == ALE) printf("%s\n",frase("aleman"));
+  printf("\t%s: %s\n",frase("nac"),user->nacionalidad.arr);
+  printf("\t%s: %s\n",frase("fecha_creacion"),user->fechaCreacion.arr);
+  printf("\t%s: %s\n",frase("fecha_ult_log"),user->fechaUltLogin.arr);
+  if (user->divisa == EURO)
+    printf("\t%s: %7.2f\n\n",frase("credito"), user->credito);
+  else
+   printf("\t%s: %7.2f\n\n",frase("credito"), a_dolar(user->credito));
+  lsem();
+}
+
+
+
+
+
+void mostrar_info_apuestas (lista_dinamica *l,struct usuario *user)
+{
+/* Pre: --
+   Post: muestra la informacion de las apuestas pendientes de un usuario junto
+         con la informacion de sus eventos. Agrupa las apuestas por tipos */
+  struct info_apuesta ap;
+  int i, quedan, encontrado, id, j;
+  float apostado;
+  char desc_resul[100];
+  
+  /* Apuestas simples */
+  
+  quedan = 1;
+  while (quedan)
+  {
+    i = 1;
+    encontrado = 0;
+    while (i<=numdatos(*l) && !encontrado)
+    {
+      dato_posicion(l,i,(char *)&ap);
+      if (ap.tipo == 0)
+        {eliminar(l,(char *)&ap); encontrado = 1;}
+      i++;
+    }
+    if (encontrado)
+    {
+      limpiar_pantalla();
+      mostrar_cabecera(cliente,user);
+      csem();
+      printf("\n\n%s\n",frase("ap_simple"));
+      printf("\n%s",frase("evento"));
+      printf("                                                                   %s",frase("fecha_fin"));   
+      printf(" %s\n",frase("dinero_ap"));
+      printf(" ------------------------------------------------------------------------------------------------------------------ \n");
+      ap.desc_ev.arr[ap.desc_ev.len] ='\0';
+      ap.fecha_fin.arr[ap.fecha_fin.len]='\0';
+      printf("|%s",ap.desc_ev.arr);
+      for (j=1;j<=86-ap.desc_ev.len;j++) putchar(' ');
+      if (user->divisa == EURO)
+        printf("|%s |   %.2f        |\n",ap.fecha_fin.arr,ap.cantidad);  
+      else
+        printf("|%s |   %.2f        |\n",ap.fecha_fin.arr,a_dolar(ap.cantidad));
+      descripcion_resultado(desc_resul,ap.id_resultado);
+      printf("|\t%s\n",desc_resul);
+      printf(" ------------------------------------------------------------------------------------------------------------------ \n");
+      ap.fecha_ap.arr[ap.fecha_ap.len] = '\0';
+      printf("\n\n\n%s: %s\n",frase("ap_form_dia"),ap.fecha_ap.arr);
+      fflush(stdout);
+      printf("\n\t%s\n",frase("puls_enter")); 
+      lsem();
+      leer_caracter_oculto();
+    }
+    else quedan = 0;
+  }
+
+  /* Ya hemos mostrado las apuesta simples. Ahora mostraremos las combinadas */
+  quedan = 1;
+  while (quedan)
+  {
+    i = 1;
+    encontrado = 0;
+    while (i<=numdatos(*l) && !encontrado)
+    {
+      dato_posicion(l,i,(char *)&ap);
+      if (ap.tipo == 1)
+        {eliminar(l,(char *)&ap); encontrado = 1;}
+      i++;
+    }
+    if (encontrado)
+    {
+      limpiar_pantalla();
+      mostrar_cabecera(cliente,user);
+      csem();
+      printf("\n\n%s\n",frase("ap_comb"));
+      printf("\n%s",frase("evento"));
+      printf("                                                                  %s\n",frase("fecha_fin"));
+      printf(" ------------------------------------------------------------------------------------------------ \n");
+      id = ap.id;
+      ap.desc_ev.arr[ap.desc_ev.len] ='\0';
+      ap.fecha_fin.arr[ap.fecha_fin.len]='\0';
+      printf("|%s",ap.desc_ev.arr);
+      for (j=1;j<=85-ap.desc_ev.len;j++) putchar(' ');
+      printf("|%s \n",ap.fecha_fin.arr);
+      descripcion_resultado(desc_resul,ap.id_resultado);
+      printf("|\t%s\n",desc_resul);
+      lsem();
+      apostado = ap.cantidad;
+      /* Hemos encontrado el primer evento de la apuesta, ahora buscaremos el
+          resto */
+      for (i--;i<=numdatos(*l);i++)
+      {
+        dato_posicion(l,i,(char *)&ap);
+	if (ap.id == id)
+	{
+	  eliminar(l,(char *)&ap);
+	  i--;
+          ap.desc_ev.arr[ap.desc_ev.len] ='\0';
+          ap.fecha_fin.arr[ap.fecha_fin.len]='\0';
+	  csem();
+	  printf("|%s",ap.desc_ev.arr);
+	  for (j=1;j<=85-ap.desc_ev.len;j++) putchar(' ');
+          printf("|%s \n",ap.fecha_fin.arr);
+
+	  descripcion_resultado(desc_resul,ap.id_resultado);
+          printf("|\t%s\n",desc_resul);
+	  lsem();
+	}
+      }
+      csem();
+      printf(" ------------------------------------------------------------------------------------------------ \n");
+      if (user->divisa == EURO)
+        printf("%s %.2f\n",frase("dinero_ap"),apostado);
+      else
+        printf("%s %.2f\n",frase("dinero_ap"),a_dolar(apostado));
+      ap.fecha_ap.arr[ap.fecha_ap.len] = '\0';
+      printf("\n\n\n%s: %s\n",frase("ap_form_dia"),ap.fecha_ap.arr);
+      fflush(stdout);
+      printf("\n\t%s\n",frase("puls_enter")); 
+      lsem();
+      leer_caracter_oculto();
+    }
+    else quedan = 0;
+  }
+  quedan = 1;
+  while (quedan)
+  {
+    /* Ya hemos mostrado las combinadas, ahora mostraremos las apuestas por sistema */
+    i = 1;
+    encontrado = 0;
+    while (i<=numdatos(*l) && !encontrado)
+    {
+      dato_posicion(l,i,(char *)&ap);
+      if (ap.tipo == 2)
+        {eliminar(l,(char *)&ap); encontrado = 1;}
+      i++;
+    }
+    if (encontrado)
+    {
+      limpiar_pantalla();
+      mostrar_cabecera(cliente,user);
+      csem(); 
+      printf("\n\n%s\n",frase("ap_sis"));
+      printf("\n%s",frase("evento"));
+      printf("                                                                  %s\n",frase("fecha_fin"));
+      printf(" ------------------------------------------------------------------------------------------------ \n");
+      id = ap.id;
+      ap.desc_ev.arr[ap.desc_ev.len] ='\0';
+      ap.fecha_fin.arr[ap.fecha_fin.len]='\0';
+      printf("|%s",ap.desc_ev.arr);
+      for (j=1;j<=85-ap.desc_ev.len;j++) putchar(' ');
+      printf("|%s\n",ap.fecha_fin.arr);
+      descripcion_resultado(desc_resul,ap.id_resultado);
+      printf("|\t%s\n",desc_resul);
+      lsem();
+      apostado = ap.cantidad;
+      /* Hemos encontrado el primer evento de la apuesta, ahora buscaremos el
+          resto */
+      for (i--;i<=numdatos(*l);i++)
+      {
+        dato_posicion(l,i,(char *)&ap);
+	if (ap.id == id)
+	{
+	  eliminar(l,(char *)&ap);
+	  i--;
+          ap.desc_ev.arr[ap.desc_ev.len] ='\0';
+	  ap.fecha_fin.arr[ap.fecha_fin.len]='\0';
+	  csem();
+	  printf("|%s",ap.desc_ev.arr);
+	  for (j=1;j<=85-ap.desc_ev.len;j++) putchar(' ');
+          printf("|%s \n",ap.fecha_fin.arr);
+	  descripcion_resultado(desc_resul,ap.id_resultado);
+          printf("|\t%s\n",desc_resul);
+	  lsem();
+	}
+      }
+      csem();
+      printf(" ------------------------------------------------------------------------------------------------ \n");
+      if (user->divisa == EURO)
+        printf("%s %.2f\n",frase("dinero_ap"),apostado);
+      else
+        printf("%s %.2f\n",frase("dinero_ap"),a_dolar(apostado));
+      printf("%s %d\n",frase("res_min_ac"),ap.combinadas);
+      ap.fecha_ap.arr[ap.fecha_ap.len] = '\0';
+      printf("\n\n\n%s: %s\n",frase("ap_form_dia"),ap.fecha_ap.arr);
+      fflush(stdout);
+      printf("\n\t%s\n",frase("puls_enter")); 
+      lsem();
+      leer_caracter_oculto();
+    }
+    else quedan = 0;
+  }    
+}
+
+
+int mostrar_eventos (lista_dinamica *l, struct usuario *user) 
+/*  Pre: l es una lista dinamica de tuplaEvento
+    Post: Devuelve 1 si se ha mostrado algun evento */
+{
+  tuplaEvento ev;
+  tuplaResul res;
+  lista_dinamica lr;
+  lista_opciones op;
+  int i,j,opcion,hayMas = 0, celebrado, sucedido;
+  
+  nueva_lista(&op);
+ 
+  if (numdatos(*l)>14)
+  {
+    j = 2;
+    agregar_opcion(&op,frase("mas"));
+    hayMas = 1;
+  }
+  else j = 1;
+  agregar_opcion(&op,frase("salir_2"));
+  for (i=1;i<=numdatos(*l);i++)
+  {
+    dato_posicion(l,i,(char *)&ev);
+    ev.descripcion.arr[ev.descripcion.len] = '\0';
+    agregar_opcion(&op,ev.descripcion.arr);
+    j++;
+    if (j == 16 || i == numdatos(*l))
+    {
+       limpiar_pantalla();
+       mostrar_cabecera(cliente,user);       
+       opcion = elegir_opcion(op);
+       destruir_lista_op(&op);
+       if ((hayMas && opcion!=1) || !hayMas) break;
+       nueva_lista(&op);
+       if ((j == 16) && (numdatos(*l)-i>14)) {agregar_opcion(&op,frase("mas")); j = 2; hayMas = 1;}
+       else { j = 1; hayMas = 0;}
+       agregar_opcion(&op,frase("salir_2"));
+    }
+  }
+  
+  if ((hayMas && opcion == 2) || (!hayMas && opcion == 1)) return 0;
+  /* Si hemos llegado a este punto es que se ha seleccionado un evento */
+  
+
+  /* Mostramos una tabla con toda la informacion del evento */  
+   
+   if (hayMas)
+     dato_posicion(l,i-(14-opcion)-2,(char *)&ev);
+   else
+     dato_posicion(l,i-(j-1-opcion) - 1,(char *)&ev);
+     
+     
+   /* Ya se ha seleccionado el evento, ahora se muestra toda su informacion */
+
+   ev.descripcion.arr[ev.descripcion.len] = '\0';
+   limpiar_pantalla();
+   mostrar_cabecera(cliente,user); 
+   printf("\n -------------------------------------------------------------------------------------------------- \n");  
+   putchar('|');
+   for (j=1;j<=(98-ev.descripcion.len)/2;j++) putchar(' ');
+   printf("%s",ev.descripcion.arr);
+   for (j=1;j<=(98-ev.descripcion.len)/2;j++) putchar(' ');
+   if (ev.descripcion.len%2 != 0) putchar(' ');
+   putchar('|');
+   putchar('\n');
+   printf(" -------------------------------------------------------------------------------------------------- \n");
+   
+   celebrado = se_ha_celebrado(ev.idEvento);  
+
+   resultados_evento(ev.idEvento,&lr);
+   /* Tenemos los resultados en la lista, ahora los mostraremos bien */
+   printf("|                          %s                             |\n",frase("res_asoc_ev"));
+   printf(" -------------------------------------------------------------------------------------------------- \n");
+   for (i=1;i<=numdatos(lr);i++)
+   {
+     dato_posicion(&lr,i,(char *)&res);
+     if (celebrado)
+     {
+       if(ha_sucedido(res.idPosResul))
+       {
+	 negrita();
+       }
+     }
+     res.infoResul.arr[res.infoResul.len] = '\0';
+     printf("|  %s",res.infoResul.arr);
+     for (j=1;j<=70-res.infoResul.len;j++) putchar(' ');
+     printf("%7.2f",res.cotizacion);
+     for (j=1;j<=100-70-res.infoResul.len-9;j++) putchar(' ');
+     putchar('|');
+     no_negrita();
+     putchar('\n');
+     printf(" -------------------------------------------------------------------------------------------------- \n");
+   }  
+    lsem();
+    return ev.idEvento;
+}
+
+
+
+int seleccionar_res (struct usuario * user,int id_ev)
+/* Pre: El identificador de evento tiene que tener asociados unos resultados.
+        El numero de resultados asociados al evento debe ser menor de 14.
+   Post: pregunta al usuario a que resultado del evento quiere apostar. En caso de 
+         que elija no apostar devuelve 0. Devuelve el identificador del resultado
+	 en caso contrario */
+{
+  lista_dinamica l_res; 
+  lista_opciones l_op;
+  tuplaResul res;
+  int i, opcion, id_res;
+  
+  nueva_lista_dinam(&l_res,sizeof(int));
+  resultados_evento(id_ev,&l_res);
+  nueva_lista(&l_op);
+  for (i=1;i<=numdatos(l_res);i++)
+  {
+    dato_posicion(&l_res,i,(char *)&res);
+    res.infoResul.arr[res.infoResul.len] = '\0';
+    agregar_opcion(&l_op,res.infoResul.arr);
+  }
+  agregar_opcion(&l_op,frase("no_quiero_apostar"));
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  opcion = elegir_opcion(l_op);
+  if (opcion == (numdatos(l_res)+1)) return 0; /* Ha elegido que no quiere apostar */
+  else 
+  {
+    dato_posicion(&l_res,opcion,(char *)&id_res);
+    return id_res;
+  }
+}
+
+
+int mostrar_resultado_prob (resulProb *dato, struct usuario *user)
+/* Pre: --
+   Post: pregunta al usuario si quiere apostar al resultado dada la probabilidad
+   de este */
+{
+   int id_res;
+   char cadena[100];
+   char eleccion;
+
+   limpiar_pantalla();
+   mostrar_cabecera(cliente,user);
+   id_res = dato->idResul;
+   descripcion_evento(cadena,id_res);
+   csem();
+   printf("\n\n\t\t");
+   negrita();
+   subrayado();
+   printf(frase("evento_may"));
+   no_negrita();
+   no_subrayado();
+   printf("\n\n\t%s\n",cadena);
+   lsem();
+   descripcion_resultado(cadena,id_res);
+   csem();
+   printf("\n\t\t");
+   negrita();
+   subrayado();
+   printf(frase("res_may"));
+   no_negrita();
+   no_subrayado();
+   printf("\n\n\t%s\n",cadena);
+   printf("\n\n\t%s %.2f \%\n",frase("la_prob_es"),100*dato->p);
+   printf("\n\n%s\n",frase("agreg_res_ap"));
+   lsem();
+   __fpurge(stdin);
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion)) return 1;
+   else return 0;
+}
+
+
+
+	
+
+/*---------------------------------------------------------------------------------*/
+/*------------------------------ Menus de interfaz --------------------------------*/
+/*---------------------------------------------------------------------------------*/
+
+
+int menu_principal() 
+/* Pre: --
+/* Post: Muestra el menu principal de la aplicacion y devuelve la opcion elegida 
+         por el usuario.*/
+{  
+     int opcion = 0;
+     lista_opciones l;
+
+     nueva_lista(&l);       
+     agregar_opcion(&l,frase("reg"));
+     agregar_opcion(&l,frase("ini_ses"));
+     agregar_opcion(&l,frase("olv_pass"));
+     agregar_opcion(&l,frase("most_ult_nov"));
+     agregar_opcion(&l,frase("most_adv_leg"));
+     agregar_opcion(&l,frase("salir"));
+     agregar_opcion(&l,frase("ayuda"));
+     limpiar_pantalla();
+     mostrar_cabecera_sin_login();
+     opcion = elegir_opcion(l);       
+     destruir_lista_op(&l);
+     return opcion;
+} 
+
+
+int opcion_menu_cliente(struct usuario *user)
+/* Pre: --
+   Post: Muestra el menu de opciones para los usuarios y devuelve
+         la opcion escogida */
+{
+    lista_opciones l;
+    int opcion;
+    
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    nueva_lista(&l);
+    agregar_opcion(&l,frase("ing"));
+    agregar_opcion(&l,frase("cob"));
+    agregar_opcion(&l,frase("rev_hist"));
+    agregar_opcion(&l,frase("ver_det_per"));
+    agregar_opcion(&l,frase("most_pref"));
+    agregar_opcion(&l,frase("camb_pass"));
+    agregar_opcion(&l,frase("camb_preg_seg"));
+    agregar_opcion(&l,frase("ev_y_ap"));
+    agregar_opcion(&l,frase("jueg"));
+    agregar_opcion(&l,frase("mod_dat_pers"));
+    agregar_opcion(&l,frase("ev_viejos"));
+    agregar_opcion(&l,frase("darse_baja"));
+    agregar_opcion(&l,frase("ayuda"));
+    agregar_opcion(&l,frase("logout"));
+    opcion = elegir_opcion(l);  
+    destruir_lista_op(&l);    
+    return opcion;
+}
+
+
+
+int opcion_menu_admin(struct usuario *user)
+/* Pre: --
+   Post: Muestra el menu de opciones para el administrador y devuelve
+         la opcion escogida */
+{
+
+    lista_opciones l;
+    int opcion;
+  
+    nueva_lista(&l);
+    agregar_opcion(&l,frase("intro_nuevos_eventos"));
+    agregar_opcion(&l,frase("get_usu"));
+    agregar_opcion(&l,frase("inf_nego"));
+    agregar_opcion(&l,frase("gest_bonos"));
+    agregar_opcion(&l,frase("tareas_pend"));
+    agregar_opcion(&l,frase("ayuda"));
+    agregar_opcion(&l,frase("logout"));
+    limpiar_pantalla();
+    mostrar_cabecera(admin,user);
+    opcion = elegir_opcion(l);  
+    return opcion;
+}
+
+
+int pantalla_inicial(void)
+/* Pre: --
+   Post: Muestra la pantalla inicial y pide el idioma en el que se desea
+         que se ejecute la aplicacion. Devuelve el idioma elegido */
+{
+
+  int tecla;
+  struct termios conf;
+  lista_opciones l;
+  char idioma;
+  limpiar_pantalla();
+  csem();
+  posicionar_cursor(1,22);
+  fflush(stdout);
+
+  printf("	                                                  _,aaadP\"\"\"\"\"\"Ybaaaa,,_\n");
+  printf("                                                    ,adP,__,,,aaaadP\"\"\"\"\"Y888888a,_\n");
+  printf("                                                 ,a8888888P\"''             \"Y8888888b,\n");
+  printf("                                              _a888888888\"                   `Y88888888b,\n");
+  printf("                                            ,d888888888P'                       \"888888888b,\n");
+  printf("                                          ,88888888P\"Y8,                       ,P'   `\"\"Y888b,\n");
+  printf("                                        ,d8888P\"'     \"Ya,                    ,P'         `Ya`b,\n");
+  printf("                                       ,P88\"'           `Ya,                 ,P'            `b`Yi\n");
+  printf("                                      d\",P                `\"Y,              ,P'              `Y \"i\n");
+  printf("                                    ,P' P'                   \"888888888888888b                `b \"i\n");
+  printf("                                   ,P' d'                    d8888888888888888b                `b `b\n");
+  printf("                                   d' d'                    ,888888888888888888b                I, Y,\n");
+  printf("                                  ,f ,f                    ,88888888888888888888b               `b, b\n");
+  printf("                                  d' d'                    d888888888888888888888b              ,88,I\n");
+  printf("                                 ,P  8                    ,88888888888888888888888b,_          ,d8888\n");
+  printf("                                 d'  8,                   d8888888888888888888888P'`\"Ya,_     ,d88888\n");
+  printf("                                 8  d88b,             ,adP\"\"Y888888888888888888P'      `\"\"Ya, d88888P\n");
+  printf("                                 8 ,88888b,       ,adP\"'     `\"Y8888888888888\"'             `\"888888I\n");
+  printf("                                 Y,88888888b, ,adP\"'             \"\"Y888888P\"                  888888'\n");
+  printf("                                 `888888888888P'                     \"\"YP\"                    888888\n");
+  printf("                                  I88888888888                          8                     88888I\n");
+  printf("                                  `Y8888888888                          8                     88888'\n");
+  printf("                                   `Y888888888                          8                     8888I\n");
+  printf("                                    `Y88888888                          8                     8P\"8'\n");
+  printf("                                     `Y8888888,                         8                   ,d',d'\n");
+  printf("                                      `b\"\"\"\"Y8b                         8                 ,d\" ,d'\n");
+  printf("                                        \"b,   \"Y,                       8               ,P\" ,d\" \n");
+  printf("                                          \"b,   \"Ya,_                 ,d88ba,,___   _,aP\" ,P\"\n");
+  printf("                                            \"Ya_   \"\"Ya,_       _,,ad88888888888888P\"' _,d\"\n");
+  printf("                                              `\"Ya_    \"\"Yaaad88888888888888888888P _,d\"'\n");
+  printf("                                                  `\"Ya,_     \"Y888888888888888888P\",d\"'\n");
+  printf("                                                     `\"\"Ya,__`Y888888888888888P\"\"\"\n");
+  printf("                                                            ``\"\"\"\"\"\"\"\"\"\"\"\"\"''\n");
+  fflush(stdout);
+  
+  lsem();
+
+  nueva_lista(&l);
+  agregar_opcion(&l,"Espanyol");
+  agregar_opcion(&l,"English");
+  agregar_opcion(&l,"Deutsch");
+  
+  csem();
+  posicionar_cursor(26,3);
+  color_texto("rojo","azul");
+  printf("BIENVENIDO A APOSTOPOLIS / WELCOME TO APOSTOPOLIS / WILLKOMMEN IN APOSTOPOLIS\n\n\n");
+  posicionar_cursor(23,5);
+  color_texto("blanco","negro");
+  printf("Elige tu idioma / Choose your language / Wahlen Sie ihre Sprache\n");
+  lsem();
+  idioma = elegir_opcion(l);
+  destruir_lista_op(&l);
+  return idioma-1;
+}
+
+
+
+void menu_evento_criterio (struct usuario *user,int *opcion, int *criterio, int se_puede)
+/* Pre: --
+   Post: Pide al usuario Tipo y Criterio para un listado de eventos */
+{
+  lista_opciones l;
+
+pedir_tipo_ev:
+  nueva_lista(&l);
+  agregar_opcion(&l, frase("futbol"));
+  agregar_opcion(&l, frase("f1"));
+  agregar_opcion(&l, frase("ev_soc"));
+  agregar_opcion(&l, frase("fut_y_f1"));
+  agregar_opcion(&l, frase("fut_y_soc"));
+  agregar_opcion(&l, frase("f1_y_soc"));
+  agregar_opcion(&l, frase("todos"));
+  agregar_opcion(&l, frase("cons_as")); 
+  if (se_puede) agregar_opcion(&l, frase("apostar"));
+  agregar_opcion(&l,frase("volver"));
+  limpiar_pantalla();
+  mostrar_cabecera(cliente, user);
+  *opcion = elegir_opcion(l);
+  destruir_lista_op(&l);
+  if (*opcion == 9 || *opcion == 8 || *opcion == 10) return;
+  
+    /* Seleccion del criterio de listado */
+  nueva_lista(&l);
+  agregar_opcion(&l, frase("list_pers"));
+  agregar_opcion(&l, frase("ev_viej"));
+  agregar_opcion(&l, frase("mas_nuev"));
+  agregar_opcion(&l, frase("menos_pop"));
+  agregar_opcion(&l, frase("mas_pop"));
+  agregar_opcion(&l, frase("cad_pron"));
+  agregar_opcion(&l, frase("cad_tad"));
+  agregar_opcion(&l, frase("ad_mas"));
+  agregar_opcion(&l, frase("volver"));
+  limpiar_pantalla();	
+  mostrar_cabecera(cliente, user);
+  *criterio = elegir_opcion(l);
+  if (*criterio == 9) goto pedir_tipo_ev;
+  destruir_lista_op(&l);
+  
+}
+
+
+
+int mostrarPantJuegos(struct usuario *user)
+/* Pre: --
+   Post: muestra la pantalla de eleccion de juego  para que el
+         usuario elija y devuelve a que juego se quiere jugar  */
+{
+  int opcion = 0;
+  lista_opciones l;
+
+  nueva_lista(&l);       
+  agregar_opcion(&l,frase("jug_rul"));
+  agregar_opcion(&l,frase("jug_dad"));
+  agregar_opcion(&l,frase("jug_cma"));
+  agregar_opcion(&l,frase("jug_bj"));
+  agregar_opcion(&l,frase("volver"));
+
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  opcion = elegir_opcion(l);       
+
+  return opcion;
+}
+
+
+int mostrarPantDados (struct usuario *user)
+/* Pre: --
+   Post: muestra la pantalla de apuesta a dados  para que el usuario
+         elija y devuele a que se quiere apostar */
+{
+  int opcion = 0;
+  lista_opciones l;
+
+  nueva_lista(&l);      
+  agregar_opcion(&l,frase("dad_ex"));
+  agregar_opcion(&l,frase("dad_par"));
+  agregar_opcion(&l,frase("dad_impar"));
+  agregar_opcion(&l,frase("volv_jueg"));
+  opcion = elegir_opcion(l);      
+  destruir_lista_op(&l);
+  return opcion;
+} 
+
+
+int mostrarPantRuleta (struct usuario *user)
+/* Pre: --
+   Post: muestra la pantalla de apuesta a ruleta  para que el usuario
+         elija y devuele a que se quiere apostar */
+{
+  int opcion = 0;
+  lista_opciones l;
+
+  nueva_lista(&l);       
+  agregar_opcion(&l,frase("rul_ex"));
+  agregar_opcion(&l,frase("rul_par"));
+  agregar_opcion(&l,frase("rul_impar"));
+  agregar_opcion(&l,frase("rul_rojo"));
+  agregar_opcion(&l,frase("rul_negro"));
+  agregar_opcion(&l,frase("rul_d1"));
+  agregar_opcion(&l,frase("rul_d2"));
+  agregar_opcion(&l,frase("rul_d3"));
+  agregar_opcion(&l,frase("volv_jueg"));
+  opcion = elegir_opcion(l);      
+  destruir_lista_op(&l);
+  return opcion;
+}
+
+
+int pedir_datos_dados (struct usuario *user, int opcion, float *cantidad, int *numero)
+/* Pre: --
+   Post: pide al usuario los datos para realizar una apuesta de dados
+         (cantidad y/o numero) y los guarda en la zona de memoria
+	 apuntada por los correspondientes punteros pasados como 
+	 parametro */
+{
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+    
+  if (opcion == 5 ) return;
+  else if (opcion == 4) /* mostrarInstrucciones(DADOS); */ ;
+  else if ( (opcion == 2) || (opcion == 3) )
+  {
+     csem();
+     printf("\n\n\t%s\n",frase("g1_dad"));
+     lsem();
+  }
+  else if (opcion == 1)
+  {
+    csem();
+    printf("\n\n\t%s\n",frase("g2_dad")); 
+    printf("\t%s: ",frase("ped_num_dad")); fflush(stdout);
+    lsem();
+    leer_entero(numero);
+    while (!(*numero >= 2 && *numero <= 12))
+    {
+      csem();
+      printf("\t%s: ",frase("ped_num_dad")); fflush(stdout);
+      lsem();
+      leer_entero(numero);
+    }
+  }
+  printf("\n\n\t%s",frase("intro_cant_ap"));
+  printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+  fflush(stdout);
+  lsem();
+  leer_float(cantidad);
+   /* Comprobar que ha apostado >=2,5 euros y su equivalente en dolares y saldo suficiente */
+  if (user->divisa == EURO)
+  {
+    while (*cantidad < 2.5)
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    } 
+    if (user->saldo < *cantidad)
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  else if (user->divisa == DOLAR)
+  {
+    while (*cantidad < (2.5 * EUROS_DOLAR))
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    }    
+    if (user->saldo < (*cantidad*DOLARES_EURO))
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  csem();
+  printf("\n\t%s",frase("puls_ent_lanz")); fflush(stdout);
+  lsem();
+  __fpurge(stdin);
+  leer_caracter_oculto();
+}
+
+
+
+int mostrar_resultado_dados(float *cantidad, int dado1, int dado2, int opcion, struct usuario *user, int resultado)
+/* Pre: --
+   Post: muestra el resultado de una partida de dados indicando ademas al usuario el resultado de
+         su apuesta */
+{
+   int ganado;
+   
+   limpiar_pantalla();
+   mostrar_cabecera(user->tipo_user,user);
+   csem();
+   printf("\n\n\t%s:\n",frase("res_dados"));
+   printf("\t\t%s 1: %d\n",frase("dado"),dado1);
+   printf("\t\t%s 2: %d\n",frase("dado"), dado2);
+   printf("\t%s: %d\n",frase("resultado"),dado1+dado2);
+   if (user->divisa == EURO) {printf("\t%s %.2f ",frase("su_ap_era"),*cantidad); printf("%s ",frase("eur_a"));}
+   else { printf("\t%s %.2f ",frase("su_ap_era"),*cantidad); printf("%s ",frase("dol_a")); }
+   /* Informar resultado y actualizar credito del usuario */
+   switch (opcion)
+   {
+     case 1:
+       printf("%s\n",frase("res_acert"));
+       ganado = ((dado1 + dado2) == resultado);  
+       *cantidad = *cantidad * 11.0;
+       break;
+     case 2:  
+       printf("\t%s\n",frase("res_par"));
+       ganado = ((dado1+dado2) % 2 == 0);
+       break;
+     case 3:
+       printf("\t%s\n",frase("res_impar"));
+       ganado = ((dado1+dado2) % 2 != 0);
+       break;
+     default: ;
+   }
+   if (ganado) printf("\t%s\n",frase("ha_ganado"));
+   else printf("\t%s\n",frase("ha_perdido"));
+   __fpurge(stdin);
+   printf("%s\n",frase("puls_enter")); leer_caracter_oculto();
+   lsem();
+   return ganado;
+}
+
+
+
+int pedir_datos_ruleta (struct usuario *user, int opcion, float *cantidad, int *numero)
+/* Pre: --
+   Post: pide al usuario los datos para realizar una apuesta de dados
+         (cantidad y/o numero) y los guarda en la zona de memoria
+	 apuntada por los correspondientes punteros pasados como 
+	 parametro. Devuelve 1 si los datos se han pedido de forma correcta y 0 en 
+	 caso contrario. */
+{
+
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  if (opcion == 10 ) return 0;
+  else if (opcion == 9) ; /* mostrarInstrucciones(RULETA); */ 
+
+  else if (opcion == 1)
+  {
+    csem();
+    printf("\n\n\t%s\n",frase("g1_rul"));
+    printf("\t%s: ",frase("rul_cant")); fflush(stdout);
+    lsem();
+    leer_entero(numero);
+    while (!(*numero >= 0 && *numero <= 36))
+    {  
+      csem();
+      printf("\n\t%s: ",frase("rul_cant")); fflush(stdout);
+      lsem();
+      leer_entero(numero);
+    }
+  }
+  csem();
+  printf("\n\n\t%s",frase("intro_cant_ap"));
+  printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+  fflush(stdout);
+  lsem();
+  leer_float(cantidad);
+   /* Comprobar que ha apostado >=2,5 euros y su equivalente en dolares y saldo suficiente */
+  if (user->divisa == EURO)
+  {
+    while (*cantidad < 2.5)
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    } 
+    if (user->saldo < *cantidad)
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  else if (user->divisa == DOLAR)
+  {
+    while (*cantidad < (2.5 * EUROS_DOLAR))
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    }    
+    if (user->saldo < (*cantidad*DOLARES_EURO))
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  return 1;
+}
+
+
+int mostrar_resultados_ruleta (int opcion, struct tpResulRuleta resultado, float *cantidad, int numero, struct usuario *user)
+/* Pre: --
+   Post: muestra el resultado de una partida de ruleta indicando ademas al usuario el resultado de
+         su apuesta */
+{
+   int ganado;
+
+    limpiar_pantalla();
+    mostrar_cabecera(user->tipo_user,user);
+    csem();    
+    printf("\n\n\t%s:\n",frase("rul_res"));
+    printf("\t%s: %d\n",frase("num"),resultado.numero);
+    printf("\t%s: %c\n",frase("col"), resultado.color);
+    if (user->divisa == EURO) {printf("\t%s %.2f ",frase("su_ap_era"),*cantidad); printf("%s\n",frase("eur_a"));}
+    else {printf("\t%s %.2f ",frase("su_ap_era"),*cantidad); printf("%s\n",frase("dol_a")); }
+    /* Informar resultado y actualizar credito del usuario */
+    switch (opcion) 
+    { 
+      case 1:
+        printf("\t%s %d\n",frase("num"),numero);
+	if (ganado = (resultado.numero == numero))
+	  *cantidad = *cantidad * 35.0;
+	break;
+      case 2:
+        printf("\t%s\n",frase("num_par"));
+        ganado = (resultado.numero % 2 == 0);
+        break;
+      case 3:
+        printf("\t%s\n",frase("num_impar"));
+        ganado = (resultado.numero % 2 != 0);
+        break;
+      case 4:
+        printf("\t%s\n",frase("color_rojo"));
+        ganado =  (resultado.color == 'R');
+        break;
+      case 5:
+        printf("\t%s\n",frase("color_negro"));
+        ganado = (resultado.color == 'N');
+        break;
+      default:
+        if (opcion == 6)  
+        { printf("\t%s\n",frase("prim_doc"));
+          ganado = (resultado.numero >= 1 && resultado.numero <=12);
+          if (ganado) *cantidad = *cantidad * 3.0;
+        }
+	else if (opcion == 7) 
+        { printf("\t%s\n",frase("seg_doc"));
+          ganado = (resultado.numero >= 13 && resultado.numero <=24);
+          if (ganado) *cantidad = *cantidad * 3.0;
+        }
+	else if (opcion == 8) 
+        { printf("\t%s\n",frase("ter_doc"));
+          ganado = (resultado.numero >= 25 && resultado.numero <=36);
+          if (ganado) *cantidad = *cantidad * 3.0; 
+        }       	
+    }
+    if (ganado) printf("\t%s\n",frase("ha_ganado"));
+    else printf("\t%s\n",frase("ha_perdido"));
+    __fpurge(stdin);
+    printf("\t%s\n",frase("puls_enter")); 
+    __fpurge(stdin);
+    leer_caracter_oculto();
+    lsem();
+    return ganado;
+}
+
+
+int mostrar_resultados_carta (int opcion, tpCarta cartaUsuario, tpCarta
+                              cartaMaquina, float *cantidad, struct usuario *user)
+/* Pre: --
+   Post: muestra el resultado de una partida de carta mas alta indicando ademas al usuario 
+         el resultado de su apuesta */
+{
+   int ganado;
+
+    limpiar_pantalla();
+    mostrar_cabecera(user->tipo_user,user);
+    csem(); 
+    printf("\n\n\t%s %d\n",frase("su_carta_es"), cartaUsuario);
+    printf("\n\n\t%s %d\n",frase("carta_maq"), cartaMaquina);
+    /* Buscamos ganador, en caso de empate gana la maquina como en 7.5 */
+    ganado = (cartaUsuario > cartaMaquina); 
+    /* Informar resultado y actualizar credito del usuario */
+    if (ganado) printf("\t%s\n",frase("ha_ganado"));
+    else printf("\t%s\n",frase("ha_perdido"));
+    __fpurge(stdin);
+    printf("\t%s\n",frase("puls_enter")); 
+    __fpurge(stdin);
+    leer_caracter_oculto();
+    lsem();
+    return ganado;
+}
+
+
+int pedir_datos_carta (struct usuario *user, float *cantidad)
+/* Pre: --
+   Post: pide al usuario los datos para realizar una apuesta de carta mas alta
+         (cantidad) y los guarda en la zona de memoria
+	 apuntada por los correspondientes punteros pasados como 
+	 parametro. Devuelve 1 si los datos se han pedido de forma correcta
+	 y 0 en caso contrario */
+{
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  printf("\n\n\t%s",frase("intro_cant_ap"));
+  printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+  fflush(stdout);
+  lsem();
+  leer_float(cantidad);
+   /* Comprobar que ha apostado >=2,5 euros y su equivalente en dolares y saldo suficiente */
+  if (user->divisa == EURO)
+  {
+    while (*cantidad < 2.5)
+    {
+      csem();
+      printf("\n\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    } 
+    if (user->saldo < *cantidad)
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  else if (user->divisa == DOLAR)
+  {
+    while (*cantidad < (2.5 * EUROS_DOLAR))
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    }    
+    if (user->saldo < (*cantidad*DOLARES_EURO))
+    {
+     csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }  csem();
+  printf("\n\t%s\n",frase("enter_carta")); fflush(stdout);
+  lsem();
+  __fpurge(stdin);
+  leer_caracter_oculto();
+  return 1;
+}
+
+
+
+int pedir_datos_blackjack (struct usuario *user, float *cantidad)
+/* Pre: --
+   Post: pide al usuario los datos para realizar una apuesta de BlackJack
+         (cantidad) y los guarda en la zona de memoria
+	 apuntada por los correspondientes punteros pasados como 
+	 parametro */	 
+{
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  printf("\n\n\t%s",frase("intro_cant_ap"));
+  printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+  fflush(stdout);
+  lsem();
+  leer_float(cantidad);
+   /* Comprobar que ha apostado >=2,5 euros y su equivalente en dolares y saldo suficiente */
+  if (user->divisa == EURO)
+  {
+    while (*cantidad < 2.5)
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    } 
+    if (user->saldo < *cantidad)
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  else if (user->divisa == DOLAR)
+  {
+    while (*cantidad < (2.5 * EUROS_DOLAR))
+    {
+      csem();
+      printf("\n\n\t%s",frase("intro_cant_ap"));
+      printf(" (%s %2.1f): ",frase("minimo"), ((user->divisa == EURO) ? 2.5 : 2.5*EUROS_DOLAR)); 
+      fflush(stdout);
+      lsem();
+      leer_float(cantidad);
+    }    
+    if (user->saldo < (*cantidad*DOLARES_EURO))
+    {
+      csem();
+      printf("\n%s\n",frase("no_dispone"));
+      printf("\n\n\t%s\n",frase("puls_enter"));
+      lsem();
+      leer_caracter_oculto();
+      return 0;
+    }
+  }
+  csem();
+  printf("\n\t%s",frase("enter_cartas")); fflush(stdout);
+  lsem();
+  __fpurge(stdin);
+  leer_caracter_oculto();
+}
+
+
+
+
+int elegir_resultado (lista_dinamica *lista, struct usuario *user)
+/* Pre: Lista es lista dinamica de tuplaResul */
+/* Post: devuelve el identificador de resultado seleccionado por el usuario */
+{
+  int i, opcion;
+  tuplaResul res;
+  lista_opciones lo;
+
+
+  nueva_lista(&lo);
+    
+  for (i=1; i<=numdatos(*lista); i++)
+  {
+    dato_posicion(lista,i,(char *)&res);
+    res.infoResul.arr[res.infoResul.len] = '\0';
+    agregar_opcion(&lo,res.infoResul.arr);
+  }
+  opcion = elegir_opcion(lo);
+  dato_posicion(lista,opcion,(char *)&res);
+  destruir_lista_op(&lo);
+  return res.idPosResul;
+
+}
+
+
+
+void mostrar_perfil (perfilUsuario *pref)
+/* Pre: --
+   Post: muestra por pantalla el perfil de usuario pasado como parametro */
+{
+   csem();
+   printf("\n\n\t%s: %d\n",frase("calificado_riesgo"),pref->riesgo);
+   if (pref->gustaFutbol)
+     printf("\t%s\n",frase("te_gusta_futbol"));
+   else
+     printf("\t%s\n",frase("no_gusta_futbol"));
+   if (pref->gustaF1)
+     printf("\t%s\n",frase("te_gusta_f1"));
+   else
+     printf("\t%s\n",frase("no_gusta_f1"));
+   if (pref->gustaSocial)
+     printf("\t%s\n",frase("te_gusta_social"));
+   else
+     printf("\t%s\n",frase("no_gusta_social"));
+   printf("\t%s",frase("has_hecho"));
+   printf(" %d %s\n",pref->numApuestasFutbol,frase("x_ap_fut"));
+   printf("\t%s",frase("has_hecho"));
+   printf(" %d %s\n",pref->numApuestasF1,frase("x_ap_f1"));
+   printf("\t%s",frase("has_hecho"));
+   printf(" %d %s\n",pref->numApuestasSocial,frase("x_ap_soc"));
+   printf("\t%s",frase("has_jugado"));
+   printf(" %d %s\n",pref->numVecesRuleta,frase("veces_rul"));
+   printf("\t%s",frase("has_jugado"));
+   printf(" %d %s\n",pref->numVecesDados,frase("veces_dad"));
+   printf("\t%s",frase("has_jugado"));
+   printf(" %d %s\n",pref->numVecesCarta,frase("veces_carta"));
+   printf("\t%s",frase("has_jugado"));
+   printf(" %d %s\n",pref->numVecesBlackJack,frase("veces_black"));
+   printf("\t%s",frase("ha_realiz"));
+   printf(" %d %s\n",pref->numApuestasArriesgadas,frase("ap_arriesg"));
+   printf("\t%s",frase("ha_realiz"));
+   printf(" %d %s\n",pref->numApuestasConservadoras,frase("ap_conserv"));
+   printf("\t%s",frase("ha_realiz"));
+   printf(" %d %s\n",pref->numApuestasSimples,frase("ap_simples"));
+   printf("\t%s",frase("ha_realiz"));
+   printf(" %d %s\n",pref->numApuestasCombinadas,frase("ap_combs"));
+   printf("\t%s",frase("ha_realiz"));
+   printf(" %d %s\n",pref->numApuestasSistema,frase("ap_siss"));
+   if (pref->equipoFutbol1.len != 0) 
+   { 
+     pref->equipoFutbol1.arr[pref->equipoFutbol1.len] = '\0';
+     printf("\t%s 1: %s\n",frase("equip_fav"),pref->equipoFutbol1.arr);
+   }
+   if (pref->equipoFutbol2.len != 0) 
+   { 
+     pref->equipoFutbol2.arr[pref->equipoFutbol2.len] = '\0';
+     printf("\t%s 2: %s\n",frase("equip_fav"),pref->equipoFutbol2.arr);
+   }
+   if (pref->equipoFutbol3.len != 0) 
+   { 
+     pref->equipoFutbol3.arr[pref->equipoFutbol3.len] = '\0';
+     printf("\t%s 3: %s\n",frase("equip_fav"),pref->equipoFutbol3.arr);
+   }
+   if (pref->piloto1F1.len != 0) 
+   { 
+     pref->piloto1F1.arr[pref->piloto1F1.len] = '\0';
+     printf("\t%s 1: %s\n",frase("pil_fav"),pref->piloto1F1.arr);
+   }
+   if (pref->piloto2F1.len != 0) 
+   { 
+     pref->piloto2F1.arr[pref->piloto2F1.len] = '\0';
+     printf("\t%s 2: %s\n",frase("pil_fav"),pref->piloto2F1.arr);
+   }
+   if (pref->piloto3F1.len != 0) 
+   { 
+     pref->piloto3F1.arr[pref->piloto3F1.len] = '\0';
+     printf("\t%s 3: %s\n",frase("pil_fav"),pref->piloto3F1.arr);
+   }
+   if (pref->escuderia1F1.len != 0) 
+   { 
+     pref->escuderia1F1.arr[pref->escuderia1F1.len] = '\0';
+     printf("\t%s 1: %s\n",frase("esc_fav"),pref->escuderia1F1.arr);
+   }
+   if (pref->escuderia2F1.len != 0) 
+   { 
+     pref->escuderia2F1.arr[pref->escuderia2F1.len] = '\0';
+     printf("\t%s 2: %s\n",frase("esc_fav"),pref->escuderia2F1.arr);
+   }
+   if (pref->escuderia3F1.len != 0) 
+   { 
+     pref->escuderia3F1.arr[pref->escuderia3F1.len] = '\0';
+     printf("\t%s 3: %s\n",frase("esc_fav"),pref->escuderia3F1.arr);
+   }
+   lsem();
+}
+
+
+
+int pedir_preferencia (int tipo, int numero, VARCHAR *cadena)
+/* Pre: tipo es un tipo de preferencia predefinido
+   Post: pregunta al usuario acerca de la preferencia especificada */	
+{
+  char eleccion;
+
+  if (tipo == EQUIPO)
+  {
+    csem();
+    if (numero == 1)
+      printf("\n\n\n\t%s\n",frase("tiene_eq_fav"));
+    else
+      printf("\n\t%s\n",frase("otro_eq_fav"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+  }
+  else if (tipo == PILOTO)
+  {
+    csem();
+    if (numero == 1)
+      printf("\n\n\t%s\n",frase("tiene_pil_fav"));
+    else
+      printf("\n\t%s\n",frase("otro_pil_fav"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+  }
+  else
+  {
+    csem();
+    if (numero == 1)
+      printf("\n\n\t%s\n",frase("tiene_esc_fav"));
+    else
+      printf("\n\t%s\n",frase("otra_esc_fav"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+  }
+  if (es_si(eleccion))
+  {
+    csem();
+    printf("\n\t%s: ",frase("pon_su_nom")); fflush(stdout);
+    lsem();
+    leer_cadena_cota(cadena->arr,30);
+    cadena->len = strlen(cadena->arr);
+    return 1;
+  }
+  else return 0;
+}
+
+
+int pedir_preferencias_globales (int *futbol, int *f1, int *social)
+/* Pre: --
+   Post: pregunta al usuario acerca de las preferencias en todas las tematicas */
+{
+  char eleccion;
+  int correcto;
+
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+  correcto = 0;
+  while(!correcto)
+  {
+    csem();
+    printf("\n\n\t%s",frase("preg_gusta_fut"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+    correcto = eleccion_correcta(eleccion);
+    if (!correcto)
+    {
+      csem();
+      printf("\n\n%s\n",frase("opcion_mal"));
+      lsem();
+    }	
+  }
+  if (es_si(eleccion)) *futbol = 1;
+  else *futbol = 0;
+  correcto = 0;
+  while(!correcto)
+  {
+    csem();
+    printf("\n\n\t%s",frase("preg_gusta_f1"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+    correcto = eleccion_correcta(eleccion);
+    if (!correcto)
+    {
+      csem();
+      printf("\n\n%s\n",frase("opcion_mal"));
+      lsem();
+    }	
+  }
+  if (es_si(eleccion)) *f1 = 1;
+  else *f1 = 0;
+  
+  correcto = 0;
+  while(!correcto)
+  {
+    csem();
+    printf("\n\n\t%s",frase("preg_gusta_soc"));
+    lsem();
+    eleccion = leer_caracter_oculto();
+    correcto = eleccion_correcta(eleccion);
+    if (!correcto)
+    {
+      csem();
+      printf("\n\n%s\n",frase("opcion_mal"));
+      lsem();
+    }	
+  }
+  if (es_si(eleccion)) *social = 1;
+  else *social = 0;
+}
+
+
+
+void mostrar_resultado_apuesta_simple(int id_res,float *mi_cantidad,
+                                     float *ganancia, struct usuario *user)
+/* Pre: id_res es un identificador valido de resultado
+        mi_cantidad >= 0.0   ganancia >=0.0
+	user es un usuario registrado
+   Post: muestra por pantalla el resultado de una apuesta simple ya resuelta */
+{
+   char cadena[100];
+   
+   limpiar_pantalla();
+   mostrar_cabecera(cliente,user);
+   csem();
+   printf("\n\n\t\t%s",frase("ap_simple"));
+   descripcion_evento(cadena,id_res);
+   printf("\n\n\t%s: %s\n",frase("ev_aposto"),cadena);
+   descripcion_resultado(cadena,id_res);
+   printf("\t%s: %s\n",frase("res_predijo"),cadena);
+   
+   if (user->divisa == DOLAR)
+   {
+     printf("\t%s:",frase("cant_apost"));
+     printf(" %.2f %s\n",a_dolar(*mi_cantidad),frase("dolares"));
+     if ( *ganancia > 0.0) 
+     {
+       printf("\t%s: ",frase("ust_gano"));
+       printf("%.2f %s\n",a_dolar(*ganancia),frase("dolares"));
+     }
+     else printf("\t%s\n",frase("ust_perdio"));
+   }
+   else
+   {
+     printf("\t%s: ",frase("cant_apost"));
+     printf(" %.2f euros\n",*mi_cantidad);
+     if ( *ganancia > 0.0) 
+     {
+       printf("\t%s: ",frase("ust_gano"));
+       printf("%.2f euros\n",*ganancia);
+     }
+     else printf("\t%s\n",frase("ust_perdio"));
+   }
+   printf("\n\n%s\n",frase("puls_enter"));
+   lsem();
+   leer_caracter_oculto();
+}
+
+
+void mostrar_resultado_apuesta_multiple(int mi_tipo,lista_dinamica *lista_resultados,float *mi_cantidad,
+                                        float *ganancia, struct usuario *user)
+/* Pre: mi_tipo es un tipo de resultado valido
+        lista_resultados es una lista dinamica de identificadores de resultado
+        id_res es un identificador valido de resultado
+        mi_cantidad >= 0.0   ganancia >=0.0
+	user es un usuario registrado
+   Post: muestra por pantalla el resultado de una apuesta simple ya resuelta */
+
+{
+  int i, id_res;
+  char cadena[100];
+  
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  csem();
+  if (mi_tipo == tp_apuesta_combinada)
+    printf("\n\n\t\t%s\n\n",frase("ap_comb"));
+  else
+    printf("\n\n\t\t%s\n\n",frase("ap_sis"));
+  for (i=1; i<=numdatos(*lista_resultados); i++)
+  {
+    dato_posicion(lista_resultados,i,(char *)&id_res);
+    descripcion_evento(cadena,id_res);
+    printf("\n\n\t%s: %s\n",frase("ev_aposto"),cadena);
+    descripcion_resultado(cadena,id_res);
+    printf("\t%s: %s\n",frase("res_predijo"),cadena);
+  }
+   if (user->divisa == DOLAR)
+   {
+     printf("\t%s:",frase("cant_apost"));
+     printf(" %.2f %s\n",a_dolar(*mi_cantidad),frase("dolares"));
+     if ( *ganancia > 0.0) 
+     {
+       printf("\t%s: ",frase("ust_gano"));
+       printf("%.2f %s\n",a_dolar(*ganancia),frase("dolares"));
+     }
+     else printf("\t%s\n",frase("ust_perdio"));
+   }
+   else
+   {
+     printf("\t%s: ",frase("cant_apost"));
+     printf(" %.2f euros\n",*mi_cantidad);
+     if ( *ganancia > 0.0) 
+     {
+       printf("\t%s: ",frase("ust_gano"));
+       printf("%.2f euros\n",*ganancia);
+     }
+     else printf("\t%s\n",frase("ust_perdio"));
+   }
+   printf("\n\n%s\n",frase("puls_enter"));
+   lsem();
+   leer_caracter_oculto();
+}
+
+
+
+void mostrar_historico_global (struct usuario *user, float *balance, 
+                               float *totalJuegos, float *gananciasJuegos,
+			       float *gananciasOfertas)
+/* Pre: --
+   Post: muestra por pantalla el balance global de un usuario */
+{
+  
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  csem();
+  printf("\n\n\t%s\n\n\t\t",frase("en_su_est"));
+  printf("%s ",frase("ust_ha"));
+  if (*balance >= 0.0)
+    printf("%s ",frase("ganado"));
+  else
+    printf("%s ",frase("perdido"));
+  negrita();
+  subrayado();
+  if (user->divisa == DOLAR)
+  {
+    if (*balance >= 0.0)
+      printf("%.2f %s",a_dolar(*balance),frase("dolares"));
+    else
+      printf("%.2f %s",a_dolar(-*balance),frase("dolares"));
+  }
+  else
+  {
+    if (*balance >= 0.0)
+      printf("%.2f euros",*balance);
+    else
+      printf("%.2f euros",-*balance);
+  }    
+  no_negrita();
+  no_subrayado();
+  printf(" %s\n",frase("en_ap"));
+  
+  printf("\n\t\t%s ",frase("ust_ha"));
+  if (*gananciasJuegos - *totalJuegos >= 0.0)
+    printf("%s ",frase("ganado"));
+  else
+    printf("%s ",frase("perdido"));
+  negrita();
+  subrayado();
+  if (user->divisa == DOLAR)
+  {
+    if (*gananciasJuegos - *totalJuegos >= 0.0)
+      printf("%.2f %s",a_dolar(*gananciasJuegos - *totalJuegos),frase("dolares"));
+    else
+      printf("%.2f %s",a_dolar(*totalJuegos - *gananciasJuegos),frase("dolares"));
+  }
+  else
+  {
+    if (*gananciasJuegos - *totalJuegos >= 0.0)
+      printf("%.2f euros",*gananciasJuegos - *totalJuegos);
+    else
+      printf("%.2f euros",*totalJuegos-*gananciasJuegos);
+  }    
+  no_negrita();
+  no_subrayado();
+  printf(" %s\n",frase("en_jueg"));
+  printf("\n\t\t%s ",frase("ust_ha"));
+  printf("%s ",frase("ganado"));
+  negrita();
+  subrayado();
+  fflush(stdout);
+  if (user->divisa == DOLAR) printf("%.2f %s",a_dolar(*gananciasOfertas),frase("dolares"));
+  else printf("%.2f euros",*gananciasOfertas);
+  no_negrita();
+  no_subrayado();
+  printf(" %s\n",frase("deb_ofert"));  
+  printf("\n\n%s\n",frase("puls_enter"));
+  lsem();
+  leer_caracter_oculto();
+}
+
+
+void mostrar_informe(tpInforme informe, int tipo, struct usuario *user)
+/* Pre: informe debe corresponder a un informe economico correcto.
+        Si tipo == MENSUAL, es un informe mensual y si tipo == GLOBAL
+	es un informe global.
+  Post: Muestra por pantalla el informe del tipo espeficado
+*/	 
+
+{
+  float ingresosGlobales, perdidasGlobales, resultadoGlobal;
+  int mes, anyo;
+  int correcto;
+  VARCHAR fecha[FECHA_LEN];
+  
+  strncpy(fecha.arr, informe.fecha.arr, FECHA_LEN);
+  fecha.len = informe.fecha.len;
+  ingresosGlobales = informe.ingresosApuestas + informe.ingresosJuegos;
+  perdidasGlobales = informe.perdidasApuestas + informe.perdidasJuegos + informe.perdidasOfertas;
+  resultadoGlobal = ingresosGlobales - perdidasGlobales;
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  csem();
+  printf("\n\n\n\n");
+  if (tipo == MENSUAL) 
+  {
+    mes = obtener_mes((VARCHAR *) &informe.fecha); 
+    anyo = obtener_anyo((VARCHAR *) &informe.fecha);
+    printf("%s %d ",frase("inf_ec_ref"),mes); 
+    printf("%s %d\n\n",frase("del_an"), 2000 + anyo);
+  }
+  else printf("%s\n\n",frase("inf_ec_glob"));
+  
+  printf("\t%s: %7.2f.\n",frase("res_glob_mes"), resultadoGlobal);
+  printf("\t%s: %7.2f.\n",frase("ing_glob_mes"), ingresosGlobales);
+  printf("\t%s: %7.2f.\n",frase("perd_glob_mes"), perdidasGlobales);
+  printf("\t%s: %7.2f.\n",frase("res_glob_ap"), informe.ingresosApuestas - informe.perdidasApuestas);
+  printf("\t%s: %7.2f.\n",frase("ing_der_ap"), informe.ingresosApuestas);
+  printf("\t%s: %7.2f.\n",frase("per_der_ap"), informe.perdidasApuestas);
+  printf("\t%s: %7.2f.\n",frase("res_glob_ju"), informe.ingresosJuegos- informe.perdidasJuegos);
+  printf("\t%s: %7.2f.\n",frase("ing_der_ju"), informe.ingresosJuegos);
+  printf("\t%s: %7.2f.\n",frase("per_der_ju"), informe.perdidasJuegos);
+  printf("\t%s: %7.2f.\n",frase("per_der_of"), informe.perdidasOfertas);
+  printf("\n\n%s\n",frase("puls_enter"));
+  lsem();
+  leer_caracter_oculto();
+}
+
+
+void pedir_datos_nuevos (tuplaUsuario *datos)
+/* Pre: datos son datos validos de un usuario registrado
+   Post: actualiza los datos que el usuario indica pidiendo unos nuevos */
+{
+   char eleccion, cadena[200];
+   int correcto, entero_aux, exito, i;
+   
+   
+   csem();
+   printf("\n\n\n\t%s\n",frase("des_camb_dir"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("dir"));
+	fflush(stdout);
+	lsem();
+        leer_cadena_cota(cadena,DIR_LEN);
+	correcto = (strlen(cadena) != 0);
+	if (!correcto)
+	  if(!seguir("dir_mal")) break;
+      }
+      if (correcto)
+      {
+        strcpy(datos->direccion.arr,cadena);
+	datos->direccion.len = strlen(cadena);
+      }
+   }  
+   csem();
+   printf("\n\n\t%s\n",frase("des_camb_cp"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("cp"));
+	fflush(stdout);
+	lsem();
+        leer_cadena_cota(cadena,CP_LEN);
+	correcto = (strlen(cadena) != 0);
+	for (i=0;i<=strlen(cadena)-1;i++)
+	{
+	  if (!(cadena[i]>='0' && cadena[i]<='9'))
+	    correcto = 0;
+	}
+	if (!correcto)
+	  if(!seguir("cp_mal")) break;
+      }
+      if (correcto)
+      {
+        strcpy(datos->CP.arr,cadena);
+	datos->CP.len = strlen(cadena);
+      }
+   }         
+   csem();
+   printf("\n\n\t%s\n",frase("des_camb_loc"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("localidad"));
+	fflush(stdout);
+	lsem();
+        leer_cadena_cota(cadena,LOC_LEN);
+	correcto = (strlen(cadena) != 0);
+	if (!correcto)
+	  if(!seguir("localidad_mal")) break;
+      }
+      if (correcto)
+      {
+        strcpy(datos->localidad.arr,cadena);
+	datos->localidad.len = strlen(cadena);
+      }
+   }  
+   csem();
+   printf("\n\n\t%s\n",frase("des_camb_pais"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("pais"));
+	fflush(stdout);
+	lsem();
+        leer_cadena_cota(cadena,PAIS_LEN);
+	correcto = (strlen(cadena) != 0);
+	if (!correcto)
+	  if(!seguir("pais_mal")) break;
+      }
+      if (correcto)
+      {
+        strcpy(datos->pais.arr,cadena);
+	datos->pais.len = strlen(cadena);
+      }
+   }   
+   csem();
+   printf("\n\n\t%s: \n",frase("des_camb_div"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("divisa"));
+	fflush(stdout);
+	lsem();
+        leer_entero(&entero_aux);
+	correcto = (entero_aux == 1 || entero_aux == 2);
+	if (!correcto)
+	  if(!seguir(frase("divisa_mal"))) break;
+      }
+      if (correcto)
+      {
+        datos->divisa = entero_aux;
+      }
+   }      
+   csem();
+   printf("\n\n\t%s: \n",frase("des_camb_id"));
+   lsem();
+   eleccion = leer_caracter_oculto();
+   if (es_si(eleccion))
+   {
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+	printf("\t%s: ",frase("idioma"));
+	fflush(stdout);
+	lsem();
+        leer_entero(&entero_aux);
+	correcto = (entero_aux == 0 || entero_aux == 1 || entero_aux == 2);
+	if (!correcto)
+	  if(!seguir(frase("idioma_mal"))) break;
+      }
+      if (correcto)
+        datos->idioma = entero_aux;
+    }  
+}
+
+
+void mostrar_listado_usuarios(lista_dinamica *lista, struct usuario *user)
+/* Pre: --
+   Post: muestra por pantalla un listado de todos los usuarios registrados junto con su
+   fecha de ultimo login y la fecha de creacion de su cuenta */
+{
+  int i,j; 
+  datos_listado usuario;
+
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  csem();
+  printf("\n\n\n%s",frase("tu_nick"));
+  for (i=1; i<=22; i++) putchar(' ');
+  printf("%s",frase("fecha_creacion"));
+  for (i=1; i<=2; i++) putchar(' ');
+  printf("%s\n",frase("fecha_ult_log"));
+  for (i=1; i<=63;i++) putchar('-');
+  putchar('\n');
+  for (i=1; i<= numdatos(*lista); i++)
+  {
+    dato_posicion(lista,i,(char *)&usuario);
+    usuario.nick.arr[usuario.nick.len] = '\0';
+    usuario.fechaCreacion.arr[usuario.fechaCreacion.len] = '\0';
+    usuario.fechaUltLogin.arr[usuario.fechaUltLogin.len] = '\0';
+    printf("%s",usuario.nick.arr);
+    for (j=1; j<=26-usuario.nick.len; j++) putchar(' ');
+    printf("%s",usuario.fechaCreacion.arr);
+    for (j=1; j<=30-FECHA_LEN; j++) putchar(' ');
+    printf("%s\n",usuario.fechaUltLogin.arr);
+  }
+  lsem();
+} 
+  
+
+
+
+
+
+
+

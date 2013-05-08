@@ -1,0 +1,434 @@
+ad_mas: Eventos que admiten mayores apuestas
+adv1: Atencion: Apostar implica un riesgo.
+adv2: El juego sin control puede suponer perdidas de dinero y
+adv3: trastornos psicologicos. Juegas bajo tu responsabilidad
+adv4: 1. Para jugar en esta casa de apuestas debe ser mayor de edad.
+adv5: 2. El juego puede producir adiccion.
+adv6: 3. La casa no se hace responsable de las perdidas que suponga el juego
+agreg_res_ap: Desea agregar este resultado a una apuesta? (S/N)
+agregar_mas_resul: Desea agregar algun resultado mas a la apuesta? (S/N)
+aleman: Aleman
+altas_pendientes: Altas pendientes
+ap_arriesg: apuesta(s) consideradas arriesgadas
+ap_comb: Apuesta combinada
+ap_combs: apuesta(s) combinadas
+ap_conserv: apuesta(s) consideradas conservadoras
+ap_correcta: Apuesta gestionada correctamente
+ap_dados: Apuestas disponibles para el juego de los dados
+ap_form_dia: Apuesta formalizada el dia
+ap_minima_es: La apuesta minima es de
+ap_rul: Apuestas disponibles para el juego de la ruleta
+ap_simple: Apuesta simple
+ap_simples: apuesta(s) simples
+ap_sis: Apuesta por sistema
+ap_siss: apuesta(s) por sistema
+apostar: Apostar
+apuesta_mal: No se puede realizar la apuesta
+apuesta_ok: Apuesta realizada satisfactoriamente
+as: as
+ayuda: Ayuda
+baja_ok: Baja validada correctamente
+barajando: Barajando cartas
+bienv: Bienvenido
+bienvenido: BIENVENIDO A APOSTOPOLIS
+cab: caballo
+cad_pron: Eventos que caducaran mas pronto
+cad_tad: Eventos que caducaran mas tarde
+calificado_riesgo: Se le ha calificado con un riesgo de grado
+camb_pass: Cambiar password
+camb_preg_seg: Cambiar pregunta secreta
+cant_apost: Cantidad apostada
+cart_nuev_jug: Carta nueva del jugador
+carta_maq: La carta de la maquina es un
+cheq_cant: Cantidad a ingresar en el cheque.
+cheq_cant_inc: Cantidad incorrecta.
+cheq_no_reg: El usuario en cuestion no esta registrado en Apostopolis.
+cheq_nom_us: Nombre del usuario al que extender el cheque
+cob: Cobros
+col: Color
+color_negro: Color negro
+color_rojo: Color rojo
+comen_black: Comenzando juego BlackJack
+comprobar_mas_us: Desea comprobar mas usuarios? (S/N)
+cons_as: Consultar al Asesor de apuestas
+cons_datos_us: Consultar datos de usuarios
+cot_mal: Cotizacion incorrecta
+cp: Codigo postal
+cp_mal: Codigo postal incorrecto
+credito: Credito
+cuanto_apostar: Cuanto quiere apostar?
+cuenta_mal: datos de transferencia invalidos
+dad_ex: Apostar a resultado exacto
+dad_impar: Apostar a resultado impar
+dad_inst: Mostrar instrucciones del juego
+dad_intro_cant: Introduzca la cantidad de dinero a apostar (minimo 2,5 EUR)
+dad_par: Apostar a resultado par
+dado: dado
+dado_baja_ok: Usuario dado de baja definitivamente
+dar_baja_us: Dar de baja a un usuario
+darse_baja: Darse de baja
+datos_act_ok: Datos actualizados satisfactoriamente
+datos_mal: Datos incorrectos, ¿Desea volver a intentarlo? (S/N)
+de_cor: de corazones
+de_diam: de diamantes
+de_pic: de picas
+de_treb: de treboles
+deb_ofert: debido a ofertas
+del_an: del año
+des_camb_cp: Desea cambiar su Codigo Postal? (S/N)
+des_camb_dir: Desea cambiar su Direccion? (S/N)
+des_camb_div: Desea cambiar su Divisa? (S/N)
+des_camb_id: Desea cambiar su Idioma? (S/N)
+des_camb_loc: Desea cambiar su Localidad? (S/N)
+des_camb_pais: Desea cambiar su Pais de residencia? (S/N)
+desc_inc: Descripcion incorrecta
+desc_mal: Descripcion incorrecta
+desc_oferta_cumpleanyos: Oferta de Apostopolis que permitira al usuario cumplir sus deseos el dia de su cumpleanyos
+desc_oferta_regalo_efectivo: Oferta que dara potestad al admin. de ingresar credito a los usuarios
+desc_oferta_regalo_efectivo: Premio para todos aquellos usuarios que cumplan su aniversario como clientes de Apostopolis
+desc_oferta_regalo_inicial: Oferta que ingresara un credito base a los usuarios como bienvenida
+deu: 2. Deutsch
+dinero_ap: Dinero apostado
+dinero_mal: Cantidad incorrecta de dinero
+dir: Direccion
+dir_mal: Direccion invalida
+div: Divisa
+divisa: Divisa (1 para Euros, 2 para Dolares)
+divisa_mal: Divisa incorrecta
+dni_mal: Formato de DNI incorrecto
+dol_a: dolares a
+dolar: dolar
+dolares: Dolares
+dos_cart: Repartimos 2 cartas usuario
+dos_cart_maq: Repartimos 2 cartas maquina
+elige_op: Elige tu opcion: 
+email_mal: Direccion de correo incorrecta
+emp_black: Empate de BlackJacks!
+empate_punt: Empate con puntuacion
+en_ap: en apuestas
+en_jueg: en juegos
+en_su_est: En su estancia en APOSTOPOLIS
+eng: English
+enter_carta: Pulsa enter para sacar tu carta
+enter_cartas: Pulsa enter para sacar cartas
+equip_fav: Equipo favorito
+error: Error
+error_apuesta: Error al realizar la apuesta
+error_historico: Ocurrio un error en la consulta del historico
+error_intro_ev: Ha habido algun error al introducir el evento
+error_por: Error por
+error_preferencias: Se produjo un error al acceder a las preferencias
+esc_fav: Escuderia favorita
+esc_pass: Escribe tu password
+esc_user: Escribe tu nombre de usuario
+escoge_opcion: Escoge tu opcion
+escribe_cantidad_ingresar: Escribe la cantidad a ingresar
+escribe_cantidad_retirar: Escribe la cantidad a retirar
+escribe_cuenta: Escriba su numero de cuenta (20 digitos)
+eur_a: euros a
+euros: (Euros)
+ev_aposto: Evento al que aposto
+ev_marc_ok: El evento se ha marcado como ocurrido satisfactoriamente
+ev_soc: Eventos sociales
+ev_viej: Eventos mas antiguos
+ev_viejos: Eventos antiguos
+ev_y_ap: Eventos y apuestas
+evento: Evento
+evento_may: EVENTO
+evento_ok: Evento introducido correctamente
+eventos_resul_intro: Eventos cuyos resultados hay que introducir
+exist: Existen
+exito_transferencia: Transferencia realizada correctamente
+f1: Formula 1
+f1_y_soc: Formula 1 y Eventos sociales
+fallo_mod: Fallo en la modificacion del resultado
+fecha_creacion: Fecha de creacion de la cuenta
+fecha_fin: Fecha fin
+fecha_hora: Fecha y hora (dd/mm/aa hh:mm:ss)
+fecha_hora_mal: Fecha y hora incorrectas
+fecha_nac: Fecha de nacimiento(DD-MM-YYYY)
+fecha_nac_mal: Fecha de nacimiento incorrecta
+fecha_ult_log: Fecha de ultimo login
+fin_black: Fin juego BlackJack
+fin_intro_ev: Fin de la introduccion de eventos
+fin_registro: Registro completado. Espere la confirmacion de alta por email.
+fut_y_f1: Futbol y Formula 1
+fut_y_soc: Futbol y Eventos sociales
+futbol: Futbol
+g1_dad: La ganancia posible para este tipo de apuesta es del doble de la apuesta realizada
+g1_rul: La ganancia posible para este tipo de apuesta es de 35 veces la apuesta realizada
+g2_dad: La ganancia posible para este tipo de apuesta es de once veces la apuesta realizada
+g2_rul: La ganancia posible para este tipo de apuesta es del triple de la apuesta realizada
+ganado: ganado
+ganancia_potencial: La ganancia potencial es de
+ganancias_son: Las posibles ganancias son las siguientes
+gest_bonos: Introducir/retirar bonos
+get_usu: Gestionar usuarios
+ha_ganado: Enhorabuena, ha ganado
+ha_perdido: Lo sentimos, ha perdido
+ha_realiz: Ha realizado
+ha_sal: Ha salido el
+ha_selecc: Ha seleccionado
+has_hecho: Ha hecho
+has_jugado: Ha jugado
+hay_error: Ha habido algun error
+hombre: hombre
+id_invalido: Identificador invalido
+idio: idioma
+idioma: Idioma (0 para Espanyol, 1 para Ingles, 2 para Aleman)
+idioma_configurado: Se ha configurado el idioma de su perfil
+idiomas_disp: Idiomas disponibles
+incluir_mas_resul: Desea incluir algun resultado de este evento para realizar una apuesta? (S/N)
+inf_ec_glob: Informe economico global
+inf_ec_ref: Informe economico referente al mes
+inf_nego: Informe de negocios
+informe_global: Consultar informe de negocios global
+informe_mensual: Consultar informe de negocios mensual
+ing: Ingresos
+ing_der_ap: Ingresos derivadas de apuestas
+ing_der_ju: Ingresos derivados de juegos
+ing_glob_mes: Ingresos globales del mes
+ingles: Ingles
+ini_ses: Iniciar sesion
+intro_anyo: Introduzca anyo (AAAA)
+intro_cant_ap: Introduce la cantidad a apostar
+intro_idio: Introduzca su numero de idioma deseado
+intro_mes: Introduzca mes (MM)
+intro_min_resul: Introduce el minimo de resultados a acertar
+intro_nuevos_eventos: Introducir nuevos eventos
+intro_ofert: Introducir nuevas ofertas
+intro_resp_bien: Introduzca una respuesta correcta
+intro_sig_dat: Introduzca los siguientes datos
+introducir_resultados: Introducir resultados
+invitado: Invitado
+ir_menu_anterior: Volver al menu anterior
+jueg: Juegos
+jug_bj: Jugar al BlackJack
+jug_cma: Jugar a la Carta Mas alta
+jug_dad: Jugar a los dados
+jug_g_black: Jugador gana(tiene blackjack)
+jug_rul: Jugar a la ruleta
+la_prob_es: La probabilidad de este resultado es del
+list_ofer: Listas ofertas
+list_ofer_int: Listas ofertas de un intervalo de fechas
+list_pers: Listado personalizado
+list_us_fech: Listar usuarios y fechas
+listar_ofertas: Listar ofertas
+lo_sentimos_resul: Lo sentimos, no se pueden agregar mas resultados
+localidad: Localidad
+localidad_mal: Localidad incorrecta
+log_correcto: Login correcto
+log_mal: Login incorrecto 
+logout: Logout
+mal_nomap: Nombre y Apellidos incorrectos
+maq_blak: Maquina tiene BlackJack!
+maq_g_punt: Maquina gana con puntuacion
+maq_may: MAQUINA
+maq_p_punt: Maquina pierde con puntuacion
+maq_pierde: Maquina pierde (se ha pasado)
+mas: Mas
+mas_nuev: Eventos mas novedosos
+mas_pop: Eventos mas populares
+max_ap: Maxima cantidad apostable
+max_mal: Maximo incorrecto
+menos_pop: Eventos menos populares
+minimo: minimo
+mod_dat_pers: Modificar datos personales
+most_adv_leg: Mostrar advertencias legales
+most_ap_pend: Mostrar apuestas pendientes
+most_ev: Mostrar eventos
+most_pref: Mostrar preferencias
+most_ult_nov: Mostrar ultimas novedades
+mostrando_datos: Mostrando los datos personales
+mostrando_datos: OK, mostrando sus datos personales
+mostrando_registrados: Mostrando usuarios registrados en el sistema
+mujer: mujer
+nac: Nacionalidad
+nac_mal: Nacionalidad incorrecta
+nick_us_consult: Introduce el nick del usuario a consultar
+nick_usado: Nick en uso o formato incorrecto
+no_altas_pend: No hay clientes pendientes de alta
+no_ap_pen: No hay apuestas pendientes
+no_dispone: No dispone de dinero suficiente para la apuesta
+no_ev_asesor: Lo sentimos, no hay resultados que se ajusten a su perfil
+no_ev_viej: No hay eventos antiguos para mostrar
+no_eventos_termin: No hay ningun evento que haya terminado todavia
+no_existe_us: No existe dicho usuario
+no_gusta_f1: Usted determino que no le gusta la Formula 1
+no_gusta_futbol: Usted determino que no le gusta el futbol
+no_gusta_social: Usted determino que no le gustan los asuntos de caracter social
+no_quiero_apostar: No quiero apostar a este evento
+no_saldo: Saldo insuficiente o cantidad de dinero no valida
+nuev_cart_maq: Carta nueva de la maquina
+nueva_carta: Desea nueva carta el jugador?(S/N)
+num: Numero
+num_impar: numero impar
+num_par: numero par
+num_resul_mal: Numero incorrecto de resultados
+of_mal: Oferta invalida.
+of_pued_act: Ofertas que pueden activarse en Apostopolis
+of_reg_us: Extender un bono a un cliente
+ofert_disp: oferta(s) disponibles actualmente en
+oferta_borrada: Oferta correctamente eliminada
+oferta_introducida: Oferta correctamente introducida
+oferta_no_borrada: La oferta no ha podido ser eliminada
+oferta_no_introducida: La oferta no ha podido ser introducida
+olv_pass: Olvidaste tu password?
+opcion_mal: Opcion incorrecta
+otra_esc_fav: Tiene alguna escuderia de Formula 1 preferida? (S/N)
+otra_vez: ¿Desea volver a introducir este campo? (S/N):
+otra_vez_pass: Introduzca el password de nuevo
+otro_eq_fav: Tiene algun otro equipo de futbol preferido? (S/N)
+otro_pil_fav: Tiene algun otro piloto de Formula 1 preferido? (S/N)
+pais: Pais
+pais_mal: Pais incorrecto
+pass_enviado_mail: Se ha enviado un mail a su direccion de correo con la contrasenya
+pass_mal: Contraseña incorrecta
+pass_mal: Password incorrecto
+ped_num_dad: Introduzca el numero al que desea apostar (2-12)
+pedir_nomap: Nombre y apellidos
+pedir_sexo: Sexo (0 para mujer, 1 para hombre)
+per_der_ap: Perdidas derivadas de apuestas
+per_der_ju: Perdidas derivadas de juegos
+per_der_of: Perdidas derivadas de ofertas
+perd_gan_of: Perdidas/ganancias ofertas
+perd_glob_mes: Perdidas globales del mes
+perdido: perdido
+pierde_jug: Jugador pierde (se ha pasado)
+pierden_ambos: Jugador y maquina pierden(ambos se han pasado)
+pil_fav: Piloto favorito
+pon_cant_apostar: Introduzca la cantidad a apostar
+pon_nick: Introduce tu nick
+pon_nueva_preg: Introduce tu nueva pregunta secreta
+pon_nueva_resp: Introduce tu nueva respuesta secreta
+pon_pass: Introduce tu contraseña
+pon_pass_actual: Introduce tu contraseña actual
+pon_pass_nuevo: Introduce tu nueva contraseña
+pon_resp: Introduce la respuesta
+pon_su_nom: Introduce su nombre
+poner_pass: Tu contrasenya es
+poner_preg: Tu pregunta secreta es
+pop: Popularidad
+pop_mal: Grado de populadidad incorrecto
+preg_cot: Introduzca la cotizacion asociada al posible resultado
+preg_desc_ev: Descripcion del evento
+preg_desc_res: Introduzca la descripcion del posible resultado
+preg_gusta_f1: Le gusta la Formula 1? (S/N)
+preg_gusta_fut: Le gusta el futbol? (S/N)
+preg_gusta_soc: Le gustan los eventos de caracter social? (S/N)
+preg_intro_mas: Desea introducir mas resultados? (S/N)
+preg_pass: Password (caracteres alfanumericos)
+preg_priv: Pregunta privada
+preg_priv_mal: Pregunta privada incorrecta
+preg_tipo_ev: Tipo del evento (futbol, f1, social)
+prim_doc: Primera docena (1-12)
+prom_ins: Promocion insertada en DirigirPromo
+puede_realizar: Puede realizar
+puls_ent_lanz: Pulse enter cuando desee lanzar los dados
+puls_enter: Pulsa enter para continuar...
+puls_enter_maq: Pulsa enter para sacar la carta de la maquina
+punt_maq: La puntuacion de la maquina es
+punt_us: La puntuacion del usuario es
+pyg_of: 5. Perdidas/ganancias ofertas
+que_evento: Que evento le interesa? (Introduzca el identificador)
+que_resultado: A que resultado desea apostar?
+quiere_dar_alta: Desea dar de alta a este usuario? (S/N)
+quieres_apostar: Desea apostar a alguno de estos eventos?: (S/N)
+rank_mal: Ranking incorrecto.
+recibir_informe_mail: Desea recibir el informe anterior por email(S/N)
+reg: Registrarme
+reg_an_ac: Regalo aniversario (activa)
+reg_an_no: Regalo aniversario(inactiva)
+reg_cump_ac: Regalo cumpleanyos (activa)
+reg_cump_no: Regalo cumpleanyos (inactiva)
+reg_ef_ac: Regalo efectivo (activa)
+reg_ef_no: Regalo efectivo (inactiva)
+reg_ini_ac: Regalo inicial (activa)
+reg_ini_no: Regalo inicial (no activa)
+res_acert: resultado acertado
+res_asoc_ev: Resultados asociados al evento seleccionado
+res_dados: Los resultados de su tirada han sido
+res_glob_ap: Resultado global de apuestas
+res_glob_ju: Resultado global de juegos
+res_glob_mes: Resultado global del mes
+res_impar: resultado impar
+res_may: RESULTADO
+res_min_ac: Resultados minimos a acertar
+res_mod_ok: Resultado modificado satisfactoriamente
+res_par: resultado par
+res_predijo: Resultado que predijo
+resp_inc: Respuesta incorrecta
+resp_priv: Respuesta privada
+resp_priv_mal: Respuesta privada incorrecta
+result: resultados(s)
+resultado: Resultado
+ret_ofert: 2. Retirar ofertas
+retirar_ofertas: Retirar ofertas
+rev_hist: Revisar historico
+rey: rey	
+rul_cant: Introduzca el numero al que desea apostar(0-36)
+rul_d1: Apostar a primera docena (1-12)
+rul_d2: Apostar a segunda docena (13-24)
+rul_d3: Apostar a tercera docena (25-36)
+rul_ex: Apostar a resultado exacto
+rul_impar: Apostar a resultado impar
+rul_inst: Mostrar instrucciones del juego
+rul_negro: Apostar a resultado negro
+rul_par: Apostar a resultado par
+rul_res: Los resultados de la ruleta han sido
+rul_rojo: Apostar a resultado rojo
+salir: Salir de la aplicacion
+salir_2: Salir
+seg_doc: Segunda docena (13-24)
+seguro_baja: Estas seguro de que quieres darte de baja? (S/N)
+sel_of: Seleccione una oferta (ID entre
+sel_rank: Seleccione un ranking valido (entre
+sig_res: Introduciendo siguiente resultado...
+social: Social
+sot: sota
+span: Espanyol
+su_ap_era: Su apuesta era de 
+su_carta_es: Su carta es un
+tareas_pend: Efectuar tareas pendientes
+te_gusta_f1: Usted determino que le gusta la Formula 1
+te_gusta_futbol: Usted determino que le gusta el futbol
+te_gusta_social: Usted determino que le gustan los asuntos de caracter social
+ter_doc: Tercera docena (25-36)
+tiene_eq_fav: Tiene algun equipo de futbol preferido? (S/N)
+tiene_esc_fav: Tiene alguna escuderia de Formula 1 favorita? (S/N)
+tiene_pil_fav: Tiene algun piloto de formula 1 de Formula 1 preferido? (S/N)
+tip_mal: Tipo incorrecto
+todos: Futbol, F1 y Eventos sociales
+transferencia_mal: La transferencia no se ha podido realizar satisfactoriamente
+tu_cumple: Fecha de cumpleanyos
+tu_dni: DNI
+tu_nick: Nick
+tu_saldo: Su saldo es
+tu_sexo: Sexo
+ult_nov: ultimas novedades
+us_black: Usuario tiene BlackJack!
+us_g_punt: Usuario gana con puntuacion
+us_may: USUARIO
+us_pierde_punt: Usuario pierde con puntuacion
+ust_gano: Usted gano
+ust_ha: Usted ha
+ust_perdio: Usted perdio la apuesta
+usuario_menor_edad: Atencion! El usuario es menor de edad
+veces_black: veces al Blackjack
+veces_carta: veces a la carta mas alta
+veces_dad: veces a los dados
+veces_rul: veces a la ruleta
+ver_altas_pend: Verificar altas pendientes
+ver_det_per: Ver detalles personales
+ver_mas_resul: Quiere ver mas resultados? (S/N)
+volv_jueg: Volver al menu principal de juegos
+volv_menu_ant: Volver al menu anterior
+volver: Volver al menu anterior
+volver_menu: Volver al menu
+volver_menu_ant: Volver al menu anterior
+vuelva_pronto: Gracias, vuelva pronto y tenga un buen dia.
+x_ap_f1: aspuesta(s) a f1
+x_ap_fut: apuesta(s) a futbol
+x_ap_soc: apuesta(s) a eventos de caracter social
+ya_existe_nick: Nick inexistente
+idioma_mal: Idioma incorrecto

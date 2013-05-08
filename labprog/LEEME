@@ -1,0 +1,11 @@
+Se puede consultar el historico de revisiones y cambios en el fichero log.
+Este fichero se ha generado con el comando cvs log.
+Por motivos de higiene en los ficheros de codigo no se ha incluido esta 
+informacion en la cabecera de los mismos.
+Tambien se puede consultar de forma interactiva a traves del siguiente enlace:
+    http://hj47x98.cvs.sourceforge.net/hj47x98/labprog/
+Alli se puede consultar para todos los ficheros su historico de cambios 
+(usando diff o annotate tras hacer click en algun fichero).
+
+La especificacion de los procedimientos y funciones de cada modulo se 
+encuentra en el fichero .h correspondiente.

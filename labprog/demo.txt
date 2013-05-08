@@ -1,0 +1,31 @@
+1. Iniciar la aplicación con idioma español. Comentar reloj, 3 idiomas.
+2. Iniciar sesión con admin
+3. Decir que como el admin es ingles se ha cambiado el idioma de español a 
+   ingles.
+4. Introducir 1 evento
+5. Enseñar informe de negocios de enero y febrero y global y enviar por correo
+los 3 y enseñarlos luego
+6. Administer users -> Show users and dates
+7. Abrir ayuda del administrador (en ingles).
+8. Logout admin
+9. Iniciar sesion Blazer
+10. Comentar que tiene divisa dolares
+11. Apostar 3 apuestas: una simple, otra combinada y otra por sistema
+    utilizando para la simple el evento.
+12. Mostrar apuestas pendientes.
+13. Mostrar eventos asesor.
+14. Mostrar preferencias usuario y datos personales.
+15. Mostrar historico de apuestas.
+16. Juegos: dados resultado exacto
+17. Mostrar ayuda del usuario (en español estara).
+18. Comentar operaciones bancarias simultadas (ingresos, cobros)
+19. Cambiar idioma de Blazer a aleman.
+19. Salir de sesión Blazer
+20. Mostrar ultimas noticias (eventos).
+21. Comentar recordatorio de contraseña, advertencias legales
+22. Iniciar sesión con admin
+23. Ver en el gmail que se insta al admin a resolver los eventos
+24. Resolver el evento introducido
+25. Ver en el gmail que hemos ganado
+26. Iniciar sesion con Blazer y ver que ha modificado su saldo
+27. Mostrar la fase de registro (no completar).

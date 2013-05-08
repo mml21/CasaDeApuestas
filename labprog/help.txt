@@ -1,0 +1,323 @@
+USER GUIDE
+
+
+The use of this documentation is subject to the following terms: you can create a hard copy of this documentation only for personal use. 
+The conversion to other formats is allowed as long as the content is not altered or edited in any way. 
+You shall not publish or distribute this documentation in any form or by any means, except if you distribute the documentation in a manner similar 
+to that used for dissemination Apostópolis (ie electronically to be downloaded with the software) or a CD-ROM or similar means, as long as the 
+documentation is disseminated along with the software in the same medium. For all other uses, for example dissemination of printed copies, or 
+use of this documentation, in whole or in part, in another publication, you must obtain prior written permission from an authorized representative 
+of Apostópolis. Apostópolis reserves all rights to this documentation.
+
+Document generated: 18-01-2008 (review: 3)
+
+
+Table of contents.
+1. System Requirements.
+2. Install Apostópolis on a Unix machine.
+3. Execution of apostópolis.
+4. Functions administrator.
+4.1 First Steps.
+4.2 aspects to be taken into account.
+4.3 User Management.
+  4.3.1 Giving high.
+  4.3.2 Unsubscribe.
+  4.3.3 See data users.
+  4.3.4 See user activity.
+4.4. Economic Reports 
+  4.4.1 Economic Report of a particular month.
+  4.4.2 global economic report.
+4.5 Promotions / bonds.
+  4.5.1 Introduce new promotions.
+  4.5.2 See promotions active.
+  4.5.3 Remove promotions.
+  4.5.4 Loss of promotions.
+4.6 Introduction of new events.
+4.7 Resolution of events.
+
+5. Features user.
+  5.1. Registration 
+  5.2 View / Change personal details.
+  5.3 View preferences.
+  5.4 Income and withdrawals credit.
+  5.5 unsubscribe.
+  5.6 forgot your password?
+  5.7 Change secret question.
+  5.8 Change password.
+  5.9 Perform bets.
+  5.10 Need help deciding on his bet?
+  5.11 View bets pending.
+  5.12 View historic betting and economic balance.
+  5.13 See historical events.
+  5.14 Gambling
+  5.15 Standards.
+  
+  
+1. System Requirements.
+
+You must install a machine Apostópolis under Solaris UNIX to ensure their proper functioning. The machine should consist of the GCC compiler and precompiladors ProC and have at least 3 MB of free space on your hard drive.
+In addition you must have a connection to the database server ORACLE.
+
+2. Installing Apostópolis on a Unix machine.
+
+Copy all files included in the directory where you want to have installed the application -
+Run the following command: make
+Wait for the system will return control. You will see various messages appear on screen but do not worry, are part of the installation.
+Run the command: make clean
+It is ready to run the application, make sure that you have the files: english.txt, english.txt and deutsch.txt.
+Run Apostópolis always in the directory in which it was installed.
+
+3. Execution of apostópolis.
+
+For the implementation of Apostópilis type the command: leading in the directory where the application is installed to the correct view of the application is recommended its implementation in a maximized window of the terminal.
+4. Functions administrator.
+
+4.1 First Steps.
+
+From now on your tasks will be to be the manager Apostópolis. There was only one administrator account in this version, but the application is ready to withstand competition in access to the database, so that multiple administrators can use the same account simultaneously.
+Here's the use of all the tools which will be at your disposal.
+
+By the time you run the application, you need to authenticate as an administrator to do this, first select the language in the main menu. Then select log and enter your name and password.
+The user name for the account manager is: admin
+The password is: 1234567
+
+Once login implementing change its language to English.
+
+4.2 aspects to be taken into account.
+
+Be aware that you are using an application that handles real money. For safety, when events are entered in the database could not be changed so make sure you enter information in the appropriate format, it is your responsibility.
+For any problem you can contact the team Apostópolis.
+
+4.3 User Management.
+
+4.3.1 Giving high.
+
+As an administrator, his duty will be responsible for confirming the high users who register. To do so go to option remaining tasks. Once there select users yet to register and it will appear one by one the users who are awaiting discharge. In the case of a minor applicant will be notified by screen.
+For each user will have to choose whether you want to give it the high or not. If so hit 'Y' and if not press 'N'.
+Applicants giving high and may use the application in its entirety as users. Those who are not discharged will remain to be discharged.
+If you want to terminate a user discharged or want someone who has not discharged does not continue to show up on outstanding high 4.3.2 to see how low to give users.
+
+4.3.2 Unsubscribe.
+
+You may terminate any user, whether a registered user or user outstanding high. Casualties depend on your personal opinion. It is recommended to be cautious when making low, as users who are discharged and not lose your credit will be given option to recover.
+Apostópolis is not responsible for undue casualties.
+-- To provide a low go to administer users.
+-- Select the option to cancel a user.
+-- Enter the nickname of the user to terminate.
+-- Once you enter, you will be discharged. If the user does not exist you will be informed of this.
+
+4.3.3 See data users.
+
+To view the personal data of a user menu administer users
+-- Select the option to see data users
+-- Enter the user's nickname
+-- If the user exists, will be shown on screen all of your personal information.
+
+See 4.3.4 user activity.
+
+If you want to consult the user activity, you can see a list of dates for account creation and date of last login for all users. To do this go to administer users
+Select users the option to see and dates
+And the requested information is displayed.
+
+Economic Reports 4.4.
+
+To keep accounts of the gambling house, you can get economic reports about losses and gains that have been obtained due to betting and games of users. There are two types of reports: one month or one that reflects the evolution of the full house of gambling.
+
+4.4.1 Economic Report of a particular month.
+
+-- Go to the menu reports business.
+-- Select the option to consult monthly economic report.
+-- Enter the month whose economic report sought (in numeric format, with two digits).
+-- Enter the year as a four-digit number.
+-- Appears on the screen report of the month desired. Press any key. You can then choose to receive the report at its economic email. Click 'Y' in the affirmative.
+
+4.4.2 global economic report.
+
+-- Go to the menu reports Business
+-- Select the option to consult overall economic report
+-- Is displayed on screen this report. Press any key. You can then choose to receive the report at its economic email. Click 'Y' in the affirmative.
+
+
+4.5 Promotions / bonds.
+
+As manager Apostópolis you will be responsible for activating and deactivating the promotions as they wish. It has four different promotions: Gift initial gift of cash, gift anniversary and birthday present. Offers are valid for the range of users you specify -
+
+4.5.1 Introduce new promotions.
+
+-- Go to the menu introduction / removal bids.
+-- Select the option to introduce new offers.
+-- Select identifier bid to activate among those available.
+-- Select ranking user from which the offer is valid.
+-- After entering these data supply already been activated.
+
+
+4.5.2 See promotions active.
+
+-- Go to the menu introduction / removal bids.
+-- Select the option lists bids.
+-- You can see on the screen listing of all active bids.
+-- Press a key and return to the previous menu.
+
+
+4.5.3 Remove promotions.
+
+-- Go to the menu introduction / removal bids.
+-- Select the option to eliminate bids.
+-- You can see a list of active bids. Select the offer you want to disable.
+-- Once the offer is turned off.
+
+4.5.4 Loss of promotions.
+
+-- Go to the menu introduction / removal bids.
+-- Select the option to eliminate bids.
+-- You can see a report on the economic losses that have resulted in bids.
+
+
+4.6 Introduction of new events.
+
+To introduce new events go to introduce new events.
+-- Enter a description
+-- Insert the type of event: football, or social f1
+-- Enter the degree of popularity
+-- Enter the maximum apostable money in euros.
+-- Enter the exact time and date of commencement of the event
+After entering these data begin inserting possible outcomes. For each result will have to enter a description and a quotation.
+Enter as many as you want results.
+
+Resolution of 4.7 events.
+
+To resolve the events that have already taken place, go to unfinished
+Select the option to introduce results.
+You get a list of events that must be resolved. Select the event you want to settle.
+Once the event obtain a list of possible outcomes. Select the result happened.
+Thereafter, the event will be treated, and resolve all the bets have linked.
+
+
+5. Features user.
+
+Below is a description of the tools available as a user of Apostópolis. If you have any questions please contact one of the administrators.
+
+Registration 5.1.
+
+The first step to enter user Apostópolis will register. Start the application, and select the language in which they want to see implementation.
+Select the option to sign up.
+Then you will complete your personal data once it has done this will pose a short questionnaire about their preferences in order to provide a better service. The questionnaire is voluntary, and can not be declined to respond to any questions.
+Once you have completed the registration should expect notification in your email validating its high.
+It is important to note that at the time that you define a language, provided they start implementing this will be displayed in the language that you defined in the registry. To find out how to change your language see 5.2 covered by the display and modification of personal details.
+
+
+For the following options should be in the user menu. To access the menu user starts the application, select your language and sign. You can do this by selecting the log and entering then, for not using so much for your username and password.
+
+5.2 View / Change personal details.
+
+Once completed registration and discharged, you can view and edit their personal details.
+To view your personal details select see personal details. You can see the screen a list of all their personal details.
+To change these personal details select modify personal data of the user menu. You will be asked if you want to change any of your personal details that lets you change: Address your home, Zip, City, Country, Language and Currency.
+
+
+5.3 View preferences.
+
+Depending on its history as Apostópolis player, the system will develop a personal profile theirs. You can view this profile.
+To view the preferences choose show user preferences menu. You will be shown a list of all your preferences.
+
+5.4 Income and withdrawals credit.
+
+To enter or withdraw money from Apostópolis dríjase the user menu.
+Select the option income or receipts as desired.
+Both options need to enter your bank account number and the amount of money entering / withdraw.
+If the transaction is successful you will be informed by this display.
+
+5.5 unsubscribe.
+
+If you wish to unsubscribe from the betting house, go to the user menu and select unsubscribe. To validate the floor you have to enter your password. Once the insert, you will be asked once again if really want to be scrapped. If you will be confirmed as definitely low.
+
+5.6 forgot your password?
+
+If you forget your password can retrieve it from your secret question.
+Go to the main menu and select forgotten your password?.
+To recover your password will have to answer to his question. Once respond correctly will be sent an email enclosing your password.
+
+5.7 Change secret question.
+
+To change your secret question, please check with the user menu and select change secret question. To change your secret question in the first place you have to enter your password.
+Once introduced enter your new password secret question, then enter your new secret answer. Then your question and answer secret be updated.
+
+5.8 Change password.
+
+To change your password, select the menu change user password. First you must enter your current password. Once this is validated must enter the new password.
+
+Perform 5.9 bets.
+
+To make bets you can select one or more outcomes of the events that are available in Apostópolis.
+First go to the option of betting events and user menu and select show events.
+-- Select the type of events you want to view.
+-- Select the yardstick by which want to be listed events.
+-- Select the event you want to bet those offered.
+-- If any of the results of the selected event you are interested, please indicate that you want to bet on one of them and select it.
+Then you will be asked if you want to add more events to results of the stake (in the event that you are completing a bet multiple). If you select yes, you can repeat the steps above to select all the results of events that wants to gamble up to a maximum of eight.
+Once unwilling to add more results to the bet, you have to finish formalise. There are two ways to access the formalization of the bet:
+Selecting which does not want to add more events to bet when choosing a result.
+Selecting the option of betting and gambling events menu.
+
+Once access the formalization of the bet will have to enter the amount of money you want to gamble and in case of a bet system by the degree of the bet.
+If all the requirements for the bid are correct the bet must be made correctly.
+
+
+5.10 Need help deciding on his bet?
+
+From the profile Apostópolis made on the basis of its historical as a player, you have the option that the system offers a series of results which may choose to gamble. Selecting these results will be added to your bet, which can formalize selecting menu betting and gambling events.
+To access this advice select consult the adviser of betting and gambling events menu.
+
+
+5.11 View bets pending.
+
+If you want to see your bets pending select from the menu display outstanding betting and gambling events. He was listed all its outstanding betting starting with the simple, followed by the combined and finally the betting system.
+
+5.12 View historic betting and economic balance.
+
+If you want to see its historic betting and economic balance in his stay in Apostópolis select historical review of user menu.
+You will be showing all their bets that have already been resolved by indicating whether you won or lost, indicating the money earned in this case.
+Finally, we will show an overall profit and loss in betting, games and promotions.
+
+5.13 See historical events.
+
+To view the events occurred and select old events of the user menu. You get a listing of events already occurred. Select the desired and you will be presented with all the information highlighting the outcome of the event happened.
+
+5.14 Gambling.
+
+Besides betting events, it can also play games of chance. To access gambling select games in the user menu.
+There are four games: roulette, dice, blackjack and highest card and the minimum bet on any game is 2.5 euros.
+
+Instructions roulette
+It consists of hit some data on the outcome of the spin of a roulette wheel, the stakes are possible:
+* Score exact: is to find out the result of the launch of the roulette wheel, which is numbered from 0 to 36. The figure was 35 times the money invested.
+      * Score odd or even: predict whether the result is odd or even. The gain is equal
+        Money wagered
+      * Score red or black: predict whether the number is associated with the color red or black. The
+         Gain is equal to the money wagered.
+       * Dozen: guess if that result is one of the intervals: [1-12], and [13.24]
+          [25-36]. The gain is equal to twice the money wagered.
+
+Instructions of the dice:
+It consists of hit data about the launch of two facts. Any bets are:
+* Reusltado exact: is to find out the number that joined the dice (between 2 and 12). The gain is equal to eleven times the money wagered.
+* Score odd or even: ascertain whether the sum of the dice will be an odd or even number. The gain is equal to the money wagered.
+
+Instructions for the highest card:
+It involves getting a letter higher than banking. The gain is equal to the amount of money wagered.
+
+Instructions of blackjack:
+The dealer distributes 2 cards to each player. The player has the option to stay with those letters or letter requesting further without under any circumstances exceed the 21 points in which case they will lose the game. Wins finally having the highest number or get a blackjack.
+It gets in the first blackjack hand if you get a score of 21 points.
+The value of the Ace can be 1 or 10 points.
+Figures worth 10 points.
+Letters from 2 to 9 are worth as many points as their numerical value.
+The gain is equal to the money wagered.
+
+5.15 Standards.
+
+As a user of Apostópolis will have to follow these rules:
+Once perform a bet may not withdraw it.
+The manager is who decides high and is free to expel anyone.
+If at any time it is detected fraud on his part will be discharged automatically.
+If there is low withdraw money without leaving Apostópolis, that money becomes part of Apostópolis not have the right to claim you.

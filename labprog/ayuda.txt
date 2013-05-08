@@ -1,0 +1,315 @@
+MANUAL DE USUARIO
+
+
+El uso de esta documentación está sujeta a los siguientes términos: ustes puede crear una copia impresa de esta documentación únicamente para su uso personal. La conversión a otros formatos está permitida siempre y cuando el contenido no se vea alterado ni editado de ninguna manera. No está permitida la publicación ni la distribución de esta documentación bajo ninguna forma ni en ningún medio, excepto si distribuye la documentación en una manera similar a la que utiliza Apostópolis para difundirla (esto es, electrónicamente para ser descargada con el software) o en un CD-ROM o medio similar, siempre y cuando la documentación se difunda junto con el software en el mismo medio. Para cualquier otro uso, como, por ejemplo difusión de copias escritas, o el uso de esta documentación, en su totalidad o parcialmente, en otra publicación, se debe obtener una autorización escrita previa por parte de un representante autorizado de Apostópolis.  Apostópolis se reserva todos los derechos sobre esta documentación
+
+Documento generado el: 18-01-2008 (revisión: 3) 
+
+
+Tabla de contenidos.
+	1. Requisitos del sistema.
+	2. Instalar apostópolis en una máquina UNIX.
+	3. Ejecución de apostópolis.
+	4. Funciones de administrador.
+		4.1 Primeros pasos.
+		4.2 Aspectos a tener en cuenta.
+		4.3 Gestión de usuarios.
+			4.3.1 Dar altas.
+			4.3.2 Dar de baja.
+			4.3.3 Consultar datos de usuarios.
+			4.3.4 Consultar actividad de los usuarios.
+		4.4 Informes económicos.
+			4.4.1 Informe económico de un mes concreto.
+			4.4.2 Informe económico global.
+		4.5 Promociones/bonos.
+			4.5.1 Introducir nuevas promociones.
+			4.5.2 Ver promociones activas.
+			4.5.3 Eliminar promociones.
+			4.5.4 Pérdidas y ganancias de las promociones.
+		4.6 Introducción de nuevos eventos.
+		4.7 Resolución de eventos.
+
+	5. Funciones de usuario.
+		5.1 Registro.
+		5.2 Ver/Cambiar detalles personales.
+		5.3 Ver preferencias.
+		5.4 Ingresos y retiradas de crédito.
+		5.5 Darse de baja.
+		5.6 ¿Olvidó tu password?
+		5.7 Cambiar pregunta secreta.
+		5.8 Cambiar password.
+		5.9 Realizar apuestas.
+		5.10 ¿Necesita ayuda para decidirse en su apuesta?
+		5.11 Ver apuestas pendientes.
+		5.12 Ver histórico de apuestas y balance económico.
+		5.13 Consultar histórico de eventos.
+		5.14 Juegos de azar
+		5.15 Normas.
+	1. Requisitos del sistema.
+
+Usted debe instalar Apostópolis bajo una máquina Solaris UNIX para que se garantice su correcto funcionamiento. La máquina debe constar del compilador GCC y precompiladors ProC y tener por lo menos 3 MB de espacio libre en el disco duro.
+Además debe disponer de conexión a un servidor de bases de datos ORACLE.
+
+	2. Instalación de Apostópolis en una máquina UNIX.
+
+Copie todos los ficheros incluidos en el directorio donde quiere tener instalada la aplicación-
+Ejecute el siguiente comando: make
+Espere a que el sistema le devuelva el control. Verá aparecer diversos mensajes por pantalla pero no se preocupe, son parte de la instalación.
+Ejecute el comando: make clean
+Ya está lista la aplicación para ejecutarse, cerciórese de que dispone de los ficheros: spanish.txt, english.txt y deutsch.txt.
+Ejecute siempre Apostópolis en el directorio en el que lo ha instalado.
+
+	3. Ejecución de apostópolis.
+
+Para la ejecución de Apostópilis escriba el comando: principal en el directorio donde tiene instalada la aplicación Para la correcta visualización de la aplicación se recomienda su ejecución en una ventana maximizada del terminal.
+	4. Funciones de administrador.
+
+	4.1 Primeros pasos.
+
+A partir de ahora su tare consistirá en ser el administrador de Apostópolis. Existe una sola cuenta de administrador en esta versión, pero la aplicación está preparada para soportar concurrencia en el acceso a la base de datos,  de manera que varios administradores puedan emplear la misma cuenta de forma simultánea.
+A continuación le informamos del uso de todas las herramientas que tendrá a su disposición.
+
+En el momento en que ejecute la aplicación, tiene que autentificarse como administrador, para ello, en primer lugar, seleccione el idioma en el menú principal. Después, seleccione la opción iniciar sesión e introduzca su nombre y su contraseña.
+El nombre de usuario para la cuenta de administrador es: admin
+La contraseña es: 1234567
+
+Una vez inicie sesión la aplicación cambiará su idioma a inglés.
+
+	4.2 Aspectos a tener en cuenta.
+
+Sea consciente de que usted está utilizando una aplicación que maneja dinero real. Por seguridad, cuando se introducen eventos en la base de datos no se pueden modificar así que asegúrese de que introduce la información en el formato apropiado, es su responsabilidad.
+Para cualquier problema puede ponerse en contacto con el equipo de Apostópolis.
+
+	4.3 Gestión de usuarios.
+
+	4.3.1 Dar altas.
+
+Como administrador, su deber será encargarse de confirmar las altas de los usuarios que se registren. Para ello vaya a la opción tareas pendientes. Una vez ahí seleccione la opción usuarios pendientes de dar de alta y se le irán mostrando uno a uno los usuarios que están pendientes del alta. En caso de que haya un aspirante menor de edad se le notificará por pantalla.
+Para cada usuario usted tendrá que seleccionar si quiere darle el alta o no. En caso afirmativo pulse 'S' y en caso negativo pulse 'N'.
+Los aspirantes que dé de alta ya podrán utilizar la aplicación en su totalidad como usuarios. Los que no sean dados de alta seguirán pendientes de ser dados de alta. 
+Si quiere dar de baja a un usuario dado de alta o quiere que un usuario al que no ha dado de alta no siga apareciendo en los pendientes de alta consulte el apartado 4.3.2 para saber cómo dar de baja a los usuarios.
+
+	4.3.2 Dar de baja.
+
+Usted puede dar de baja a cualquier usuario, ya sea un usuario registrado o un usuario pendiente de alta. Las bajas dependen de su criterio personal. Se recomienda que sea cauto al efectuar bajas, ya que los usuarios que sean dados de baja perderán su crédito y no se les dará opción de recuperarlo.
+Apostópolis no se hace responsable de bajas indebidas.
+- Para dar una baja vaya al menú administrar usuarios.
+- Seleccione la opción dar de baja a un usuario.
+- Introduzca el nick del usuario a dar de baja.
+- Una vez lo introduzca, el usuario será dado de baja. En caso de que el usuario no exista se le informará de ello.
+
+	4.3.3 Consultar datos de usuarios.
+
+Para consultar los datos personales de un usuario vaya al menú administrar usuarios
+- Seleccione la opción ver datos de usuarios
+- Introduzca el nick del usuario
+- Si el usuario existe, se mostrará por pantalla toda su información personal.
+
+	4.3.4 Consultar actividad de los usuarios.
+
+Si quiere consultar la actividad de los usuarios, podrá ver un listado de las fechas de creación de cuenta y fecha de último inicio de sesión de todos los usuarios. Para ello vaya al menú administrar usuarios
+Seleccione la opción ver usuarios y fechas
+y la información solicitada aparecerá en pantalla. 
+
+	4.4 Informes económicos.
+	
+Para llevar la contabilidad de la casa de apuestas, usted puede obtener informes económicos acerca de las pérdidas y ganancias que se han obtenido debido a las apuestas y juegos de los usuarios. Dispone de dos tipos de informes: un mes concreto o uno que refleje la evolución completa de la casa de apuestas.
+
+	4.4.1 Informe económico de un mes concreto.
+
+- Vaya al menú informes de negocios. 
+- Seleccione la opción consultar informe económico mensual. 
+- Introduzca el mes cuyo informe económico desea obtener (en formato numérico, con dos dígitos).
+- Introduzca el año en formato numérico con cuatro dígitos.
+- Aparecerá por pantalla el informe del mes deseado. Pulse una tecla cualquiera. A continuación podrá optar por recibir el informe económico en su correo electrónico. Pulse 'S' en caso afirmativo.
+
+	4.4.2 Informe económico global.
+
+- Vaya al menú informes de negocios
+- Seleccione la opción consultar informe económico global
+- Se visualizará por pantalla este informe. Pulse una tecla cualquiera. A continuación podrá optar por recibir el informe económico en su correo electrónico. Pulse 'S' en caso afirmativo.
+
+
+	4.5 Promociones/bonos.
+
+Como administrador de Apostópolis será usted el encargado de activar y desactivar las promociones en según su criterio. Dispone de cuatro promociones distintas: Regalo inicial, regalo de efectivo, regalo de aniversario y regalo de cumpleaños. Las ofertas serán válidas para el rango de usuarios que usted especifique-
+
+	4.5.1 Introducir nuevas promociones.
+
+- Vaya al menú introducir/retirar ofertas.
+- Seleccione la opción introducir nuevas ofertas.
+- Seleccione el identificador de la oferta a activar entre las disponibles.
+- Seleccione el ranking de usuario a partir del cual será válida la oferta.
+- Una vez haya introducido estos datos la oferta ya habrá sido activada.
+
+
+	4.5.2 Ver promociones activas.
+
+- Vaya al menú introducir/retirar ofertas.
+- Seleccione la opción listar ofertas.
+- Podrá ver por pantalla el listado de todas las ofertas activas.
+- Pulse una tecla y volverá al menú anterior.
+
+
+	4.5.3 Eliminar promociones.
+
+- Vaya al menú introducir/retirar ofertas.
+- Seleccione la opción eliminar ofertas.
+- Podrá ver un listado de las ofertas activas. Seleccione la oferta que quiere desactivar.
+- Una vez seleccionada la oferta se desactivará.
+
+	4.5.4 Pérdidas y ganancias de las promociones.
+
+- Vaya al menú introducir/retirar ofertas.
+- Seleccione la opción eliminar ofertas.
+- Podrá ver un informe económico de las pérdidas que han supuesto las ofertas.
+
+
+	4.6 Introducción de nuevos eventos.
+
+Para introducir nuevos eventos vaya al menú introducir nuevos eventos.
+- Introduzca la descripción
+- Introduza el tipo de evento: futbol, f1 o social
+- Introduzca el grado de popularidad
+- Introduzca el máximo dinero apostable en euros.
+- Introduzca la fecha y hora exactas del comienzo del evento
+Una vez haya introducido estos datos comenzará la inserción de los posibles resultados. Para cada resultado tendrá que introducir una descripción y una cotización.
+Introduzca tantos resultados como quiera.
+
+	4.7 Resolución de eventos.
+
+Para resolver los eventos que ya se han celebrado, vaya al menú tareas pendientes
+Seleccione la opción introducir resultados.
+Obtendrá un listado de los eventos que tienen que ser resueltos. Seleccione el evento que quiere resolver.
+Una vez seleccionado el evento obtendrá un listado de los posibles resultados. Seleccione el resultado acontecido.
+Hecho esto,  el evento será tratado y se resolverán todas las apuestas que tenga relacionadas.
+
+
+	5. Funciones de usuario.
+
+A continuación tiene una descripción de las herramientas de las que dispone como usuario de Apostópolis. Para cualquier consulta póngase en contacto con uno de los administradores.
+
+	5.1 Registro.
+
+El primer paso ingresar como usuario de Apostópolis será el registro. Inicie la aplicación y seleccione el idioma en el que desea visualizar la aplicación.
+Seleccione la opción registrarme.
+A continuación tendrá que rellenar sus datos personales, una vez haya hecho esto se le planteará un breve cuestionario acerca de sus preferencias con el fin de ofrecerle un mejor servicio. Dicho cuestionario es voluntario, y puede ser declinado respondiendo no a todas las preguntas. 
+Una vez haya completado el registro deberá esperar una notificación en su correo electrónico validando su alta.
+Es importante que tenga en cuenta que, en el momento que usted defina un idioma, siempre que inicie la aplicación esta se mostrará en el idioma que usted definió en el registro. Para saber como cambiar su idioma consulte el apartado 5.2 que trata la visualización y modificación de detalles personales.
+
+
+Para las siguientes opciones ha de estar en el menú de usuario. Para acceder al menú de usuario inicie la aplicación, seleccione su idioma e inicie sesión. Podrá hacer esto seleccionando la opción iniciar sesión e introduciendo entonces, para no usar tantos para su nombre de usuario y contraseña.
+
+	5.2 Ver/Cambiar detalles personales.
+
+Una vez completado el registro y dado de alta, usted podrá ver y modificar sus detalles personales.
+Para ver sus detalles personales seleccione la opción ver detalles personales. Podrá ver por pantalla un listado de todos sus detalles personales.
+Para modificar estos detalles personales seleccione la opción modificar datos personales del menú de usuario. Se le irá preguntando si quiere cambiar cualquiera de sus detalles personales que se le permite cambiar: Dirección de su domicilio, Código Postal, Localidad, País, Divisa e Idioma.
+
+
+	5.3 Ver preferencias.
+	
+En función de su historia como jugador de Apostópolis, el sistema elaborará un perfil personal suyo. Usted puede consultar este perfil.
+Para consultar las preferencias seleccione la opción mostrar preferencias del menú de usuario. Se le mostrará un listado de todas sus preferencias.
+
+	5.4 Ingresos y retiradas de crédito.
+
+Para ingresar o retirar dinero de Apostópolis dríjase al menú de usuario.
+Seleccione la opción ingresos o cobros según le interese.
+En ambas opciones tendrá que introducir su número de cuenta bancaria y la cantidad de dinero a ingresar/retirar.
+Si la transacción se realiza con éxito se le informará de ello por pantalla.
+
+	5.5 Darse de baja.
+
+Si usted desea darse de baja de la casa de apuestas, vaya al menú de usuario y seleccione la opción darse de baja. Para validar la baja tendrá que introducir su contraseña. Una vez la introduzca, se le preguntará una vez más si de veras quiere darse de baja. Si usted lo confirma será dado definitivamente de baja.
+	
+	5.6 ¿Olvidó tu password?
+
+Si usted olvidó su password puede recuperarlo a partir de su pregunta secreta.
+Diríjase al menú principal y seleccione la opción Olvidaste tu password?.
+Para la recuperación de su password tendrá que responder correctamente a su pregunta secreta. Una vez responda de forma correcta se le enviará un correo electrónico adjuntando su contraseña.
+
+	5.7 Cambiar pregunta secreta.
+
+Para cambiar su pregunta secreta, acuda al menú de usuario y seleccione la opción cambiar pregunta secreta. Para cambiar su pregunta secreta en primer lugar tendrá que introducir su contraseña.
+Una vez introducida la contraseña introduzca su nueva pregunta secreta, seguidamente introduzca su nueva respuesta secreta. Hecho esto su pregunta y respuesta secreta se habrán actualizado.
+
+	5.8 Cambiar password.
+
+Para cambiar su contraseña seleccione la opción cambiar password del menú de usuario. En primer lugar deberá introducir su contraseña actual. Una vez esta sea validada deberá introducir la contraseña nueva.
+
+	5.9 Realizar apuestas.
+
+Para realizar apuestas usted podrá seleccionar uno o varios resultados de los eventos que tiene disponibles en Apostópolis.
+En primer lugar acuda a la opción eventos y apuestas del menú de usuario y seleccione la opción mostrar eventos. 
+- Seleccione el tipo de eventos que quiere consultar.
+- Seleccione el criterio por el que quiere que sean listados los eventos.
+- Seleccione el evento al que quiere apostar de los que se le ofrecen.
+- Si alguno de los resultados del evento seleccionado le interesa, indique que desea apostar a uno de los mismos y selecciónelo.
+A continuación se le preguntará si quiere añadir más resultados de eventos a la apuesta (en el caso de que esté usted cumplimentando una apuesta múltiple). Si selecciona la opción afirmativa, podrá repetir los pasos anteriores hasta seleccionar todos los resultados de eventos a los que desea apostar hasta un máximo de ocho.
+Una vez no quiera agregar más resultados a la apuesta, tendrá que terminar de formalizarla. Tiene dos maneras de acceder a la formalización de la apuesta:
+Seleccionando que no quiere agregar más eventos a la apuesta cuando elija un resultado.
+Seleccionando la opción apostar del menú eventos y apuestas.
+
+Una vez acceda a la formalización de la apuesta tendrá que introducir la cantidad de dinero que quiere apostar y en caso de que se trate de una apuesta por sistema el grado de la apuesta.
+Si todos los requisitos para la apuesta son correctos la apuesta se formalizará correctamente.
+
+
+	5.10 ¿Necesita ayuda para decidirse en su apuesta?
+
+A partir del perfil que Apostópolis realiza en función de su historico como jugador, tiene la opción de que el sistema le ofrezca una serie de resultados a los cuales puede optar apostar. Si selecciona resultados estos se agregarán a su apuesta, la cual puede formalizar seleccionando la opción apostar del menú eventos y apuestas.
+Para acceder a este asesoramiento seleccione la opción consultar al asesor de apuestas del menú eventos y apuestas.
+
+
+	5.11 Ver apuestas pendientes.
+
+Si quiere consultar sus apuestas pendientes de resolución seleccione la opción mostrar apuestas pendientes del menú eventos y apuestas. Se le listarán todas sus apuestas pendientes empezando por las simples, seguidas de las combinadas y por último las apuestas por sistema.
+
+	5.12 Ver histórico de apuestas y balance económico.
+
+Si quiere consultar su histórico de apuestas y su balance económico en su estancia en Apostópolis seleccione la opción revisar histórico del menú de usuario.
+Se le irán mostrando todas sus apuestas que ya se han resuelto indicando si usted perdió o ganó e indicando el dinero ganado en este caso.
+Por último se le mostrará un balance global de las pérdidas y ganancias en apuestas, en juegos y en promociones.
+
+	5.13 Consultar histórico de eventos.
+
+Para consultar los eventos ya sucedidos seleccione la opción eventos antiguos del menú de usuario. Obtendrá un listado de los eventos ya sucedidos. Seleccione el deseado y se le mostrará toda la información del evento resaltando el resultado que sucedió.
+
+	5.14 Juegos de azar.
+
+Además de apuestas a eventos, también puede jugar a juegos de azar. Para acceder a los juegos de azar seleccione la opción juegos del menú	de usuario.
+Dispone de cuatro juegos: ruleta, dados, carta más alta y blackjack y la apuesta mínima a cualquier juego es de 2,5 euros.
+
+Instrucciones de la ruleta
+Consiste en acertar ciertos datos acerca del resultado del giro de una ruleta, las apuestas posibles son:
+* Resultado exacto: consiste en averiguar el resultado del lanzamiento de la ruleta, el cual está comprendido entre los números 0 y 36. La ganancia es 35 veces el dinero apostado.
+     * Resultado par o impar: predecir si el resultado es par o impar. La ganancia es igual 
+       al dinero apostado
+     * Resultado rojo o negro: predecir si el color asociado al número es rojo o negro. La 
+        ganancia es igual al  dinero apostado.
+      * Docena: adivinar si el resultado corresponde a uno de los intervalos: [1-12], [13,24] y 
+         [25-36]. La ganancia es igual al doble del dinero apostado.
+
+Instrucciones de los dados:
+Consiste en acertar datos acerca del lanzamiento de dos datos. Las posibles apuestas son:
+* Reusltado exacto: consiste en averiguar el número que sumarán los dados (entre 2 y 12). La ganancia es igual a once veces el dinero apostado.
+* Resultado par o impar: averiguar si la suma de los dados será un número par o impar. La ganancia es igual al dinero apostado.
+
+Instrucciones de la carta más alta:
+Consiste en sacar una carta más alta que la banca. La ganancia es igual a la cantidad de dinero apostada.
+
+Instrucciones del blackjack:
+La banca reparte 2 cartas a cada jugador. El jugador tiene la posibilidad de quedarse con esas cartas o seguir pidiendo carta, sin superar en ningún caso los 21 puntos en cuyo caso perderá la partida. Gana finalmente el que tenga el número más alto o obtenga un blackjack.
+Se consigue blackjack si en la primera mano se obtiene una puntuación de 21 puntos. 
+El valor del As puede ser 1 ó 10 puntos.
+Las figuras valen 10 puntos.
+Las cartas del 2 al 9 valen tantos puntos como su valor numérico.
+La ganancia es igual al dinero apostado.
+
+	5.15 Normas.
+
+Como usuario de Apostópolis tendrá que seguir las siguientes normas:
+Una vez realice una apuesta no podrá retirarla.
+El administrador es quién decide las altas y tiene libertad para expulsar a cualquier usuario.
+Si en algún momento se detecta fraude por su parte será dado de baja de forma automática.
+Si se da de baja quedando dinero sin retirar de Apostópolis, ese dinero pasará a ser parte de Apostópolis sin tener derecho usted a reclamarlo.

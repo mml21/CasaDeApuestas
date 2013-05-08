@@ -1,0 +1,740 @@
+/* MODULO DE JUEGOS EN TIEMPO REAL
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Fichero de definicion del modulo de juegos */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include <time.h>
+#include "macros.h"
+#include "escape.h"
+#include <synch.h>
+
+EXEC SQL INCLUDE juegos;
+
+extern sema_t mutex; /* Definida en interfaz.pc */
+float a_euros (float dolares);
+int restar_saldo (char nick[NICK_LEN], float cantidad);
+int ingresar_credito (char id_usuario[NICK_LEN], float ganancias);
+
+
+/* Operaciones basicas del modulo: */
+
+
+int jugarDados (struct usuario *user, perfilUsuario *perfil, int opcion, datosJuegos *datos)
+{
+  int listo, exito, numero, dado1, dado2, resultado;
+  float cantidad, apostada;
+
+  if (pedir_datos_dados(user,opcion,&cantidad,&numero) == -1) return 0;
+  apostada = cantidad;
+  if (user->divisa == DOLAR) datos->totalJuegos += a_euros(cantidad);
+  else datos->totalJuegos += cantidad;  
+  exito = accederPerfilUsuario(user, perfil);
+  if (exito != TRUE) printf("Error al acceder al perfil del usuario\n");
+  tirarDados(&dado1, &dado2, &resultado);
+  if (mostrar_resultado_dados(&cantidad,dado1,dado2,opcion,user,numero))
+  {
+     if (user->divisa == DOLAR) 
+     { 
+       ingresar_credito(user->nick, a_euros(cantidad));
+       datos->gananciasJuegos += a_euros(cantidad) + a_euros(apostada);
+       user->saldo = user->saldo +  a_euros(cantidad); 
+     }
+     else 
+     { 
+       ingresar_credito (user->nick,cantidad);
+       datos->gananciasJuegos += cantidad + apostada;
+       user->saldo += cantidad;
+     }      
+  }
+  else 
+  {
+    if (user->divisa == DOLAR) user->saldo = user->saldo - a_euros(apostada);
+    else user->saldo = user->saldo - apostada;
+    if (user->divisa == DOLAR) restar_saldo(user->nick, a_euros(apostada));
+    else restar_saldo(user->nick, apostada); 
+    
+  }
+  /* Actualizar perfil del usuario */
+  exito = actualizarPerfilUsuarioTrasJugar(perfil, DADOS);
+  if (exito != TRUE) printf("Ha ocurrido algun tipo de error al actualizar el perfil");
+}
+
+
+void jugarRuleta (struct usuario *user, perfilUsuario *perfil, int opcion, datosJuegos *datos)
+{
+  int listo, exito, numero;
+  float cantidad, apostada;
+  struct tpResulRuleta resultado;
+
+  /* Falta considerar si sale el 0, dividir a la mitad lo que apuesta? */
+  exito = accederPerfilUsuario(user, perfil);
+  if (exito != TRUE) printf("Error al acceder al perfil del usuario\n");
+  if ((exito = pedir_datos_ruleta(user,opcion,&cantidad,&numero)) == 0) return;
+  apostada = cantidad;
+  if (user->divisa == DOLAR) datos->totalJuegos += a_euros(cantidad);
+  else datos->totalJuegos += cantidad;  
+  if (exito)
+  {
+    moverRuleta(&resultado);
+    if (mostrar_resultados_ruleta(opcion,resultado,&cantidad,numero,user))
+    {
+      if (user->divisa == DOLAR) 
+      { 
+        ingresar_credito(user->nick, a_euros(cantidad));
+        datos->gananciasJuegos += a_euros(cantidad) + a_euros(apostada);
+        user->saldo = user->saldo +  a_euros(cantidad); 
+      }
+      else 
+      { 
+         ingresar_credito (user->nick,cantidad);
+         datos->gananciasJuegos += cantidad + apostada;
+         user->saldo += cantidad;
+       }      
+    }
+    else 
+    {
+      if (user->divisa == DOLAR) user->saldo = user->saldo - a_euros(apostada);
+      else user->saldo = user->saldo - apostada;
+      if (user->divisa == DOLAR) restar_saldo(user->nick, a_euros(apostada));
+      else restar_saldo(user->nick, apostada); 
+    
+    }  
+  /* Actualizar perfil del usuario */
+  exito = actualizarPerfilUsuarioTrasJugar(perfil, RULETA);
+  if (exito != TRUE) printf("Ha ocurrido algun tipo de error al actualizar el perfil");
+  }
+}
+
+
+void tirarDados (int *dado1, int *dado2, int *resultado)
+{
+  long ltime;
+  int i, stime;
+  
+  /* Inicializacion aleatoria de la semilla con la hora
+     del sistema para que las secuencias de numeros
+     pseudoaleatorios sean diferentes en las distintas
+     ejecuciones */
+
+  /* Obtenemos la hora actual */
+  ltime = time(NULL);
+  stime = (unsigned) ltime/2;
+  srand(stime);
+
+  *dado1 = (int) rand() % 6;
+  *dado2 = (int) rand() % 6;
+
+  if (*dado1 == 0) *dado1 = 6;
+  if (*dado2 == 0) *dado2 = 6;
+
+  *resultado = *dado1 + *dado2;
+}
+   
+   
+void moverRuleta (struct tpResulRuleta *resultado)
+{
+  long ltime;
+  int i, stime, sumaCifras;
+  
+  /* Inicializacion aleatoria de la semilla con la hora
+     del sistema para que las secuencias de numeros
+     pseudoaleatorios sean diferentes en las distintas
+     ejecuciones */
+
+  /* Obtenemos la hora actual */
+  ltime = time(NULL);
+  stime = (unsigned) ltime/2;
+  srand(stime);
+  
+  resultado->numero = rand() % 37;
+  /* Obtenemos el color del numero correspondiente */
+  if (resultado->numero == 0) resultado->color = NULL;
+  else if (resultado->numero == 10) resultado->color = 'N'; /* Las 3 excepciones */
+  else if (resultado->numero == 29) resultado->color = 'N';
+  else if (resultado->numero == 19) resultado->color = 'R';
+  else /* Regla general */
+  {
+    /* si la reduccion de la suma de sus digitos es par negro, sino rojo */ 
+    sumaCifras = (resultado->numero % 10) + (resultado->numero / 10);
+    if (sumaCifras % 2 == 0) resultado->color = 'N';
+    else resultado->color = 'R';
+  }
+}
+
+
+void jugarCartaMasAlta (struct usuario *user, perfilUsuario *perfil, int opcion, datosJuegos *datos)
+{
+  int listo, exito, numero;
+  float cantidad, apostada;
+  tpCarta cartaUsuario, cartaMaquina;
+
+  exito = accederPerfilUsuario(user, perfil);
+  if (exito != TRUE) printf("Error al acceder al perfil del usuario\n");
+  if ((exito = pedir_datos_carta(user,&cantidad)) == 0) return;
+  if (user->divisa == DOLAR) datos->totalJuegos += a_euros(cantidad);
+  else datos->totalJuegos += cantidad;  
+  apostada = cantidad;
+  if (exito)
+  {
+    sacarCarta(&cartaUsuario); 
+    printf("\n\t%s\n",frase("puls_enter_maq")); 
+    fflush(stdout); lsem(); __fpurge(stdin); leer_caracter_oculto();
+    sacarCarta(&cartaMaquina);
+    if (mostrar_resultados_carta(opcion,cartaUsuario,cartaMaquina,&cantidad,user))
+    {
+      if (user->divisa == DOLAR) 
+      { 
+        ingresar_credito(user->nick, a_euros(cantidad));
+        datos->gananciasJuegos += a_euros(cantidad) + a_euros(apostada);
+        user->saldo = user->saldo +  a_euros(cantidad); 
+      }
+      else 
+      { 
+         ingresar_credito (user->nick,cantidad);
+         datos->gananciasJuegos += cantidad + apostada;
+         user->saldo += cantidad;
+       }      
+    }
+    else 
+    {
+      if (user->divisa == DOLAR) user->saldo = user->saldo - a_euros(apostada);
+      else user->saldo = user->saldo - apostada;
+      if (user->divisa == DOLAR) restar_saldo(user->nick, a_euros(apostada));
+      else restar_saldo(user->nick, apostada); 
+    }  
+    /* Actualizar perfil del usuario */
+    exito = actualizarPerfilUsuarioTrasJugar(perfil, CARTA);
+    if (exito != TRUE) printf("Ha ocurrido algun tipo de error al actualizar el perfil");
+  }
+}
+
+
+void sacarCarta (tpCarta *carta)
+{
+  long ltime;
+  int stime;
+  
+  /* Inicializacion aleatoria de la semilla con la hora
+     del sistema para que las secuencias de numeros
+     pseudoaleatorios sean diferentes en las distintas
+     ejecuciones */
+
+  /* Obtenemos la hora actual */
+  ltime = time(NULL);
+  stime = (unsigned) ltime/2;
+  srand(stime);
+
+  *carta = (int) rand() % 13;
+  
+  if (*carta == 0) *carta = 1;
+  
+}
+
+
+/* Funciones del juego BlackJack */
+
+
+static time_t semilla = 0;
+
+
+void barajar(tpBaraja *pbaraja)
+{
+  /* permite contabilizar los numeros utilizados */
+  int retirados[TAMBARAJA] = {0};
+  int i;
+
+  /* Inicializacion aleatoria */
+  if(0 == semilla)
+  {
+    semilla = time(NULL);
+    srand(semilla);
+  }
+  for(i = 0; i < TAMBARAJA; i++)
+  {
+    int valor = -1;
+    do
+    {
+      valor = rand() % TAMBARAJA;
+    }
+    while(retirados[valor] != 0);
+
+    /* marcar valor como utilizado */
+    retirados[valor] = 1;
+    pbaraja->naipe[i] = valor;
+  }
+  pbaraja->repartidos = 0;
+  return;
+}
+
+
+int valor_carta(int cartas, int total, int mostrar)
+{
+  switch(cartas){
+    case 0: if (mostrar) diamantes(1); 
+            if(total>10) total=total+1; else total=total+11;
+	    break;
+    case 1: if (mostrar) diamantes(2); 
+            total=total+2; 
+	    break;
+    case 2: if (mostrar) diamantes(3);
+            total=total+3;
+	    break;
+    case 3: if (mostrar) diamantes(4);
+            total=total+4;
+	    break;
+    case 4: if (mostrar) diamantes(5);
+            total=total+5;
+	    break;
+    case 5: if (mostrar) diamantes(6);
+	    total=total+6;
+	    break;
+    case 6: if (mostrar) diamantes(7);
+            total=total+7;
+	    break;
+    case 7: if (mostrar) diamantes(8);
+            total=total+8;
+	    break;
+    case 8: if (mostrar) diamantes(9);
+            total=total+9;
+	    break;
+    case 9: if (mostrar) diamantes(10);
+            total=total+10;
+	    break;
+    case 10: if (mostrar) diamantes(11);
+             total=total+10;
+	     break;	  
+    case 11: if (mostrar) diamantes(12);
+             total=total+10;
+	     break;    
+    case 12: if (mostrar) corazones(1);
+             if(total>10) total=total+1; else total=total+11;
+	     break;
+    case 13: if (mostrar) corazones(2);
+             total=total+2;
+	     break;
+    case 14: if (mostrar) corazones(3);
+             total=total+3;
+	     break;
+    case 15: if (mostrar) corazones(4);
+             total=total+4;
+	     break;
+    case 16: if (mostrar) corazones(5);
+             total=total+5;
+	     break;
+    case 17: if (mostrar) corazones(6);
+             total=total+6;
+	     break;
+    case 18: if (mostrar) corazones(7);
+             total=total+7;
+	     break;
+    case 19: if (mostrar) corazones(8);
+             total=total+8;
+	     break;
+    case 20: if (mostrar) corazones(9);
+             total=total+9;
+	     break;
+    case 21: if (mostrar) corazones(10);
+             total=total+10;
+	     break;
+    case 22: if (mostrar) corazones(11);
+             total=total+10;
+	     break;
+    case 23: if (mostrar) corazones(12);
+             total=total+10;
+	     break;
+    case 24: if (mostrar) treboles(1);
+             if(total>10) total=total+1; else total=total+11;
+	     break;
+    case 25: if (mostrar) treboles(2);
+             total=total+2;
+	     break;
+    case 26: if (mostrar) treboles(3);
+             total=total+3;
+	     break;
+    case 27: if (mostrar) treboles(4);
+             total=total+4;
+	     break;
+    case 28: if (mostrar) treboles(5);
+    	     total=total+5;
+	     break;
+    case 29: if (mostrar) treboles(6);
+             total=total+6;
+	     break;
+    case 30: if (mostrar) treboles(7);
+             total=total+7;
+	     break;
+    case 31: if (mostrar) treboles(8);
+             total=total+8;
+	     break;
+    case 32: if (mostrar) treboles(9);
+             total=total+9;
+	     break;
+    case 33: if (mostrar) treboles(10);
+             total=total+10;
+	     break;
+    case 34: if (mostrar) treboles(11);
+             total=total+10;
+	     break;
+    case 35: if (mostrar) treboles(12);
+             total=total+10;
+	     break;
+    case 36: if (mostrar) picas(1);
+             if(total>10) total=total+1; else total=total+11;
+	     break;
+    case 37: if (mostrar) picas(2);
+             total=total+2;
+	     break;
+    case 38: if (mostrar) picas(3);
+             total=total+3;
+	     break;
+    case 39: if (mostrar) picas(4);
+             total=total+4;
+	     break;
+    case 40: if (mostrar) picas(5);
+             total=total+5;
+	     break;
+    case 41: if (mostrar) picas(6);
+             total=total+6;
+	     break;
+    case 42: if (mostrar) picas(7);
+             total=total+7;
+	     break;
+    case 43: if (mostrar) picas(8);
+             total=total+8;
+	     break;
+    case 44: if (mostrar) picas(9);
+             total=total+9;
+	     break;
+    case 45: if (mostrar) picas(10);
+    	     total=total+10;
+	     break;
+    case 46: if (mostrar) picas(11);
+             total=total+10;
+	     break;
+    case 47: if (mostrar) picas(12);
+             total=total+10;
+	     break;
+  }
+  return total;
+}
+
+
+void diamantes(int numero)
+{
+  csem();
+  if (numero == 1) { printf("%s ",frase("ha_sal")); printf("%s",frase("as")); printf(" %s\n",frase("de_diam"));}
+  else if (numero == 10) { printf("%s ",frase("ha_sal")); printf("%s",frase("sot")); printf(" %s\n",frase("de_diam"));}
+  else if (numero == 11) { printf("%s ",frase("ha_sal")); printf("%s",frase("cab")); printf(" %s\n",frase("de_diam"));}
+  else if (numero == 12) { printf("%s ",frase("ha_sal")); printf("%s",frase("rey")); printf(" %s\n",frase("de_diam"));}
+  else { printf("%s ",frase("ha_sal")); printf("%d %s\n", numero,frase("de_diam"));}
+  lsem();
+}
+
+
+void corazones(int numero)
+{
+  csem();
+  if (numero == 1) { printf("%s ",frase("ha_sal")); printf("%s",frase("as")); printf(" %s\n",frase("de_cor"));}
+  else if (numero == 10) { printf("%s ",frase("ha_sal")); printf("%s",frase("sot")); printf(" %s\n",frase("de_cor"));}
+  else if (numero == 11) { printf("%s ",frase("ha_sal")); printf("%s",frase("cab")); printf(" %s\n",frase("de_cor"));}
+  else if (numero == 12) { printf("%s ",frase("ha_sal")); printf("%s",frase("rey")); printf(" %s\n",frase("de_cor"));}
+  else { printf("%s ",frase("ha_sal")); printf("%d %s\n", numero,frase("de_cor"));}
+  lsem();
+}
+
+
+void treboles(int numero)
+{
+  csem();
+  if (numero == 1) { printf("%s ",frase("ha_sal")); printf("%s",frase("as")); printf(" %s\n",frase("de_treb"));}
+  else if (numero == 10) { printf("%s ",frase("ha_sal")); printf("%s",frase("sot")); printf(" %s\n",frase("de_treb"));}
+  else if (numero == 11) { printf("%s ",frase("ha_sal")); printf("%s",frase("cab")); printf(" %s\n",frase("de_treb"));}
+  else if (numero == 12) { printf("%s ",frase("ha_sal")); printf("%s",frase("rey")); printf(" %s\n",frase("de_treb"));}
+  else { printf("%s ",frase("ha_sal")); printf("%d %s\n", numero,frase("de_treb"));}
+  lsem();
+}
+
+
+void picas(int numero)
+{
+  csem();
+  if (numero == 1) { printf("%s ",frase("ha_sal")); printf("%s",frase("as")); printf(" %s\n",frase("de_pic"));}
+  else if (numero == 10) { printf("%s ",frase("ha_sal")); printf("%s",frase("sot")); printf(" %s\n",frase("de_pic"));}
+  else if (numero == 11) { printf("%s ",frase("ha_sal")); printf("%s",frase("cab")); printf(" %s\n",frase("de_pic"));}
+  else if (numero == 12) { printf("%s ",frase("ha_sal")); printf("%s",frase("rey")); printf(" %s\n",frase("de_pic"));}
+  else { printf("%s ",frase("ha_sal")); printf("%d %s\n", numero,frase("de_pic"));}
+  lsem();
+}
+
+
+int coger_carta(tpBaraja *baraja, tpJugador *jugador, int mostrar)
+{
+  int numero;
+
+  /* Cogemos una carta de la baraja */
+  numero = baraja->naipe[baraja->repartidos];
+  baraja->repartidos++;
+  jugador->naipe[jugador->numCartas] = numero;
+  jugador->numCartas++;
+  jugador->puntuacion = valor_carta(numero, jugador->puntuacion, mostrar);
+  return numero;
+}
+
+
+
+void jugarBlackJack (struct usuario *user, perfilUsuario *perfil, int opcion, datosJuegos *datos)
+{
+  int listo, exito, numero;
+  float cantidad, apostada;
+  tpBaraja baraja;
+  tpJugador usuario, maquina;
+  int plantadoJugador = 0, plantadaMaquina = 0, fin = 0, ganaJugador = 0, ganaMaquina = 0, empate = 0;
+  char resp;
+  int mostrar = 1;
+  
+  usuario.numCartas = 0; maquina.numCartas = 0;
+  usuario.puntuacion = 0; maquina.puntuacion = 0;
+  
+  exito = accederPerfilUsuario(user, perfil);
+  if (exito != TRUE) printf("Error al acceder al perfil del usuario\n");
+  if (pedir_datos_blackjack(user,&cantidad) == 0) return;
+  if (user->divisa == DOLAR) datos->totalJuegos += a_euros(cantidad);
+  else datos->totalJuegos += cantidad;  
+  apostada = cantidad;
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  csem();
+  printf("\n\n\n\t\t%s\n",frase("comen_black"));
+  printf("\t%s...\n\n",frase("barajando"));
+  lsem();
+  barajar(&baraja);
+
+  /* Reparte las dos primeras cartas de cada jugador */
+
+  csem();
+  printf("\t\t");
+  subrayado();
+  negrita();
+  printf("%s",frase("us_may"));
+  no_negrita();
+  no_subrayado();
+  printf("\n\n %s...\n",frase("dos_cart"));
+  printf("  ");
+  lsem();
+  coger_carta(&baraja, &usuario, mostrar); 
+  csem();
+  printf("  ");
+  lsem();
+  coger_carta(&baraja, &usuario, mostrar);
+  csem();
+  printf("\t%s: %d\n\n\n\t\t",frase("punt_us"),usuario.puntuacion);
+  subrayado();
+  negrita();
+  printf("%s",frase("maq_may"));
+  no_negrita();
+  no_subrayado();
+  printf("\n\n  %s...\n",frase("dos_cart_maq"));
+  printf("  ");
+  lsem();
+  coger_carta(&baraja, &maquina, mostrar);
+  csem();
+  printf("  ");
+  lsem();
+  coger_carta(&baraja, &maquina, mostrar);
+  printf("\t%s: %d\n",frase("punt_maq"),maquina.puntuacion);
+  
+    
+  if ((maquina.puntuacion == PUNTUACION_MAX) && (usuario.puntuacion == PUNTUACION_MAX))
+  {
+    printf("%s\n",frase("emp_black"));
+    empate = 1; fin = 1;
+  }
+  else if (maquina.puntuacion == PUNTUACION_MAX)
+  {
+    printf("\n%s\n",frase("maq_black"));
+    printf("%s %d\n",frase("maq_g_punt"),maquina.puntuacion);
+    printf("%s %d\n",frase("us_pierde_punt"), usuario.puntuacion);
+    fin = 1; ganaMaquina = 1;
+  }
+  else if (usuario.puntuacion == PUNTUACION_MAX)
+  {
+    printf("\n%s\n",frase("us_black"));
+    printf("%s %d\n",frase("us_g_punt"), usuario.puntuacion);
+    printf("%s %d\n",frase("maq_p_punt"), maquina.puntuacion);
+    fin = 1; ganaJugador = 1;
+  }
+  
+    /* Verificar ganador */
+
+    if (usuario.puntuacion > PUNTUACION_MAX && maquina.puntuacion > PUNTUACION_MAX)
+    {
+      csem();
+      printf("\n%s\n",frase("pierden_ambos"));
+      lsem();
+      fin = 1;
+    }
+   
+    else if (usuario.puntuacion > PUNTUACION_MAX)
+    {
+      csem();
+      printf("\n%s\n",frase("pierde_jug"));
+      lsem();
+      fin = 1;
+    }
+
+    else if (maquina.puntuacion > PUNTUACION_MAX)
+    {
+      csem();
+      printf("\n%s\n",frase("maq_pierde"));
+      lsem();
+      fin = 1;
+    }
+
+    if (usuario.puntuacion == PUNTUACION_MAX)
+    {
+      csem();
+      printf("\n%s\n",frase("jug_g_black"));
+      lsem();
+      fin = 1; ganaJugador = 1;
+    }
+
+  while (!fin)
+  {  
+    if ( (plantadaMaquina) && (plantadoJugador) )
+    {
+      /* Ver quien ha ganado */      
+      if (maquina.puntuacion > usuario.puntuacion)
+      {
+        csem();
+        printf("\n\n%s %d\n",frase("maq_g_punt"), maquina.puntuacion);
+        printf("%s %d\n",frase("us_pierde_punt"), usuario.puntuacion);
+	lsem();
+	fin = 1; ganaMaquina = 1;
+      }
+      else if (maquina.puntuacion < usuario.puntuacion)
+      {
+        csem();
+        printf("\n\n%s %d\n",frase("us_g_punt"), usuario.puntuacion);
+        printf("%s %d\n",frase("us_pierde_punt"), maquina.puntuacion);
+	lsem();
+	fin = 1; ganaJugador = 1;
+      }
+      else /* Empate */
+      {
+        printf("\n%s %d\n",frase("empate_punt"), usuario.puntuacion);
+	fin = 1; empate = 1;
+      }
+    }
+
+    /* Miramos a ver si hay que repartir carta al jugador */
+
+    if (!plantadoJugador && !fin)
+    {
+      csem();
+      printf("%s",frase("nueva_carta"));
+      lsem();
+      resp = leer_caracter_oculto(); 
+      if (resp=='n' || resp=='N')
+      {
+        /* El jugador se planta */
+        plantadoJugador = 1;
+      }
+      else
+      {
+        /* Darle carta al jugador */
+	limpiar_pantalla();
+	mostrar_cabecera(cliente,user);
+	csem();
+	printf("\n\n\t");
+	negrita();
+	subrayado();
+	printf("%s",frase("us_may"));
+	no_negrita();
+	no_subrayado();
+	printf("\n\n\n  %s: ",frase("cart_nuev_jug"));
+	lsem();
+        coger_carta(&baraja, &usuario, mostrar);
+	printf("\n\t%s: %d\n",frase("punt_us"),usuario.puntuacion);
+	if (usuario.puntuacion > PUNTUACION_MAX)
+        {
+          printf("\n\t%s\n",frase("pierde_jug"));
+          fin = 1; ganaMaquina = 1;
+	}
+      }
+    }
+
+    /* Miramos a ver si hay que repartir carta a la maquina */
+
+    if (maquina.puntuacion <= 16 && !fin)
+    {
+      /* La maquina pide nueva carta */
+      csem();
+      printf("\n\n\t");
+      negrita();
+      subrayado();
+      printf("%s",frase("maq_may"));
+      no_negrita();
+      no_subrayado();
+      printf("\n\n  %s: ",frase("nuev_cart_maq"));
+      lsem();
+      coger_carta(&baraja, &maquina, mostrar);
+      printf("\n\t%s: %d\n",frase("punt_maq"),maquina.puntuacion);
+      if (maquina.puntuacion > PUNTUACION_MAX)
+      {
+        printf("\n\t%s\n",frase("maq_pierde"));
+        fin = 1; ganaJugador = 1;
+      }
+    }
+    else /* La maquina se planta */
+    {     
+      plantadaMaquina = 1;
+    }
+    if (fin) { csem(); printf("\n%s\n",frase("fin_black")); lsem(); break; }
+ }
+ 
+ if (ganaJugador)
+ {
+   if (user-> divisa == EURO) 
+   {  
+      user -> saldo += cantidad;
+      ingresar_credito(user->nick,cantidad);
+      datos->gananciasJuegos += cantidad + apostada;
+   }
+   else
+  {
+     user -> saldo = user->saldo + a_euros(cantidad);
+     ingresar_credito(user->nick,a_euros(cantidad));
+     datos->gananciasJuegos += a_euros(cantidad + apostada);
+  }
+ }
+ else if (!empate)
+ {
+   if (user-> divisa == EURO) 
+   {  
+      user -> saldo -= apostada;
+      restar_saldo(user->nick,apostada); 
+   }
+   else
+   {
+      user -> saldo = user->saldo - a_euros(apostada);
+      restar_saldo(user->nick,a_euros(apostada)); 
+   }
+ }
+ /* Actualizar perfil del usuario */
+ exito = actualizarPerfilUsuarioTrasJugar(perfil, BLACKJACK);
+ if (exito != TRUE) printf("Ha ocurrido algun tipo de error al actualizar el perfil");
+ 
+ csem();
+ printf("\n\n%s\n",frase("puls_enter"));
+ lsem();
+ __fpurge(stdin);
+ leer_caracter_oculto(); 
+}
+

@@ -1,0 +1,267 @@
+/* PARSER DE EVENTOS Y RESULTADOS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Programa que introduce eventos y resultados
+                de partidos de futbol a partir de ficheros de texto 
+		de miapuesta.com en la B.D. de la Casa de Apuestas .
+   OBSERVACIONES: Leer parser.txt para usarlo */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlca.h>
+#include <sqlcpr.h>
+#include <oraca.h>
+#include <ctype.h>
+#include "macros.h"
+
+EXEC SQL INCLUDE gestion_eventos;
+
+
+typedef struct 
+{
+  float local;
+  float empate;
+  float visitante;
+} posResul;
+
+/* ---------------- Comienzo de alusiones --------------------- */
+
+char * leerNombreEvento(char *linea);
+char * leerFecha(char *linea);
+int leerResultadosEvento(char *linea, posResul *resultados);
+void conectarOracle();
+void desconectarOracle();
+void strToVARCHAR (char *orig, VARCHAR *dest);
+
+/* ---------------- Fin de alusiones --------------------------- */
+
+  
+
+/* -------------- Inicio del programa principal ---------------- */
+
+main() 
+{
+  FILE *f;
+  char linea[201], linea2[201], linea3[201], nomFich[50], *resul, *nomEvento, *fechaInicio;
+  int i = 0, j, exito;
+  posResul res;
+  tuplaResul resultado;
+  tuplaEvento evento;
+  char usuario;
+  
+  printf("nombre de usuario de la BD: "); scanf("%s", &usuario);
+  conectarOracle(&usuario,"lalala"); fflush(stdin);
+
+  printf("Nombre del fichero: "); gets(nomFich);
+  if ((f = fopen( nomFich, "r" )) == NULL )
+  {
+    printf("ERROR al abrir el fichero");
+    exit(-1);
+  }
+  
+  while ( (!feof(f)) ) 
+  { 
+    resul = fgets(linea, 200, f);
+    if (resul == NULL) 
+    {
+      /* printf("Fin del fichero\n"); */
+      exit(-1);
+    }
+    resul = strcpy(linea2,linea);
+    nomEvento = leerNombreEvento(linea); 
+    strToVARCHAR(nomEvento, (VARCHAR *)&evento.descripcion);    
+    printf("Nombre evento: %s\n", evento.descripcion.arr);
+    printf("Longitud evento: %d\n", (int) strlen(evento.descripcion.arr)); 
+    j = (int) strlen(nomEvento) + 1; i=0;
+    while (linea2[j] != '\n')
+    {
+      linea[i] = linea2[j];
+      i++; j++;
+    }
+    linea[i] = NULL; 
+    resul = strcpy(linea2,linea);
+    fechaInicio = leerFecha(linea); 
+    strcpy(evento.fechaInicio, fechaInicio);
+    printf("Fecha de fin del evento: %s\n", evento.fechaInicio);
+    j = (int) strlen(fechaInicio) + 4 ; i = 0;
+    while (linea2[j] != '\n')
+    {
+      linea[i] = linea2[j];
+      i++; j++;
+    }
+    linea[i] = NULL;
+    leerResultadosEvento(linea, &res); 
+    printf("Local: %4.2f\n", res.local);
+    printf("Empate: %4.2f\n", res.empate);
+    printf("Visitante: %4.2f\n", res.visitante);
+    
+    /* Insertamos en la B.D. los datos */
+    
+    evento.idEvento = generar_id_evento(); 
+    strToVARCHAR("admin", (VARCHAR*)&evento.nickAdmin); 
+    printf("Nombre admin: %s\n", evento.nickAdmin.arr); 
+    evento.tipoEvento = FUTBOL;
+    evento.popularidad = 9;
+    evento.haSucedido = 0;
+    evento.maxApostable = 150.5; 
+    exito = introducir_evento(&evento);
+    if (exito > 0) 
+      printf("El evento se ha introducido en la BD satisfactoriamente.\n");
+    else
+      printf("Ha ocurrido algun error al introducir el evento en la BD.\n");
+    resultado.idPosResul = generar_id_resultado();
+    resultado.idEvento = evento.idEvento;
+    resultado.haOcurrido = 0;
+    strToVARCHAR("Local", (VARCHAR *)&resultado.infoResul); 
+    resultado.cotizacion = res.local;
+    exito = introducir_pos_resultado(&resultado);  
+    if (exito > 0 )
+      printf("El resultado se ha introducido en la BD satisfactoriamente.\n");
+    else
+      printf("Ha ocurrido algun error al introducir el resultado en la BD.\n");
+    resultado.idPosResul = generar_id_resultado();
+    strToVARCHAR("Empate", (VARCHAR *)&resultado.infoResul); 
+    resultado.cotizacion = res.empate;
+    exito = introducir_pos_resultado(&resultado); 
+    if (exito > 0 )
+      printf("El resultado se ha introducido en la BD satisfactoriamente.\n");
+    else
+      printf("Ha ocurrido algun error al introducir el resultado en la BD.\n");
+    resultado.idPosResul = generar_id_resultado();
+    strToVARCHAR("Visitante", (VARCHAR *)&resultado.infoResul); 
+    resultado.cotizacion = res.visitante;
+    exito = introducir_pos_resultado(&resultado); 
+    if (exito > 0 )
+      printf("El resultado se ha introducido en la BD satisfactoriamente.\n");  
+    else
+      printf("Ha ocurrido algun error al introducir el resultado en la BD.\n"); 
+  }   
+  
+  if (fclose(f) == EOF)
+    printf("Error al cerrar el fichero\n");
+    
+  desconectarOracle();
+  
+}
+
+
+char * leerNombreEvento(char *linea) 
+{
+  /* Leer hasta el primer caracter '/' y luego volver 2 caracteres
+     hacia atras (los correspondientes al dia de la fecha) */
+    
+  char *ptr, *aux;
+
+  ptr = strtok(linea, "/"); 
+  aux = ptr;
+  
+  while ((*aux != '1') && (*aux != '2')
+    && (*aux != '3') && (*aux != '4') 
+    && (*aux != '5') && (*aux != '6')
+    && (*aux != '7') && (*aux != '8')
+    && (*aux != '9') && (*aux != '0')) aux++; 
+    
+  aux--; *aux = NULL;  
+
+  return ptr;
+}
+
+
+char * leerFecha(char *linea)
+{
+/* Lee la fecha de celebracion del evento que se corresponde
+   con nuestra fechaInicio de la tabla Evento */
+   
+  char *ptr, *aux;
+  
+  ptr = strtok(linea, "C"); 
+  aux = ptr; 
+  while (*aux != '/') aux++;
+  *aux = '-';
+  while (*aux != '/') aux++;
+  *aux = '-'; 
+  while (*aux != ':') aux++;
+  aux = aux + 3;
+  *aux = NULL; 
+  
+  return ptr;
+}
+
+
+int leerResultadosEvento(char *linea, posResul *resultados)
+{
+/* Lee las cotizaciones de los 3 posibles resultados del
+   evento (partido de futbol) en este orden: Local Empate Visitante */
+     
+  char *ptr, *aux;
+  
+  ptr = strtok(linea, "\t");
+  ptr = strtok(NULL, "\t");
+  aux = ptr;
+  while (*aux != ' ') aux++;
+  *aux = NULL;
+  resultados->local = atof(ptr);
+  ptr = strtok(NULL, "\t"); aux = ptr;
+  while (*aux != ' ') aux++;
+  *aux = NULL;
+  resultados->empate = atof(ptr); 
+  ptr = strtok(NULL, "\t"); aux = ptr;
+  while (*aux != ' ') aux++;
+  *aux = NULL;
+  resultados->visitante = atof(ptr); 
+
+  return 0;
+}
+
+
+void conectarOracle(char *usuario, char *contrasena)
+{
+  VARCHAR username[NICK_LEN];
+  VARCHAR password[PASS_LEN];
+  VARCHAR host[HOST_LEN];
+
+  /* Conexión a Oracle. Copiar el nombre de usuario a la variable 'username' y establecer la
+     longitud */
+     
+  strncpy((char *) username.arr, usuario, NICK_LEN);
+  username.len = strlen((char *) username.arr);
+  
+  /* Copiar la contraseña a la variable 'password' */
+  
+  strncpy((char *) password.arr, contrasena, PASS_LEN);
+  password.len = strlen((char *) password.arr);
+  
+  /* Copiar el host a la variable 'host' */
+  
+  strncpy((char *) host.arr, "vicious.den.cps.unizar.es", HOST_LEN);
+  host.len = strlen((char *) host.arr);
+  
+  /* Registrar la función sql_error() como capturador de eventos. */
+  
+  EXEC SQL WHENEVER SQLERROR DO sql_error("Error en Oracle:\n");
+  
+  /* Conectar a Oracle. El programa llama a sql_error()
+     si sucede algún error en la conexión a la base de datos por defecto */
+  
+  EXEC SQL CONNECT :username IDENTIFIED BY :password USING :host;
+  
+  printf("\nConectado a ORACLE como usuario: %s\n", username.arr);
+
+}
+
+
+void desconectarOracle()
+{
+  /* Ejecutar las SQL pendientes (que estén en el buffer) */
+  EXEC SQL COMMIT WORK RELEASE;
+  exit(0);
+}
+
+
+void strToVARCHAR (char *orig, VARCHAR *dest)
+{
+  strcpy((char *) dest->arr, orig);
+  dest->len = (unsigned short) strlen(orig);
+}

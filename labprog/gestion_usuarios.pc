@@ -1,0 +1,1068 @@
+/* MODULO DE GESTION DE USUARIOS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Definicion del modulo de Gestion de Usuarios */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+
+
+EXEC SQL INCLUDE gestion_usuarios;
+
+
+EXEC SQL WHENEVER SQLERROR DO sql_error("Error en Oracle:\n");
+
+/* --------------------------------- Funciones del modulo ---------------- */
+
+
+int existeNick(char *nickJugador)
+{
+  VARCHAR nick[NICK_LEN];
+  
+  strncpy((char *)nick.arr, nickJugador, NICK_LEN);
+  nick.arr[strlen(nickJugador)] = '\0';
+  nick.len = strlen((char *)nick.arr);
+  
+  EXEC SQL SELECT *
+    FROM Usuario
+    WHERE (nickUser = :nick);
+  
+  if (sqlca.sqlcode == 0) return TRUE;
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+
+}
+
+
+int obtener_datos_globales(char *nickJugador, int *tipo, 
+                           int *divisa, float *credito)
+
+{ 
+  int exito;
+  VARCHAR nick[NICK_LEN];
+  int moneda;
+  float dinero;
+  
+  strncpy((char *)nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *)nick.arr);
+  
+  EXEC SQL SELECT divisa, credito
+    INTO :moneda, :dinero
+    FROM Usuario
+    WHERE (nickUser = :nick);
+    
+  if (sqlca.sqlcode == 0)
+  {
+    *tipo = cliente;
+    *divisa = moneda; *credito = dinero;
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) exito = FALSE; 
+  else return ERROR;
+  
+  EXEC SQL SELECT *
+    FROM Administrador
+    WHERE (nickAdmin = :nick);
+  
+  if (sqlca.sqlcode == 0)
+  {
+    *tipo = admin;
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+}
+
+
+int esMayorEdad(char *nickJugador) 
+{
+   VARCHAR nick[NICK_LEN];
+   
+   strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+   nick.len = strlen((char *) nick.arr);
+
+   EXEC SQL SELECT *
+     FROM Usuario
+     WHERE (nickUser = :nick) AND 
+       ((to_char(sysdate,'yyyy') - to_char(fechaNac,'yyyy')) >= 18);
+
+   if (sqlca.sqlcode == 0) return TRUE;
+   else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+   else return ERROR;
+}
+
+
+int validarLogin (char *nick, char *password)
+{
+   VARCHAR nickAux[NICK_LEN];
+   VARCHAR contrasenya[PASS_LEN];
+   int exito;
+   
+   strncpy((char *) nickAux.arr, nick, NICK_LEN);
+   nickAux.len = strlen((char *) nickAux.arr);
+   
+   strncpy((char *) contrasenya.arr, password, PASS_LEN);
+   contrasenya.len = strlen((char *) contrasenya.arr);
+
+   EXEC SQL SELECT *
+     FROM Usuario
+     WHERE (nickUser = :nickAux) AND (pass = :contrasenya) AND (dadoAlta = 1);
+     
+   if (sqlca.sqlcode == 0) return TRUE;
+   else if (sqlca.sqlcode > 0) exito = FALSE;
+   else return ERROR;
+   
+   EXEC SQL SELECT *
+     FROM Administrador
+     WHERE (nickAdmin = :nickAux) AND (pass = :contrasenya);
+     
+   if (sqlca.sqlcode == 0) exito = 0;
+   else if (sqlca.sqlcode > 0) exito = ERROR;
+   else return ERROR; 
+   
+   return exito;
+     
+}
+
+
+int validarRecordatorioPass (char *nickJugador, char *respSecreta, VARCHAR
+                             *password)
+{
+   VARCHAR nick[NICK_LEN];
+   VARCHAR respPrivada[RESP_PRIVADA_LEN];
+   VARCHAR contrasenya[PASS_LEN];
+   
+   strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+   nick.len = strlen((char *) nick.arr);
+   
+   strncpy((char *) respPrivada.arr, respSecreta, RESP_PRIVADA_LEN);
+   respPrivada.len = strlen((char *) respPrivada.arr);
+
+   EXEC SQL SELECT pass
+     INTO :contrasenya
+     FROM Usuario
+     WHERE (nickUser = :nick) AND (respuestaPrivada = :respPrivada);
+  
+   if (sqlca.sqlcode == 0) 
+   {
+     strncpy((char *)password->arr, contrasenya.arr, contrasenya.len);
+     password->len = contrasenya.len;
+     return TRUE;
+   }  
+   else if (sqlca.sqlcode > 0) return FALSE; 
+   else return ERROR;
+
+}
+
+
+int accederPregRecordatorioPass(char *nickJugador, VARCHAR *pregSecreta)
+{
+   VARCHAR nick[NICK_LEN];
+   VARCHAR pregPrivada[RESP_PRIVADA_LEN];
+   
+   strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+   nick.len = strlen((char *) nick.arr);
+
+   EXEC SQL SELECT preguntaPrivada
+     INTO :pregPrivada
+     FROM Usuario
+     WHERE (nickUser = :nick);
+     
+   if (sqlca.sqlcode == 0)
+   { 
+     strncpy((char *)pregSecreta->arr, pregPrivada.arr, pregPrivada.len);
+     pregSecreta->len = pregPrivada.len;
+     return TRUE;
+   }
+   else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+   else return ERROR;
+}
+
+
+/* --------------- Para el jugador de la Casa de Apuestas -------------------- */
+
+
+/* Una vez validado el usuario en la Casa de Apuestas con 
+   nick y password correctos */
+   
+void copiarDatosUsuario(tuplaUsuario origen, tuplaUsuario *destino)
+{
+  destino->nickUser = origen.nickUser;
+  destino->DNI = origen.DNI;
+  destino->nombreApell = origen.nombreApell;
+  destino->sexo = origen.sexo;
+  destino->CP = origen.CP;
+  destino->localidad = origen.localidad;
+  destino->pais = origen.pais;
+  destino->fechaNac = origen.fechaNac;
+  destino->email = origen.email;
+  destino->preguntaPrivada = origen.preguntaPrivada;
+  destino->respuestaPrivada = origen.respuestaPrivada;
+  destino->pass = origen.pass;
+  destino->divisa = origen.divisa;
+  destino->idioma = origen.idioma;
+  destino->nacionalidad = origen.nacionalidad;
+  destino->fechaCreacion = origen.fechaCreacion; 
+  destino->fechaUltLogin = origen.fechaUltLogin; 
+  destino->gananciasJuegos = origen.gananciasJuegos;
+  destino->gananciasOfertas = origen.gananciasOfertas;
+  destino->gananciasTotales = origen.gananciasTotales;
+  destino->totalJuegos = origen.totalJuegos;
+  destino->dadoAlta = origen.dadoAlta;
+  destino->credito = origen.credito;
+  destino->direccion = origen.direccion;
+  destino->ranking = origen.ranking;
+}
+
+
+int accederDatosPersonales (char *nickJugador, tuplaUsuario *user) 
+{
+   VARCHAR nick[NICK_LEN];
+   tuplaUsuario aux;
+
+   strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+   nick.len = strlen((char *) nick.arr);
+
+   EXEC SQL SELECT *
+       INTO :aux
+       FROM Usuario
+       WHERE (nickUser = :nick);
+   
+   copiarDatosUsuario(aux,user);
+
+   if (sqlca.sqlcode == 0) return TRUE;
+   else if (sqlca.sqlcode > 0) return FALSE;
+   else return ERROR;
+}
+
+
+int modificarDatosPersonales (char *nickJugador, tuplaUsuario user) 
+{
+  VARCHAR nick[NICK_LEN];
+
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+
+  EXEC SQL SELECT *
+    FROM Usuario
+    WHERE (nickUser = :nick);
+
+  if (sqlca.sqlcode == 0) ;
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else return ERROR;
+
+  EXEC SQL UPDATE Usuario SET 
+     direccion = :user.direccion,
+     CP = :user.CP,
+     localidad = :user.localidad,
+     pais = :user.pais,
+     email = :user.email,
+     divisa = :user.divisa,
+     idioma = :user.idioma
+  WHERE (nickUser = :nick);
+
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  { 
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  } 
+}
+
+
+int darseBaja (char *nickJugador) 
+{
+  VARCHAR nick[NICK_LEN];
+  
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+
+  EXEC SQL DELETE FROM Usuario WHERE nickUser = :nick;
+  
+  if (sqlca.sqlcode == 0) /* Eliminacion correcta */
+  { 
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  } 
+}
+
+
+int solicitarAlta (tuplaUsuario user)
+{
+  EXEC SQL INSERT INTO Usuario VALUES (:user.nickUser, :user.DNI, 
+    :user.nombreApell, :user.sexo, :user.direccion, :user.CP, :user.localidad, 
+    :user.pais, to_date(:user.fechaNac,'DD-MM-YYYY'), :user.email, 
+    :user.preguntaPrivada, :user.respuestaPrivada, :user.pass, :user.divisa, 
+    :user.idioma, :user.nacionalidad, sysdate, sysdate, :user.gananciasJuegos,
+    :user.gananciasOfertas, :user.gananciasTotales, :user.totalJuegos, 
+    :user.dadoAlta, :user.credito, :user.ranking);
+  
+  if (sqlca.sqlcode == 0) /* Insercion correcta */
+  { 
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  } 
+}
+
+
+int modificarPassUsuario(char *nickJugador, char *passVieja, char *passNueva)
+{
+  VARCHAR nick[NICK_LEN];
+  VARCHAR passV[PASS_LEN];
+  VARCHAR passN[PASS_LEN];
+
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+   
+  strncpy((char *) passV.arr, passVieja, PASS_LEN);
+  passV.len = strlen((char *) passV.arr);
+
+  strncpy((char *) passN.arr, passNueva, PASS_LEN);
+  passN.len = strlen((char *) passN.arr);
+
+  EXEC SQL SELECT *
+    FROM Usuario
+    WHERE (nickUser = :nick) AND (pass = :passV);
+
+  if (sqlca.sqlcode == 0) ;
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else return ERROR;
+
+  /* Se procede a actualizar la pass del usuario */
+
+  EXEC SQL UPDATE Usuario SET pass = :passN WHERE nickUser = :nick;
+
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  {
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  }
+}
+
+
+int modificarDatosRecordatorioPass(char *nickJugador, char *pregNueva,
+                                   char *respNueva)
+{
+  VARCHAR nick[NICK_LEN];
+  VARCHAR pregN[PREG_PRIVADA_LEN];
+  VARCHAR respN[RESP_PRIVADA_LEN];
+
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+  
+  strncpy((char *) pregN.arr, pregNueva, PREG_PRIVADA_LEN);
+  pregN.len = strlen((char *) pregN.arr);
+  
+  strncpy((char *) respN.arr, respNueva, RESP_PRIVADA_LEN);
+  respN.len = strlen((char *) respN.arr);
+
+  /* Se procede a actualizar la pregunta y respuesta secretas del usuario */
+
+  EXEC SQL UPDATE Usuario SET preguntaPrivada = :pregN, 
+    respuestaPrivada = :respN WHERE (nickUser = :nick);
+
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  {
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  }
+}  
+
+
+
+/* --------------- Para el administrador de la casa de apuestas -------------------- */
+
+
+int darAltaUsuario (char *nickJugador) 
+{
+  VARCHAR nick[NICK_LEN];
+  
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+  
+  EXEC SQL UPDATE Usuario SET dadoAlta = 1 WHERE nickUser = :nick;
+  
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  {
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  }
+}
+
+
+int darBajaUsuario (char *nickJugador) 
+{
+  VARCHAR nick[NICK_LEN];
+  
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+
+  EXEC SQL DELETE FROM Usuario WHERE nickUser = :nick;
+  
+  if (sqlca.sqlcode == 0) /* Eliminacion correcta */
+  {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  }
+}
+
+
+int accederDatosUsuario (char *nickJugador, tuplaUsuario *user)
+{
+  VARCHAR nick[NICK_LEN];
+  tuplaUsuario aux;
+
+  strncpy((char *) nick.arr, nickJugador, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+
+  EXEC SQL SELECT *
+    INTO :aux
+    FROM Usuario
+    WHERE (nickUser = :nick);
+    
+  copiarDatosUsuario(aux,user);
+ 
+  if (sqlca.sqlcode == 0) return TRUE;
+  else if (sqlca.sqlcode > 0) return FALSE; /* Esto no debe ocurrir */
+  else return ERROR;
+}
+
+
+int listaNicksUsuariosRegistrados(lista_dinamica *listaUsuariosRegistrados)
+{
+  VARCHAR nick[NICK_LEN];
+  
+  nueva_lista_dinam(listaUsuariosRegistrados, NICK_LEN + sizeof(int)); 
+
+  /* Declaracion del cursor. Todos los cursores estaticos y explicitos
+     de SQL contienen sentencias SELECT. 'usuariosRegistrados' es un
+     identificador SQL, no una variable C. */
+  EXEC SQL DECLARE usuariosRegistrados CURSOR for
+    SELECT DISTINCT nickUser
+    FROM Usuario
+    WHERE (dadoAlta = 1)
+    ORDER BY nickUser;
+
+  /* Iniciar (abrir) el cursor */
+   EXEC SQL OPEN usuariosRegistrados;
+
+  /* Construimos un bucle con una sentencia FETCH con el CURSOR 
+     usuariosRegistrados para obtener la informacion de los
+     usuarios registrados en la casa de apuestas. Especificamos que
+     el bucle termina (break) cuando se han recorrido todas las tuplas
+     de la tabla Usuario (es decir, se produce el error de "tupla no
+     encontrada" al ejecutar la sentencia FETCH) */
+
+   EXEC SQL WHENEVER not found DO BREAK;
+
+  for (;;) {
+     EXEC SQL FETCH usuariosRegistrados INTO :nick;
+     agregar(listaUsuariosRegistrados, (char *) &nick);
+  } 
+
+  /* Cerrar el cursor */
+  EXEC SQL CLOSE usuariosRegistrados;  
+
+  if (sqlca.sqlcode == 0) return TRUE;
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+}
+
+
+int listaNicksUsuariosPendientes(lista_dinamica *listaUsuariosPendientes)
+{
+  VARCHAR nick[NICK_LEN];
+
+  nueva_lista_dinam(listaUsuariosPendientes, NICK_LEN + sizeof(int)); 
+
+  /* Declaracion del cursor. Todos los cursores estaticos y explicitos
+     de SQL contienen sentencias SELECT. 'usuariosPendientes' es un
+     identificador SQL, no una variable C. */
+  EXEC SQL DECLARE usuariosPendientes CURSOR for
+    SELECT DISTINCT nickUser
+    FROM Usuario
+    WHERE (dadoAlta = 0)
+    ORDER BY nickUser;
+
+  /* Iniciar (abrir) el cursor */
+  EXEC SQL OPEN usuariosPendientes;
+
+  /* Construimos un bucle con una sentencia FETCH con el CURSOR 
+     usuariosPendientes para obtener la informacion de los
+     usuarios pendientes de registro en la casa de apuestas. 
+     Especificamos que el bucle termina (break) cuando se han 
+     recorrido todas las tuplas de la tabla Usuario (es decir, 
+     se produce el error de "tupla no encontrada" al ejecutar 
+     la sentencia FETCH) */
+
+  EXEC SQL WHENEVER not found DO BREAK;
+
+  for (;;) {
+      EXEC SQL FETCH usuariosPendientes INTO :nick;
+      agregar(listaUsuariosPendientes, (char *) &nick);
+
+  }
+
+  /* Cerrar el cursor */
+  EXEC SQL CLOSE usuariosPendientes;  
+}
+
+
+int accederPerfilUsuario(struct usuario *user, perfilUsuario *perfil)
+{
+  perfilUsuario perfilAux;
+  perfilUsuarioInd perfilAuxInd;
+  VARCHAR nick[NICK_LEN];
+  int exito;
+  
+  strncpy((char *) nick.arr, user->nick, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+  
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+  
+  EXEC SQL SELECT * 
+  INTO :perfilAux INDICATOR :perfilAuxInd
+  FROM preferenciasUsuario
+  WHERE (nickUser = :nick);
+  
+  if (sqlca.sqlcode == 0) exito = TRUE; 
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+  
+  perfilAux.nickUser.arr[perfilAux.nickUser.len] = NULL;
+  
+  if (perfilAuxInd.equipoFutbol1 == -1) perfilAux.equipoFutbol1.len = 0;
+  if (perfilAuxInd.equipoFutbol2 == -1) perfilAux.equipoFutbol2.len = 0;
+  if (perfilAuxInd.equipoFutbol3 == -1) perfilAux.equipoFutbol3.len = 0;
+  if (perfilAuxInd.piloto1F1 == -1) perfilAux.piloto1F1.len = 0;
+  if (perfilAuxInd.piloto2F1 == -1) perfilAux.piloto2F1.len = 0;
+  if (perfilAuxInd.piloto3F1 == -1) perfilAux.piloto3F1.len = 0;
+  if (perfilAuxInd.escuderia1F1 == -1) perfilAux.escuderia1F1.len = 0;
+  if (perfilAuxInd.escuderia2F1 == -1) perfilAux.escuderia2F1.len = 0;
+  if (perfilAuxInd.escuderia3F1 == -1) perfilAux.escuderia3F1.len = 0;
+  
+  perfilAux.equipoFutbol1.arr[perfilAux.equipoFutbol1.len] = NULL;
+  perfilAux.equipoFutbol2.arr[perfilAux.equipoFutbol2.len] = NULL;
+  perfilAux.equipoFutbol3.arr[perfilAux.equipoFutbol3.len] = NULL;
+  perfilAux.piloto1F1.arr[perfilAux.piloto1F1.len] = NULL;
+  perfilAux.piloto2F1.arr[perfilAux.piloto2F1.len] = NULL;
+  perfilAux.piloto3F1.arr[perfilAux.piloto3F1.len] = NULL;
+  perfilAux.escuderia1F1.arr[perfilAux.escuderia1F1.len] = NULL;
+  perfilAux.escuderia2F1.arr[perfilAux.escuderia2F1.len] = NULL;
+  perfilAux.escuderia3F1.arr[perfilAux.escuderia3F1.len] = NULL;
+
+  copiarDatosPerfilUsuario(perfilAux,perfil);
+
+  return exito;
+}
+
+
+int accederPerfilUsuarioNick(char *user, perfilUsuario *perfil)
+{
+  perfilUsuario perfilAux;
+  perfilUsuarioInd perfilAuxInd;
+  VARCHAR nick[NICK_LEN];
+  int exito;
+  
+  strncpy((char *) nick.arr, user, NICK_LEN);
+  nick.len = strlen((char *) nick.arr);
+  
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+  
+  EXEC SQL SELECT * 
+  INTO :perfilAux INDICATOR :perfilAuxInd
+  FROM preferenciasUsuario
+  WHERE (nickUser = :nick);
+  
+  if (sqlca.sqlcode == 0) exito = TRUE; 
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+  
+  perfilAux.nickUser.arr[perfilAux.nickUser.len] = NULL;
+  
+  if (perfilAuxInd.equipoFutbol1 == -1) perfilAux.equipoFutbol1.len = 0;
+  if (perfilAuxInd.equipoFutbol2 == -1) perfilAux.equipoFutbol2.len = 0;
+  if (perfilAuxInd.equipoFutbol3 == -1) perfilAux.equipoFutbol3.len = 0;
+  if (perfilAuxInd.piloto1F1 == -1) perfilAux.piloto1F1.len = 0;
+  if (perfilAuxInd.piloto2F1 == -1) perfilAux.piloto2F1.len = 0;
+  if (perfilAuxInd.piloto3F1 == -1) perfilAux.piloto3F1.len = 0;
+  if (perfilAuxInd.escuderia1F1 == -1) perfilAux.escuderia1F1.len = 0;
+  if (perfilAuxInd.escuderia2F1 == -1) perfilAux.escuderia2F1.len = 0;
+  if (perfilAuxInd.escuderia3F1 == -1) perfilAux.escuderia3F1.len = 0;
+  
+  perfilAux.equipoFutbol1.arr[perfilAux.equipoFutbol1.len] = NULL;
+  perfilAux.equipoFutbol2.arr[perfilAux.equipoFutbol2.len] = NULL;
+  perfilAux.equipoFutbol3.arr[perfilAux.equipoFutbol3.len] = NULL;
+  perfilAux.piloto1F1.arr[perfilAux.piloto1F1.len] = NULL;
+  perfilAux.piloto2F1.arr[perfilAux.piloto2F1.len] = NULL;
+  perfilAux.piloto3F1.arr[perfilAux.piloto3F1.len] = NULL;
+  perfilAux.escuderia1F1.arr[perfilAux.escuderia1F1.len] = NULL;
+  perfilAux.escuderia2F1.arr[perfilAux.escuderia2F1.len] = NULL;
+  perfilAux.escuderia3F1.arr[perfilAux.escuderia3F1.len] = NULL;
+
+  copiarDatosPerfilUsuario(perfilAux,perfil);
+
+  return exito;
+}
+
+
+
+void copiarDatosPerfilUsuario(perfilUsuario origen, perfilUsuario *destino)
+{
+  destino->nickUser = origen.nickUser;
+  destino->riesgo = origen.riesgo;
+  destino->gustaFutbol = origen.gustaFutbol;
+  destino->gustaF1 = origen.gustaF1;
+  destino->gustaSocial = origen.gustaSocial;
+  destino->numApuestasFutbol = origen.numApuestasFutbol;
+  destino->numApuestasF1 = origen.numApuestasF1;
+  destino->numApuestasSocial = origen.numApuestasSocial;
+  destino->numVecesRuleta = origen.numVecesRuleta;
+  destino->numVecesDados = origen.numVecesDados;
+  destino->numVecesCarta = origen.numVecesCarta;
+  destino->numVecesBlackJack = origen.numVecesBlackJack;
+  destino->numApuestasArriesgadas = origen.numApuestasArriesgadas;
+  destino->numApuestasConservadoras = origen.numApuestasConservadoras;
+  destino->numApuestasSimples = origen.numApuestasSimples;
+  destino->numApuestasCombinadas = origen.numApuestasCombinadas;
+  destino->numApuestasSistema = origen.numApuestasSistema;
+  destino->equipoFutbol1 = origen.equipoFutbol1;
+  destino->equipoFutbol2 = origen.equipoFutbol2;
+  destino->equipoFutbol3 = origen.equipoFutbol3;
+  destino->piloto1F1 = origen.piloto1F1;
+  destino->piloto2F1 = origen.piloto2F1;
+  destino->piloto3F1 = origen.piloto3F1;
+  destino->escuderia1F1 = origen.escuderia1F1;
+  destino->escuderia2F1 = origen.escuderia2F1;
+  destino->escuderia3F1 = origen.escuderia3F1;  
+}
+
+
+void obtener_favoritos(struct usuario *user, lista_dinamica *l_favoritos)
+{
+  perfilUsuario perfil;
+  char aux[MAX_DESC_LEN];
+  
+  accederPerfilUsuario(user, &perfil);
+  if ( perfil.equipoFutbol1.len > 0 )
+  {
+    perfil.equipoFutbol1.arr[perfil.equipoFutbol1.len] = '\0';
+    strcpy(aux, perfil.equipoFutbol1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.equipoFutbol2.len > 0 )
+  {
+    perfil.equipoFutbol2.arr[perfil.equipoFutbol2.len] = '\0';
+    strcpy(aux, perfil.equipoFutbol2.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.equipoFutbol3.len > 0 )
+  {
+    perfil.equipoFutbol3.arr[perfil.equipoFutbol3.len] = '\0';
+    strcpy(aux, perfil.equipoFutbol3.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.piloto1F1.len > 0 )
+  {
+    perfil.piloto1F1.arr[perfil.piloto1F1.len] = '\0';
+    strcpy(aux, perfil.piloto1F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.piloto2F1.len > 0 )
+  {
+    perfil.piloto2F1.arr[perfil.piloto2F1.len] = '\0';
+    strcpy(aux, perfil.piloto2F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.piloto3F1.len > 0 )
+  {
+    perfil.piloto3F1.arr[perfil.piloto3F1.len] = '\0';
+    strcpy(aux, perfil.piloto3F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.escuderia1F1.len > 0 )
+  {
+    perfil.escuderia1F1.arr[perfil.escuderia1F1.len] = '\0';
+    strcpy(aux, perfil.escuderia1F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.escuderia2F1.len > 0 )
+  {
+    perfil.escuderia2F1.arr[perfil.escuderia2F1.len] = '\0';
+    strcpy(aux, perfil.escuderia2F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+  if ( perfil.escuderia3F1.len > 0 )
+  {  
+    perfil.escuderia3F1.arr[perfil.escuderia3F1.len] = '\0';
+    strcpy(aux, perfil.escuderia3F1.arr);
+    agregar(l_favoritos, (char *)&aux);
+  }
+}
+
+
+int obtener_direccion_email (char mail[MAIL_LEN], char nick[NICK_LEN])
+{
+  VARCHAR aux[MAIL_LEN], nick_sql[NICK_LEN];
+  int exito = 0;
+     
+  strcpy(nick_sql.arr, nick);
+  nick_sql.len = strlen(nick);
+    
+  EXEC SQL SELECT email
+  INTO :aux
+  FROM Administrador
+  WHERE (nickAdmin = :nick_sql);
+    
+  if (sqlca.sqlcode == 0)
+  {
+    aux.arr[aux.len] = '\0';
+    strcpy(mail, aux.arr);
+    exito = 1;
+  }  
+  else /* Buscamos entre los Jugadores */
+  {
+    EXEC SQL SELECT email
+    INTO :aux
+    FROM Usuario
+    WHERE (nickUser = :nick_sql);
+    
+    if (sqlca.sqlcode == 0)
+    {
+      aux.arr[aux.len] = '\0';
+      strcpy(mail, aux.arr);
+      exito = 1;
+    }  
+  } 
+  
+  return exito;   
+} /* obtener_direccion_email */
+
+
+int actualizarFechaUltLogin(char *nick)
+{
+
+   VARCHAR nick_sql[NICK_LEN];
+   
+   strcpy(nick_sql.arr, nick);
+   nick_sql.len = strlen(nick);
+
+   EXEC SQL UPDATE Usuario 
+   SET fechaUltLogin = sysdate
+   WHERE nickUser = :nick_sql;
+   
+   if (sqlca.sqlcode == 0)
+   {
+     EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+     return TRUE;
+   }
+   else if (sqlca.sqlcode > 0) /* Es administrador */
+   {
+     EXEC SQL UPDATE Administrador 
+     SET fechaUltLogin = sysdate
+     WHERE nickAdmin = :nick_sql;     
+     
+     if (sqlca.sqlcode == 0)
+     {
+       EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+       return TRUE;
+     }
+     else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+     else 
+     {
+       EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+       return ERROR;
+     }
+   }
+   else /* Se ha producido error */
+   {
+     EXEC SQL ROLLBACK WORK;  /* Deshacemos la transaccion */
+     return ERROR;
+   }
+}
+
+
+
+int completar_preguntas_iniciales (char *nick)
+/* Preguntas de preferencias */
+{
+  int mas;
+  int gusta_futbol,gusta_f1,gusta_social;
+ 
+  VARCHAR mi_nick[NICK_LEN];
+  VARCHAR preferencia[30];
+
+
+  strcpy(mi_nick.arr,nick);
+  mi_nick.len = strlen(mi_nick.arr);
+  
+  EXEC SQL INSERT INTO PreferenciasUsuario 
+  VALUES (:mi_nick,10,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,NULL,NULL,NULL,
+  NULL,NULL,NULL,NULL,NULL,NULL);
+  
+  if (sqlca.sqlcode != 0) 
+  {
+    EXEC SQL ROLLBACK WORK;
+    return 0;
+  }
+  
+
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+  
+  pedir_preferencias_globales(&gusta_futbol,&gusta_f1,&gusta_social);
+  
+  EXEC SQL UPDATE PreferenciasUsuario
+  SET gustaFutbol = :gusta_futbol,
+      gustaF1 = :gusta_f1,
+      gustaSocial = :gusta_social
+  WHERE nickUser = :mi_nick;
+
+  if (sqlca.sqlcode != 0) 
+  {
+    EXEC SQL ROLLBACK WORK;
+    return 0;
+  }
+
+  /* Preferencias de equipos de futbol */
+  mas = pedir_preferencia(EQUIPO,1,(VARCHAR *)&preferencia);
+  if (mas) 
+  {
+    EXEC SQL UPDATE Preferenciasusuario 
+    SET equipoFutbol1 = :preferencia
+    WHERE nickUser = :mi_nick;
+
+    if (sqlca.sqlcode != 0) 
+    {
+      EXEC SQL ROLLBACK WORK;
+      return 0;
+    }
+
+    mas = pedir_preferencia(EQUIPO,2,(VARCHAR *)&preferencia);
+  }  
+  if (mas) 
+  {
+    EXEC SQL UPDATE Preferenciasusuario 
+    SET equipoFutbol2 = :preferencia
+    WHERE nickUser = :mi_nick;
+   
+     if (sqlca.sqlcode != 0) 
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+
+    mas = pedir_preferencia(EQUIPO,3,(VARCHAR *)&preferencia);
+  } 
+  if (mas)
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET equipoFutbol3 = :preferencia
+     WHERE nickUser = :mi_nick;
+     
+     if (sqlca.sqlcode != 0) 
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+     
+  }   
+  
+
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+  
+  /* Preferencias de pilotos */
+  mas = pedir_preferencia(PILOTO,1,(VARCHAR *)&preferencia);
+  if (mas)
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET piloto1F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+     if (sqlca.sqlcode != 0)     
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+     mas = pedir_preferencia(PILOTO,2,(VARCHAR *)&preferencia);
+  }
+  if (mas) 
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET piloto2F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+     if (sqlca.sqlcode != 0)     
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+     mas = pedir_preferencia(PILOTO,3,(VARCHAR *)&preferencia);
+  }  
+  if (mas)
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET piloto3F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+     if (sqlca.sqlcode != 0)     
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+  }
+  
+
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+
+  /* Preferencias de escuderias */
+  mas = pedir_preferencia(ESCUDERIA,1,(VARCHAR *)&preferencia);
+  if (mas)
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET escuderia1F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+     if (sqlca.sqlcode != 0)     
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+     mas = pedir_preferencia(ESCUDERIA,2,(VARCHAR *)&preferencia);
+  }
+  if (mas) 
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET escuderia2F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+     if (sqlca.sqlcode != 0)     
+     {
+       EXEC SQL ROLLBACK WORK;
+       return 0;
+     }
+     mas = pedir_preferencia(ESCUDERIA,3,(VARCHAR *)&preferencia);
+  }
+  if (mas)
+  {
+     EXEC SQL UPDATE Preferenciasusuario 
+     SET escuderia3F1 = :preferencia
+     WHERE nickUser = :mi_nick;
+  }
+  
+  if (sqlca.sqlcode == 0)
+  {
+    EXEC SQL COMMIT WORK;
+    return 1;
+  }
+  else
+  {
+    EXEC SQL ROLLBACK WORK;
+    return 0;
+  }
+
+}
+
+
+int obtener_idioma(char *nick)
+{
+  VARCHAR nick_sql[NICK_LEN];
+  int idioma;
+     
+  strcpy(nick_sql.arr, nick);
+  nick_sql.len = strlen(nick);
+    
+  EXEC SQL SELECT idioma
+  INTO :idioma
+  FROM Administrador
+  WHERE (nickAdmin = :nick_sql);
+    
+  if (sqlca.sqlcode == 0) return idioma;  
+  else /* Buscamos entre los Jugadores */
+  {
+    EXEC SQL SELECT idioma
+    INTO :idioma
+    FROM Usuario
+    WHERE (nickUser = :nick_sql);
+    
+    if (sqlca.sqlcode == 0) return idioma;
+    else return ERROR;
+  }
+}
+
+
+/* Declaración del procedimiento definido para el tratamiento de errores
+   en las sentencias SQL. */
+
+int sql_error(char *msg)
+{
+  char err_msg[128];
+  size_t buf_len, msg_len;
+
+
+  EXEC SQL WHENEVER SQLERROR CONTINUE;
+  
+  /* Imprimir por salida estándar el mensaje msg (por defecto, "Error en Oracle:" */
+  
+  printf("\n%s\n", msg);
+  
+  /* Obtener el mensaje de error usando la función sqlglm1 */
+ 
+  buf_len = sizeof (err_msg);
+  sqlglm(err_msg, &buf_len, &msg_len);
+  
+  /* Imprimir por salida estándar el mensaje de error */
+  
+  printf("%.*s\n", msg_len, err_msg);
+  
+  /* Devolver la Base de Datos al estado inmediatamente anterior de la ejecución
+  de la SQL */
+  
+  EXEC SQL ROLLBACK;
+  
+  exit(1);
+}

@@ -1,0 +1,218 @@
+/* MODULO ASESOR DE APUESTAS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Fichero de definicion del modulo asesor */
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+#include "escape.h"
+#include <synch.h>
+
+EXEC SQL INCLUDE asesor;
+
+EXEC SQL WHENEVER SQLERROR DO sql_error("Error en Oracle:\n");
+
+
+void listar_eventos_por_perfil (perfilUsuario perfil, lista_dinamica *l)
+{
+  int i, id, num_resul, total_resul, j, inicio, fin;
+  int tipo1, tipo2, tipo3;
+  char *respuesta;
+  tuplaResul resultado;
+  lista_dinamica lresul, lasesor;
+  float totInvCuota;
+  resulProb vectorProb[MAX_RESULTADOS_EVENTO], res;
+
+  /* Utilizamos 3 listas dinamicas diferentes:
+      - lresul para almacenar todos los posibles resultados de eventos.
+      - lasesor para almacenar todos los posibles resultados de eventos junto
+        con su probabilidad.
+      - l para almacenar los posibles resultados de eventos que
+        tienen el riesgo del perfil del usuario. */
+
+  /* Miramos si no le gusta alguna de las tematicas de los eventos, en ese
+     caso los eventos de ese tipo ya se descartan */
+     
+  /* Inicializamos la lista dinamica */
+     
+  nueva_lista_dinam(l, sizeof(resulProb));
+
+  if ((perfil.gustaFutbol != 0) && (perfil.gustaF1 != 0) && (perfil.gustaSocial != 0))
+  {
+    tipo1 = FUTBOL; tipo2 = F1; tipo3 = SOCIAL;
+  }
+  else if ((perfil.gustaFutbol == 0) && (perfil.gustaF1 != 0) && (perfil.gustaSocial != 0))
+  {
+    tipo1 = F1; tipo2 = F1; tipo3 = SOCIAL;
+  }
+  else if ((perfil.gustaFutbol != 0) && (perfil.gustaF1 != 0) && (perfil.gustaSocial == 0))
+  {
+    tipo1 = FUTBOL; tipo2 = F1; tipo3 = F1;
+  }
+  else if ((perfil.gustaFutbol != 0) && (perfil.gustaF1 == 0) && (perfil.gustaSocial != 0))
+  {
+    tipo1 = FUTBOL; tipo2 = SOCIAL; tipo3 = SOCIAL;
+  }
+  else if ((perfil.gustaFutbol != 0) && (perfil.gustaF1 == 0) && (perfil.gustaSocial == 0))
+  {
+    tipo1 = FUTBOL; tipo2 = FUTBOL; tipo3 = FUTBOL;
+  }
+  else if ((perfil.gustaFutbol == 0) && (perfil.gustaF1 != 0) && (perfil.gustaSocial == 0))
+  {
+    tipo1 = F1; tipo2 = F1; tipo3 = F1;
+  }
+  else if ((perfil.gustaFutbol == 0) && (perfil.gustaF1 == 0) && (perfil.gustaSocial != 0))
+  {
+    tipo1 = SOCIAL; tipo2 = SOCIAL; tipo3 = SOCIAL;
+  }  
+  else return;
+
+
+  /* Creamos un cursor para los resultados de la consulta */
+
+  EXEC SQL DECLARE listaResultados CURSOR for
+  SELECT DISTINCT R.idPosResul, R.idEvento, R.infoResul, R.cotizacion, R.haOcurrido
+  FROM Resultado R, Evento E
+  WHERE (E.idEvento = R.idEvento) AND
+        ((E.tipoEvento = :tipo1) OR (E.tipoEvento = :tipo2) OR (E.tipoEvento = :tipo3))
+	AND (sysdate < fechaInicio)
+  ORDER BY R.idPosResul;
+
+    
+  /* Inicializamos las listas dinamicas */
+ 
+  nueva_lista_dinam(&lresul, sizeof(tuplaResul));
+  nueva_lista_dinam(&lasesor, sizeof(resulProb));
+
+  
+  EXEC SQL OPEN listaResultados;
+  EXEC SQL WHENEVER NOT FOUND DO BREAK;
+
+  /* Recorremos el cursor creado */
+ 
+  total_resul = 0;
+  for (;;) 
+  {
+    EXEC SQL FETCH listaResultados INTO :resultado;
+    agregar(&lresul, (char *) &resultado);
+    total_resul++;
+  }
+  
+  EXEC SQL CLOSE listaResultados;  
+
+  i = 1; 
+  if (i <= numdatos(lresul)) 
+     dato_posicion(&lresul, i, (char *) &resultado); 
+  /* Al menos habra otro resultado referido al evento con idEvento = id */
+  
+  while (i <= numdatos(lresul))
+  {
+    id = resultado.idEvento;
+    num_resul = 0; totInvCuota = 0.0;
+    inicio = i; fin = i; j=0;
+    
+    while ((resultado.idEvento == id) && (i <= numdatos(lresul)))
+    {
+      res.invcuota = 1.0/resultado.cotizacion; 
+      res.idEvento = id; 
+      res.idResul = resultado.idPosResul;
+      resultado.infoResul.arr[resultado.infoResul.len] = NULL;
+      strncpy((char *)res.infoResul.arr, resultado.infoResul.arr, resultado.infoResul.len);
+      res.infoResul.len = strlen((char *) resultado.infoResul.arr);
+      totInvCuota = totInvCuota + res.invcuota;
+      vectorProb[num_resul] = res;
+      i++; fin++; num_resul++;
+      if (i <= numdatos(lresul)) 
+        dato_posicion(&lresul, i, (char *) &resultado); 
+    }
+     
+    for (j=0; j<num_resul; j++)
+    {
+      vectorProb[j].p = vectorProb[j].invcuota/totInvCuota;
+      agregar(&lasesor, (char *) &vectorProb[j]);
+    }
+  }
+  
+  destruir_lista(&lresul);
+  i = 1; 
+
+  /* Evaluamos el riesgo del usuario en base a sus apuestas historicas */
+
+  switch(perfil.riesgo) 
+  {
+    case 0: case 1:
+    case 2: /* Usuario ultraconservador */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.85) && (res.p < 1))
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 3: case 4: /* Bastante conservador */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.75) && (res.p < 0.85)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 5: case 6: case 7: case 8:/* Algo conservador */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.55) && (res.p < 0.75)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 9: case 10: case 11: /* Medio */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.45) && (res.p < 0.55)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 12: case 13: case 14: case 15: /* Algo arriesgado */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.35) && (res.p < 0.45)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 16: case 17: /* Bastante arriesgado */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p >= 0.15) && (res.p < 0.35)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+    case 18: case 19: case 20: /* Suicida */
+      while (i <= numdatos(lasesor))
+      {
+        dato_posicion(&lasesor, i, (char *) &res);
+	i++;
+        if ((res.p > 0.0) && (res.p < 0.15)) 
+          agregar(l, (char *) &res);
+      }
+      break;
+  }
+  
+  destruir_lista(&lasesor);
+     
+}

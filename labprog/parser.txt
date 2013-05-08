@@ -1,0 +1,32 @@
+Como usar el parser:
+
+1. Ir a miapuesta.com y a la sección de fútbol.
+
+2. Ir a alguna de las categorías de partidos de fútbol.
+
+3. Copiar en un fichero de texto los partidos que nos salen, desde
+   el nombre del primer partido hasta el nombre del último copiando toda
+   la fila hasta donde pone Todas las apuestas y un número entre paréntesis.
+   Por ejemplo, este podría ser nuestro fichero de texto(no dejar líneas en blanco
+   ni al principio ni al final del mismo, aqui están como parte del documento): 
+
+Almería v Sevilla  01/12/2007 20:00 CET   	3.50  	3.20  	2.00  	Todas las apuestas (21)
+Real Madrid v Racing de Santander 01/12/2007 20:00 CET 	1.30 	4.75 	8.00 	Todas las apuestas (21)
+Espanyol v Barcelona 01/12/2007 22:00 CET 	3.40 	3.25 	2.00 	Todas las apuestas (21)
+Deportivo v Osasuna 02/12/2007 17:00 CET 	2.20 	3.20 	3.00 	Todas las apuestas (21)
+Getafe v Levante 02/12/2007 17:00 CET 	1.50 	3.75 	6.00 	Todas las apuestas (21)
+Mallorca v Real Murcia 02/12/2007 17:00 CET 	1.65 	3.40 	5.00 	Todas las apuestas (21)
+Real Valladolid v Villarreal 02/12/2007 17:00 CET 	3.00 	3.20 	2.20 	Todas las apuestas (21)
+Recreativo de Huelva v Zaragoza 02/12/2007 17:00 CET 	2.50 	3.20 	2.60 	Todas las apuestas (21)
+Real Betis v Atlético de Madrid 02/12/2007 19:00 CET 	3.00 	3.10 	2.25 	Todas las apuestas (21)
+Valencia v Athletic Club 02/12/2007 21:00 CET 	1.55 	3.50 	6.00 	Todas las apuestas (21)
+
+4. Restricción: Los nombres de los equipos que lleven algún número, debe borrarse ese número porque
+   de lo contrario no se introducirá correctamente el evento y sus resultados. Estos equipos con números
+   en su nombre, son muy poco habituales, ahora mismo sólo se me ocurre uno: Schalke 04, 
+   se borra el 04 y ya esta (procurando dejar los mismos espacios que había antes entre el nombre del equipo
+   y la fecha, esto es, uno o dos).
+
+5. Ejecutar el programa parser (para compilarlo con todo lo necesario se puede ejecutar el Makefile con make parser)
+   y cuando nos pida que introduzcamos el nombre del fichero, introducimos el nombre completo (con extensión si 
+   la tuviera) de nuestro fichero que hemos creado en el paso 3.

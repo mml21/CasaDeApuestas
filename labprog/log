@@ -1,0 +1,5921 @@
+? asesor.c
+? gestion_eventos.c
+? gestion_interna.c
+? gestion_usuarios.c
+? informes.c
+? interfaz.c
+? juegos.c
+? log
+? parser
+? parser.c
+? principal
+? principal.c
+? promociones.c
+? realizar_apuestas.c
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/BD.odt,v
+Working file: BD.odt
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2008/01/04 18:15:20;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.1
+date: 2007/12/30 21:30:04;  author: mmainar;  state: Exp;
+diseño E/R
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/BDv1.edg,v
+Working file: BDv1.edg
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/11/17 17:04:48;  author: mmainar;  state: dead;  lines: +0 -0
+ya no hace falta
+----------------------------
+revision 1.2
+date: 2007/11/06 21:44:39;  author: mmainar;  state: Exp;  lines: +215 -227
+cambio en una cardinalidad
+----------------------------
+revision 1.1
+date: 2007/11/05 22:07:07;  author: mmainar;  state: Exp;
+base de datos del programa
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/LEEME,v
+Working file: LEEME
+head: 1.7
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 7;	selected revisions: 7
+description:
+----------------------------
+revision 1.7
+date: 2008/01/27 14:13:24;  author: mmainar;  state: Exp;  lines: +3 -1
+actualizacion
+----------------------------
+revision 1.6
+date: 2008/01/25 18:00:26;  author: mmainar;  state: Exp;  lines: +3 -0
+actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/24 21:50:17;  author: mmainar;  state: Exp;  lines: +6 -28
+LEEME
+----------------------------
+revision 1.4
+date: 2008/01/06 23:29:10;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/11/24 18:52:51;  author: mmainar;  state: Exp;  lines: +9 -0
+versiones que funcionan
+----------------------------
+revision 1.2
+date: 2007/11/17 17:21:07;  author: ismasg;  state: Exp;  lines: +3 -1
+Versiones que funcionan
+----------------------------
+revision 1.1
+date: 2007/11/13 21:09:48;  author: mmainar;  state: Exp;
+Versiones que funcionan
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Makefile,v
+Working file: Makefile
+head: 1.21
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 21;	selected revisions: 21
+description:
+----------------------------
+revision 1.21
+date: 2008/01/06 20:24:41;  author: mmainar;  state: Exp;  lines: +9 -3
+actualizaciones
+----------------------------
+revision 1.20
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;  lines: +10 -4
+actualizado para promociones
+----------------------------
+revision 1.19
+date: 2007/12/16 13:15:35;  author: mmainar;  state: Exp;  lines: +10 -4
+actualizaciones
+----------------------------
+revision 1.18
+date: 2007/12/13 19:53:40;  author: ismasg;  state: Exp;  lines: +8 -2
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.16
+date: 2007/12/11 11:11:31;  author: mmainar;  state: Exp;  lines: +9 -9
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/12/06 11:42:50;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/12/03 22:24:05;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.13
+date: 2007/12/03 22:15:12;  author: mmainar;  state: Exp;  lines: +8 -2
+actualizado para poder compilar el gestion_interna.pc
+----------------------------
+revision 1.12
+date: 2007/12/03 19:45:34;  author: mmainar;  state: Exp;  lines: +9 -10
+compila todo hasta ahora (incluido el parser) excepto el gestion_interna de momento
+----------------------------
+revision 1.11
+date: 2007/12/03 18:32:48;  author: mmainar;  state: Exp;  lines: +28 -13
+Con este ya se puede compilar todo hasta el momento
+----------------------------
+revision 1.10
+date: 2007/12/03 17:59:49;  author: mmainar;  state: Exp;  lines: +18 -25
+prueba
+----------------------------
+revision 1.9
+date: 2007/11/18 16:56:32;  author: mmainar;  state: Exp;  lines: +17 -0
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/17 20:47:28;  author: mmainar;  state: Exp;  lines: +5 -14
+en pruebas
+----------------------------
+revision 1.7
+date: 2007/11/17 20:00:46;  author: mmainar;  state: Exp;  lines: +4 -3
+actualizado
+----------------------------
+revision 1.6
+date: 2007/11/16 23:30:56;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/16 20:49:57;  author: mmainar;  state: Exp;  lines: +6 -4
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/15 15:10:58;  author: mmainar;  state: Exp;  lines: +10 -13
+para compilar el principal.pc
+----------------------------
+revision 1.3
+date: 2007/11/13 20:21:25;  author: mmainar;  state: Exp;  lines: +4 -3
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:15;  author: mmainar;  state: Exp;  lines: +4 -1
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/08 21:04:08;  author: mmainar;  state: Exp;
+Para precompilar prueba.pc
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/MarcosTADs.odt,v
+Working file: MarcosTADs.odt
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2008/01/04 18:15:20;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.1
+date: 2008/01/02 19:29:44;  author: mmainar;  state: Exp;
+boceto v0.00001
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/SQLemb_UZ.pc,v
+Working file: SQLemb_UZ.pc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:15;  author: mmainar;  state: dead;  lines: +0 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/10/25 20:42:38;  author: mmainar;  state: Exp;
+Ejemplo simple de SQL embebido en C sobre la BD de Unizar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/SQLemb_UZ_1.pc,v
+Working file: SQLemb_UZ_1.pc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:15;  author: mmainar;  state: dead;  lines: +0 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/10/25 20:43:17;  author: mmainar;  state: Exp;
+Ejemplo simple de SQL embebido en C con CURSORES sobre la BD de Unizar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ansi.h,v
+Working file: ansi.h
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 19:53:21;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesitan
+----------------------------
+revision 1.1
+date: 2007/11/05 21:43:15;  author: mmainar;  state: Exp;
+libreria con funciones graficas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/asesor.h,v
+Working file: asesor.h
+head: 1.17
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 17;	selected revisions: 17
+description:
+----------------------------
+revision 1.17
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +0 -10
+actualizaciones
+----------------------------
+revision 1.16
+date: 2008/01/04 09:57:30;  author: ismasg;  state: Exp;  lines: +0 -8
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +11 -9
+actualizacion
+----------------------------
+revision 1.14
+date: 2007/12/26 18:21:29;  author: mmainar;  state: Exp;  lines: +9 -25
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/12/17 16:50:50;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.11
+date: 2007/12/16 13:15:35;  author: mmainar;  state: Exp;  lines: +13 -1
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/12/16 10:59:56;  author: mmainar;  state: Exp;  lines: +1 -5
+actualizaciones
+----------------------------
+revision 1.9
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +1 -52
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/12/11 10:01:00;  author: mmainar;  state: Exp;  lines: +6 -7
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/12/10 21:13:34;  author: mmainar;  state: Exp;  lines: +12 -1
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/12/06 20:58:38;  author: mmainar;  state: Exp;  lines: +5 -3
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/06 13:09:05;  author: mmainar;  state: Exp;  lines: +16 -3
+agregados includes para compilar
+----------------------------
+revision 1.4
+date: 2007/12/06 12:51:08;  author: mmainar;  state: Exp;  lines: +41 -31
+primeros pasos
+----------------------------
+revision 1.3
+date: 2007/12/06 11:42:50;  author: mmainar;  state: Exp;  lines: +23 -0
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/29 14:30:49;  author: mmainar;  state: Exp;  lines: +4 -1
+actualizacion de las cabeceras
+----------------------------
+revision 1.1
+date: 2007/11/05 21:53:55;  author: ismasg;  state: Exp;
+Interfaz de los modulos de Isma, version preliminar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/asesor.pc,v
+Working file: asesor.pc
+head: 1.20
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 20;	selected revisions: 20
+description:
+----------------------------
+revision 1.20
+date: 2008/01/25 19:11:10;  author: ismasg;  state: Exp;  lines: +3 -2
+Actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/25 19:00:50;  author: mmainar;  state: Exp;  lines: +4 -1
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/25 16:42:31;  author: mmainar;  state: Exp;  lines: +1 -8
+actualizaciones
+----------------------------
+revision 1.17
+date: 2008/01/14 07:31:43;  author: mmainar;  state: Exp;  lines: +1 -0
+corregido lo de eventos antiguos
+----------------------------
+revision 1.16
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizaciones
+----------------------------
+revision 1.15
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +0 -26
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/12/27 19:08:10;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.13
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +19 -20
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/12/26 18:21:29;  author: mmainar;  state: Exp;  lines: +1 -13
+actualizaciones
+----------------------------
+revision 1.11
+date: 2007/12/17 15:57:30;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/12/17 15:44:47;  author: mmainar;  state: Exp;  lines: +6 -0
+actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +40 -25
+actualizacion
+----------------------------
+revision 1.8
+date: 2007/12/16 13:15:35;  author: mmainar;  state: Exp;  lines: +64 -40
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/12/16 10:59:56;  author: mmainar;  state: Exp;  lines: +180 -38
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +0 -139
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/11 10:01:00;  author: mmainar;  state: Exp;  lines: +13 -6
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/12/10 21:13:34;  author: mmainar;  state: Exp;  lines: +58 -4
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/12/06 20:58:38;  author: mmainar;  state: Exp;  lines: +53 -3
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/12/06 13:09:05;  author: mmainar;  state: Exp;  lines: +30 -17
+agregados includes para compilar
+----------------------------
+revision 1.1
+date: 2007/12/06 12:51:08;  author: mmainar;  state: Exp;
+primeros pasos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/asesor.sh,v
+Working file: asesor.sh
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2008/01/11 19:41:09;  author: mmainar;  state: dead;  lines: +0 -0
+ya no sirve
+----------------------------
+revision 1.1
+date: 2007/12/06 13:08:50;  author: mmainar;  state: Exp;
+script para compilar asesor.pc temporalmente
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/aux.c,v
+Working file: aux.c
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/11/17 19:47:48;  author: mmainar;  state: dead;  lines: +0 -0
+ya no vale
+----------------------------
+revision 1.2
+date: 2007/11/13 20:21:25;  author: mmainar;  state: Exp;  lines: +12 -3
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/13 16:27:10;  author: mmainar;  state: Exp;
+Funciones auxiliares
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/ayuda.txt,v
+Working file: ayuda.txt
+head: 1.1
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 1;	selected revisions: 1
+description:
+----------------------------
+revision 1.1
+date: 2008/01/25 16:34:58;  author: mmainar;  state: Exp;
+ficheros de ayuda
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/borrar.c,v
+Working file: borrar.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/18 22:17:00;  author: mmainar;  state: dead;  lines: +0 -0
+ya van
+----------------------------
+revision 1.1
+date: 2007/11/18 22:06:10;  author: jj_colomer;  state: Exp;
+fich. prueba para gestion_eventos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/borrar.pc,v
+Working file: borrar.pc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/19 18:24:24;  author: jj_colomer;  state: dead;  lines: +0 -0
+prueba J borrada
+----------------------------
+revision 1.1
+date: 2007/11/18 22:17:01;  author: mmainar;  state: Exp;
+ya van
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/borrar.sh,v
+Working file: borrar.sh
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/12/03 19:58:55;  author: mmainar;  state: dead;  lines: +0 -0
+su funcion la hace ahora el Makefile
+----------------------------
+revision 1.2
+date: 2007/12/03 11:31:15;  author: jj_colomer;  state: Exp;  lines: +1 -0
+actualizado
+----------------------------
+revision 1.1
+date: 2007/12/03 11:28:56;  author: jj_colomer;  state: Exp;
+para borrar basura
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/clientes.sql,v
+Working file: clientes.sql
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/13 21:08:03;  author: mmainar;  state: dead;  lines: +0 -0
+obsoleto
+----------------------------
+revision 1.1
+date: 2007/11/07 15:58:01;  author: mmainar;  state: Exp;
+Ejemplo BD Seminario
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/compilar.sh,v
+Working file: compilar.sh
+head: 1.8
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 8;	selected revisions: 8
+description:
+----------------------------
+revision 1.8
+date: 2007/12/03 19:58:55;  author: mmainar;  state: dead;  lines: +0 -0
+su funcion la hace ahora el Makefile
+----------------------------
+revision 1.7
+date: 2007/12/03 15:38:13;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/03 11:32:34;  author: jj_colomer;  state: Exp;  lines: +1 -0
+actualizado
+----------------------------
+revision 1.5
+date: 2007/11/29 22:05:50;  author: mmainar;  state: Exp;  lines: +4 -3
+actualizado script compilacion principal
+----------------------------
+revision 1.4
+date: 2007/11/29 16:54:01;  author: ismasg;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/29 13:52:27;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/27 14:35:42;  author: ismasg;  state: Exp;  lines: +5 -5
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/17 17:15:46;  author: ismasg;  state: Exp;
+Scrip para compilar el principal
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/compilar.txt,v
+Working file: compilar.txt
+head: 1.5
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 5;	selected revisions: 5
+description:
+----------------------------
+revision 1.5
+date: 2007/12/03 20:02:41;  author: mmainar;  state: dead;  lines: +0 -0
+puesto en nota_de_compilacion
+----------------------------
+revision 1.4
+date: 2007/12/03 19:58:55;  author: mmainar;  state: Exp;  lines: +6 -13
+su funcion la hace ahora el Makefile
+----------------------------
+revision 1.3
+date: 2007/11/18 12:38:22;  author: mmainar;  state: Exp;  lines: +8 -6
+actualizacion buena
+----------------------------
+revision 1.2
+date: 2007/11/17 17:39:45;  author: mmainar;  state: Exp;  lines: +5 -4
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/16 23:45:18;  author: mmainar;  state: Exp;
+como compilar manualmente sin el Makefile
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/consultas.txt,v
+Working file: consultas.txt
+head: 1.10
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 10;	selected revisions: 10
+description:
+----------------------------
+revision 1.10
+date: 2008/01/06 22:55:36;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/30 21:45:56;  author: mmainar;  state: Exp;  lines: +3 -193
+para promociones e informes economicos
+----------------------------
+revision 1.8
+date: 2007/11/18 20:44:51;  author: mmainar;  state: Exp;  lines: +40 -0
+actualizacion
+----------------------------
+revision 1.7
+date: 2007/11/18 16:56:32;  author: mmainar;  state: Exp;  lines: +27 -140
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/17 18:42:00;  author: mmainar;  state: Exp;  lines: +40 -0
+añadida la ultima
+----------------------------
+revision 1.5
+date: 2007/11/17 16:47:42;  author: mmainar;  state: Exp;  lines: +39 -0
+parte consulta 17
+----------------------------
+revision 1.4
+date: 2007/11/15 11:36:40;  author: jj_colomer;  state: Exp;  lines: +28 -1
+Actualizado consultas.txt con las consultas necesarias para gestion_eventos
+----------------------------
+revision 1.3
+date: 2007/11/13 21:13:50;  author: mmainar;  state: Exp;  lines: +25 -3
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/13 16:27:26;  author: mmainar;  state: Exp;  lines: +99 -5
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/12 11:33:16;  author: mmainar;  state: Exp;
+Listado de consultas SQL necesarias
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/copaRey.txt,v
+Working file: copaRey.txt
+head: 1.1
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 1;	selected revisions: 1
+description:
+----------------------------
+revision 1.1
+date: 2008/01/27 22:16:21;  author: mmainar;  state: Exp;
+partidos de vuelta de cuartos de final de la Copa del Rey
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/creaBD.sql,v
+Working file: creaBD.sql
+head: 1.23
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 23;	selected revisions: 23
+description:
+----------------------------
+revision 1.23
+date: 2008/01/27 16:42:13;  author: mmainar;  state: Exp;  lines: +0 -13
+actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +1 -7
+actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/06 19:13:08;  author: mmainar;  state: Exp;  lines: +11 -1
+actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/05 15:01:34;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/04 10:34:39;  author: jj_colomer;  state: Exp;  lines: +5 -5
+modif
+----------------------------
+revision 1.17
+date: 2008/01/03 18:49:27;  author: mmainar;  state: Exp;  lines: +2 -1
+añadido atributo rankingPromo en la tabla Promocion
+----------------------------
+revision 1.16
+date: 2008/01/03 12:26:00;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.15
+date: 2008/01/03 10:28:44;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.14
+date: 2007/12/12 21:24:56;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/12/10 21:13:34;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.12
+date: 2007/12/06 12:51:55;  author: mmainar;  state: Exp;  lines: +3 -0
+actualizacion datos preferencias usuario
+----------------------------
+revision 1.11
+date: 2007/12/06 11:42:50;  author: mmainar;  state: Exp;  lines: +32 -1
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/12/03 11:15:41;  author: mmainar;  state: Exp;  lines: +1 -1
+agregada restriccion NOT NULl al atributo combinadas de la tabla Apuesta
+----------------------------
+revision 1.9
+date: 2007/12/02 14:24:12;  author: ismasg;  state: Exp;  lines: +3 -2
+Actualizacion apuestas
+----------------------------
+revision 1.8
+date: 2007/11/29 11:37:38;  author: mmainar;  state: Exp;  lines: +9 -9
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/16 23:30:56;  author: mmainar;  state: Exp;  lines: +13 -14
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/13 21:13:50;  author: mmainar;  state: Exp;  lines: +33 -31
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/13 16:27:26;  author: mmainar;  state: Exp;  lines: +4 -6
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/12 21:54:22;  author: mmainar;  state: Exp;  lines: +17 -17
+Mejora presentacion
+----------------------------
+revision 1.3
+date: 2007/11/12 10:48:15;  author: mmainar;  state: Exp;  lines: +1 -1
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.2
+date: 2007/11/10 10:53:40;  author: mmainar;  state: Exp;  lines: +15 -0
+Actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/09 21:02:14;  author: mmainar;  state: Exp;
+Crea la BD
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/deutsch.txt,v
+Working file: deutsch.txt
+head: 1.31
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 31;	selected revisions: 31
+description:
+----------------------------
+revision 1.31
+date: 2008/01/28 00:36:15;  author: ismasg;  state: Exp;  lines: +5 -5
+actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/27 22:34:47;  author: ismasg;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.29
+date: 2008/01/27 19:47:47;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +0 -2
+actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/27 16:30:49;  author: ismasg;  state: Exp;  lines: +2 -0
+Actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/27 14:58:47;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/26 19:23:22;  author: jj_colomer;  state: Exp;  lines: +5 -0
+actualizado
+----------------------------
+revision 1.24
+date: 2008/01/26 13:45:31;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/26 12:53:16;  author: jj_colomer;  state: Exp;  lines: +55 -65
+modif
+----------------------------
+revision 1.22
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +16 -14
+Actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/25 18:19:10;  author: ismasg;  state: Exp;  lines: +4 -0
+Actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/25 17:59:53;  author: ismasg;  state: Exp;  lines: +1 -3
+Actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +64 -1
+Actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/25 17:00:40;  author: mmainar;  state: Exp;  lines: +4 -0
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/18 11:14:44;  author: jj_colomer;  state: Exp;  lines: +14 -14
+actualizados con aleman
+----------------------------
+revision 1.16
+date: 2008/01/11 00:16:01;  author: jj_colomer;  state: Exp;  lines: +199 -204
+actualizado
+----------------------------
+revision 1.15
+date: 2008/01/10 11:49:59;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.14
+date: 2008/01/10 11:17:11;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/10 09:41:40;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.12
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +22 -21
+actualizacion
+----------------------------
+revision 1.11
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +2 -1
+Actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/09 19:08:35;  author: ismasg;  state: Exp;  lines: +16 -0
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/09 17:50:43;  author: mmainar;  state: Exp;  lines: +30 -32
+actualizacion
+----------------------------
+revision 1.8
+date: 2008/01/09 17:19:21;  author: mmainar;  state: Exp;  lines: +11 -11
+actualizacion
+----------------------------
+revision 1.7
+date: 2008/01/08 19:54:12;  author: ismasg;  state: Exp;  lines: +298 -291
+actualizacion
+----------------------------
+revision 1.6
+date: 2008/01/08 19:33:08;  author: ismasg;  state: Exp;  lines: +291 -275
+Actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/08 18:08:45;  author: ismasg;  state: Exp;  lines: +23 -0
+Actualizacion
+----------------------------
+revision 1.4
+date: 2008/01/08 17:51:41;  author: ismasg;  state: Exp;  lines: +70 -0
+Actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/08 12:31:40;  author: ismasg;  state: Exp;  lines: +60 -0
+Actualizacion
+----------------------------
+revision 1.2
+date: 2008/01/07 17:28:37;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion
+----------------------------
+revision 1.1
+date: 2007/12/31 16:01:41;  author: ismasg;  state: Exp;
+fichero de mensajes en aleman
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/dinam.c,v
+Working file: dinam.c
+head: 1.10
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 10;	selected revisions: 10
+description:
+----------------------------
+revision 1.10
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/25 18:00:26;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.8
+date: 2008/01/07 17:55:08;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/17 23:32:02;  author: jj_colomer;  state: Exp;  lines: +25 -1
+modif
+----------------------------
+revision 1.6
+date: 2007/12/10 21:53:15;  author: jj_colomer;  state: Exp;  lines: +1 -47
+modif.
+----------------------------
+revision 1.5
+date: 2007/12/09 20:20:08;  author: jj_colomer;  state: Exp;  lines: +32 -12
+actualiz.
+----------------------------
+revision 1.4
+date: 2007/12/09 18:06:50;  author: jj_colomer;  state: Exp;  lines: +26 -0
+modif.
+----------------------------
+revision 1.3
+date: 2007/11/29 14:20:15;  author: mmainar;  state: Exp;  lines: +6 -0
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/29 12:48:19;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/28 22:51:21;  author: ismasg;  state: Exp;
+Libreria generica de listas dinamicas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/dinam.h,v
+Working file: dinam.h
+head: 1.10
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 10;	selected revisions: 10
+description:
+----------------------------
+revision 1.10
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/25 18:00:26;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizacion
+----------------------------
+revision 1.8
+date: 2008/01/07 17:55:09;  author: mmainar;  state: Exp;  lines: +5 -0
+actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/17 23:32:02;  author: jj_colomer;  state: Exp;  lines: +3 -0
+modif
+----------------------------
+revision 1.6
+date: 2007/12/10 21:53:15;  author: jj_colomer;  state: Exp;  lines: +0 -28
+modif.
+----------------------------
+revision 1.5
+date: 2007/12/09 20:20:08;  author: jj_colomer;  state: Exp;  lines: +4 -3
+actualiz.
+----------------------------
+revision 1.4
+date: 2007/12/09 18:06:50;  author: jj_colomer;  state: Exp;  lines: +27 -0
+modif.
+----------------------------
+revision 1.3
+date: 2007/11/29 14:20:16;  author: mmainar;  state: Exp;  lines: +6 -2
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/29 12:48:19;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/28 22:51:21;  author: ismasg;  state: Exp;
+Libreria generica de listas dinamicas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ejemplo_01.pc,v
+Working file: ejemplo_01.pc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: dead;  lines: +0 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/10/25 20:40:09;  author: mmainar;  state: Exp;
+Ejemplo simple de SQL embebido en C sobre la BD de pizas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ejemplo_02.pc,v
+Working file: ejemplo_02.pc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: dead;  lines: +0 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/10/25 20:41:15;  author: mmainar;  state: Exp;
+Ejemplo simple de SQL embebido con CURSORES sobre la BD de piezas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/elimBD.sql,v
+Working file: elimBD.sql
+head: 1.7
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 7;	selected revisions: 7
+description:
+----------------------------
+revision 1.7
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/06 11:42:50;  author: mmainar;  state: Exp;  lines: +3 -0
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/29 11:37:39;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/24 18:43:09;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacionES
+----------------------------
+revision 1.3
+date: 2007/11/20 19:55:44;  author: mmainar;  state: Exp;  lines: +10 -10
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/10 10:53:58;  author: mmainar;  state: Exp;  lines: +14 -1
+Actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/09 21:02:44;  author: mmainar;  state: Exp;
+Elimina la BD
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/elimDatBD.sql,v
+Working file: elimDatBD.sql
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/12/06 11:42:51;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/10 10:54:16;  author: mmainar;  state: Exp;  lines: +2 -0
+Actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/09 21:04:09;  author: mmainar;  state: Exp;
+Elimina todos los datos de la BD
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/english.txt,v
+Working file: english.txt
+head: 1.44
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 44;	selected revisions: 44
+description:
+----------------------------
+revision 1.44
+date: 2008/01/27 22:34:47;  author: ismasg;  state: Exp;  lines: +91 -100
+actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/27 21:56:57;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.42
+date: 2008/01/27 19:47:48;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.41
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/27 16:30:49;  author: ismasg;  state: Exp;  lines: +2 -0
+Actualizacion
+----------------------------
+revision 1.39
+date: 2008/01/27 15:37:16;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.38
+date: 2008/01/27 14:58:47;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.37
+date: 2008/01/26 19:23:22;  author: jj_colomer;  state: Exp;  lines: +5 -0
+actualizado
+----------------------------
+revision 1.36
+date: 2008/01/25 19:44:35;  author: mmainar;  state: Exp;  lines: +2 -2
+revisar
+----------------------------
+revision 1.35
+date: 2008/01/25 18:50:40;  author: mmainar;  state: Exp;  lines: +13 -12
+actualizacion
+----------------------------
+revision 1.34
+date: 2008/01/25 18:26:30;  author: mmainar;  state: Exp;  lines: +63 -65
+actualizacion
+----------------------------
+revision 1.33
+date: 2008/01/25 18:19:10;  author: ismasg;  state: Exp;  lines: +4 -0
+Actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +61 -0
+Actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/25 17:00:40;  author: mmainar;  state: Exp;  lines: +4 -3
+actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/13 18:13:09;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.29
+date: 2008/01/10 12:33:43;  author: mmainar;  state: Exp;  lines: +7 -1
+actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/10 12:29:41;  author: mmainar;  state: Exp;  lines: +1 -7
+actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/10 12:23:17;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/10 12:21:35;  author: ismasg;  state: Exp;  lines: +5 -0
+Actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/10 11:49:59;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.24
+date: 2008/01/10 11:17:11;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/10 09:41:40;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +2 -1
+actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +2 -1
+Actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/09 19:15:36;  author: mmainar;  state: Exp;  lines: +18 -22
+actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/09 19:08:35;  author: ismasg;  state: Exp;  lines: +20 -0
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/09 17:50:43;  author: mmainar;  state: Exp;  lines: +26 -26
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/09 17:44:25;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.16
+date: 2008/01/09 17:40:52;  author: ismasg;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.15
+date: 2008/01/09 17:19:21;  author: mmainar;  state: Exp;  lines: +7 -7
+actualizacion
+----------------------------
+revision 1.14
+date: 2008/01/08 19:54:47;  author: ismasg;  state: Exp;  lines: +306 -309
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/08 19:37:40;  author: ismasg;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.12
+date: 2008/01/08 18:16:15;  author: mmainar;  state: Exp;  lines: +91 -111
+actualizacion
+----------------------------
+revision 1.11
+date: 2008/01/08 18:08:45;  author: ismasg;  state: Exp;  lines: +26 -0
+Actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/08 17:51:41;  author: ismasg;  state: Exp;  lines: +79 -1
+Actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/08 17:45:27;  author: mmainar;  state: Exp;  lines: +7 -7
+actualizacion
+----------------------------
+revision 1.8
+date: 2008/01/08 17:24:53;  author: mmainar;  state: Exp;  lines: +77 -77
+actualizacion
+----------------------------
+revision 1.7
+date: 2008/01/08 16:58:57;  author: ismasg;  state: Exp;  lines: +24 -0
+Actualizacion
+----------------------------
+revision 1.6
+date: 2008/01/08 12:31:39;  author: ismasg;  state: Exp;  lines: +64 -2
+Actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/07 17:28:37;  author: mmainar;  state: Exp;  lines: +8 -6
+actualizacion
+----------------------------
+revision 1.4
+date: 2007/12/17 17:49:10;  author: mmainar;  state: Exp;  lines: +81 -0
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/12/17 14:33:42;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/12/11 11:53:58;  author: mmainar;  state: Exp;  lines: +56 -56
+casi traducido del todo
+----------------------------
+revision 1.1
+date: 2007/12/11 10:01:27;  author: mmainar;  state: Exp;
+inicio de la traduccion a ingles
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/escape.c,v
+Working file: escape.c
+head: 1.5
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 5;	selected revisions: 5
+description:
+----------------------------
+revision 1.5
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.4
+date: 2008/01/25 18:00:26;  author: mmainar;  state: Exp;  lines: +0 -4
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/08 12:18:48;  author: mmainar;  state: Exp;  lines: +3 -8
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/29 14:20:16;  author: mmainar;  state: Exp;  lines: +6 -4
+actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/12 11:28:46;  author: ismasg;  state: Exp;
+Interfaz
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/escape.h,v
+Working file: escape.h
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/25 18:00:26;  author: mmainar;  state: Exp;  lines: +4 -0
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/29 14:20:16;  author: mmainar;  state: Exp;  lines: +8 -3
+actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/12 11:28:46;  author: ismasg;  state: Exp;
+Interfaz
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/eventosFutbol.txt,v
+Working file: eventosFutbol.txt
+head: 1.6
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 6;	selected revisions: 6
+description:
+----------------------------
+revision 1.6
+date: 2008/01/04 15:58:09;  author: mmainar;  state: Exp;  lines: +14 -4
+agregados partidos de este fin de semana y eventos viejos para probar resolver
+----------------------------
+revision 1.5
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +55 -30
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/12/03 12:32:17;  author: mmainar;  state: Exp;  lines: +20 -0
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/29 13:42:06;  author: mmainar;  state: Exp;  lines: +10 -16
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/28 17:45:00;  author: mmainar;  state: Exp;  lines: +1 -1
+fichero para probar el parser
+----------------------------
+revision 1.1
+date: 2007/11/27 20:39:57;  author: mmainar;  state: Exp;
+Archivo a parsear
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ges_usuarios.sh,v
+Working file: ges_usuarios.sh
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2007/12/03 20:00:08;  author: mmainar;  state: dead;  lines: +0 -0
+ya no es necesario
+----------------------------
+revision 1.3
+date: 2007/11/29 12:32:36;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +19 -3
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/19 18:58:24;  author: mmainar;  state: Exp;
+script compilacion gestion_usuarios.pc gestion_usuarios.h y pgu.pc
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/gestion_economica.h,v
+Working file: gestion_economica.h
+head: 1.5
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 5;	selected revisions: 5
+description:
+----------------------------
+revision 1.5
+date: 2008/01/06 19:13:10;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.4
+date: 2008/01/06 14:50:24;  author: mmainar;  state: Exp;  lines: +7 -1
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/29 14:30:49;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizacion de las cabeceras
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: Exp;  lines: +4 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/06 11:27:50;  author: jj_colomer;  state: Exp;
+hola
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_eventos.h,v
+Working file: gestion_eventos.h
+head: 1.18
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 18;	selected revisions: 18
+description:
+----------------------------
+revision 1.18
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +0 -6
+actualizaciones
+----------------------------
+revision 1.17
+date: 2008/01/04 21:00:23;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.16
+date: 2007/12/17 19:50:37;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +14 -2
+actualizado
+----------------------------
+revision 1.14
+date: 2007/12/11 11:04:00;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif
+----------------------------
+revision 1.13
+date: 2007/12/10 21:53:15;  author: jj_colomer;  state: Exp;  lines: +38 -0
+modif.
+----------------------------
+revision 1.12
+date: 2007/12/09 16:29:50;  author: jj_colomer;  state: Exp;  lines: +4 -17
+modif.
+----------------------------
+revision 1.11
+date: 2007/12/02 18:44:19;  author: mmainar;  state: Exp;  lines: +4 -6
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/12/02 01:57:08;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/01 16:39:20;  author: jj_colomer;  state: Exp;  lines: +5 -31
+incluido tipos.h. Eliminadas definiciones de tipos
+----------------------------
+revision 1.8
+date: 2007/11/29 12:31:00;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/25 19:20:41;  author: jj_colomer;  state: Exp;  lines: +2 -0
+actualizado
+----------------------------
+revision 1.6
+date: 2007/11/24 19:38:14;  author: jj_colomer;  state: Exp;  lines: +94 -11
+actualizado
+----------------------------
+revision 1.5
+date: 2007/11/23 19:52:40;  author: jj_colomer;  state: Exp;  lines: +6 -1
+actualizado
+----------------------------
+revision 1.4
+date: 2007/11/22 11:23:31;  author: jj_colomer;  state: Exp;  lines: +14 -5
+actualizado
+----------------------------
+revision 1.3
+date: 2007/11/18 21:56:01;  author: jj_colomer;  state: Exp;  lines: +37 -83
+fallo VARCHAR
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: Exp;  lines: +13 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/06 11:27:26;  author: jj_colomer;  state: Exp;
+hola
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_eventos.pc,v
+Working file: gestion_eventos.pc
+head: 1.48
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 48;	selected revisions: 48
+description:
+----------------------------
+revision 1.48
+date: 2008/01/10 12:21:36;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.47
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +1 -7
+Actualizacion
+----------------------------
+revision 1.46
+date: 2008/01/08 19:37:40;  author: ismasg;  state: Exp;  lines: +28 -25
+actualizaciones
+----------------------------
+revision 1.45
+date: 2008/01/08 09:04:08;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.44
+date: 2008/01/08 08:59:28;  author: ismasg;  state: Exp;  lines: +29 -22
+Actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +1 -4
+actualizaciones
+----------------------------
+revision 1.42
+date: 2008/01/06 10:54:38;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif.
+----------------------------
+revision 1.41
+date: 2008/01/05 18:23:20;  author: jj_colomer;  state: Exp;  lines: +0 -12
+actualizado
+----------------------------
+revision 1.40
+date: 2008/01/05 16:16:24;  author: mmainar;  state: Exp;  lines: +25 -88
+actualizacion
+----------------------------
+revision 1.39
+date: 2008/01/05 01:40:30;  author: ismasg;  state: Exp;  lines: +0 -5
+Actualizacion
+----------------------------
+revision 1.38
+date: 2008/01/04 21:00:23;  author: ismasg;  state: Exp;  lines: +15 -32
+Actualizacion
+----------------------------
+revision 1.37
+date: 2008/01/03 11:43:10;  author: ismasg;  state: Exp;  lines: +26 -12
+Actualizaciones
+----------------------------
+revision 1.36
+date: 2007/12/31 14:12:04;  author: ismasg;  state: Exp;  lines: +11 -17
+listado en funcion de preferencias totalmente funcional
+----------------------------
+revision 1.35
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +122 -19
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.34
+date: 2007/12/27 12:29:53;  author: ismasg;  state: Exp;  lines: +10 -9
+Actualizacion
+----------------------------
+revision 1.33
+date: 2007/12/17 23:30:02;  author: jj_colomer;  state: Exp;  lines: +10 -7
+modif.
+----------------------------
+revision 1.32
+date: 2007/12/17 19:50:37;  author: ismasg;  state: Exp;  lines: +15 -19
+Actualizacion
+----------------------------
+revision 1.31
+date: 2007/12/17 18:24:30;  author: jj_colomer;  state: Exp;  lines: +6 -17
+modif.
+----------------------------
+revision 1.30
+date: 2007/12/17 18:01:20;  author: jj_colomer;  state: Exp;  lines: +33 -6
+modif.
+----------------------------
+revision 1.29
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +124 -85
+actualizado
+----------------------------
+revision 1.28
+date: 2007/12/15 11:40:46;  author: jj_colomer;  state: Exp;  lines: +2 -2
+modif.
+----------------------------
+revision 1.27
+date: 2007/12/13 00:02:01;  author: jj_colomer;  state: Exp;  lines: +17 -53
+modif.
+----------------------------
+revision 1.26
+date: 2007/12/11 11:04:00;  author: jj_colomer;  state: Exp;  lines: +27 -8
+modif
+----------------------------
+revision 1.25
+date: 2007/12/10 21:53:15;  author: jj_colomer;  state: Exp;  lines: +128 -0
+modif.
+----------------------------
+revision 1.24
+date: 2007/12/09 16:29:50;  author: jj_colomer;  state: Exp;  lines: +15 -34
+modif.
+----------------------------
+revision 1.23
+date: 2007/12/08 23:21:05;  author: jj_colomer;  state: Exp;  lines: +63 -27
+actualizado
+----------------------------
+revision 1.22
+date: 2007/12/08 21:49:40;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizado
+----------------------------
+revision 1.21
+date: 2007/12/08 12:44:54;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizado
+----------------------------
+revision 1.20
+date: 2007/12/06 21:08:09;  author: jj_colomer;  state: Exp;  lines: +4 -2
+actualizado
+----------------------------
+revision 1.19
+date: 2007/12/06 18:02:41;  author: jj_colomer;  state: Exp;  lines: +3 -2
+actualizado
+----------------------------
+revision 1.18
+date: 2007/12/05 19:51:03;  author: jj_colomer;  state: Exp;  lines: +29 -9
+actualizado
+----------------------------
+revision 1.17
+date: 2007/12/04 18:50:20;  author: jj_colomer;  state: Exp;  lines: +3 -1
+actualizado
+----------------------------
+revision 1.16
+date: 2007/12/04 14:31:33;  author: jj_colomer;  state: Exp;  lines: +62 -34
+actualizado
+----------------------------
+revision 1.15
+date: 2007/12/04 00:34:13;  author: jj_colomer;  state: Exp;  lines: +37 -24
+actualizado
+----------------------------
+revision 1.14
+date: 2007/12/03 20:16:36;  author: mmainar;  state: Exp;  lines: +4 -7
+actualizada cabecera
+----------------------------
+revision 1.13
+date: 2007/12/02 18:44:19;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizaciones
+----------------------------
+revision 1.12
+date: 2007/12/02 01:57:07;  author: ismasg;  state: Exp;  lines: +22 -53
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/12/01 19:19:15;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizados
+----------------------------
+revision 1.10
+date: 2007/12/01 17:13:33;  author: jj_colomer;  state: Exp;  lines: +18 -140
+actualizados
+----------------------------
+revision 1.9
+date: 2007/12/01 16:39:20;  author: jj_colomer;  state: Exp;  lines: +34 -19
+incluido tipos.h. Eliminadas definiciones de tipos
+----------------------------
+revision 1.8
+date: 2007/11/29 12:31:00;  author: jj_colomer;  state: Exp;  lines: +14 -16
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/27 16:37:34;  author: jj_colomer;  state: Exp;  lines: +28 -28
+actualizado
+----------------------------
+revision 1.6
+date: 2007/11/25 19:53:05;  author: jj_colomer;  state: Exp;  lines: +33 -14
+actualizado
+----------------------------
+revision 1.5
+date: 2007/11/25 19:20:21;  author: jj_colomer;  state: Exp;  lines: +219 -39
+falta mirar ordenacion
+----------------------------
+revision 1.4
+date: 2007/11/24 19:37:59;  author: jj_colomer;  state: Exp;  lines: +168 -71
+actualizado
+----------------------------
+revision 1.3
+date: 2007/11/23 19:52:16;  author: jj_colomer;  state: Exp;  lines: +152 -3
+Actualizado.Funcion crea_fecha.falta arreglar to_date
+----------------------------
+revision 1.2
+date: 2007/11/22 11:23:14;  author: jj_colomer;  state: Exp;  lines: +225 -218
+falta introducir evento y resultados
+----------------------------
+revision 1.1
+date: 2007/11/18 21:56:52;  author: jj_colomer;  state: Exp;
+fallo VARCHAR
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_interna.h,v
+Working file: gestion_interna.h
+head: 1.31
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 31;	selected revisions: 31
+description:
+----------------------------
+revision 1.31
+date: 2008/01/10 20:01:19;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/10 16:38:16;  author: mmainar;  state: Exp;  lines: +5 -8
+actualizacion
+----------------------------
+revision 1.29
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/07 01:44:38;  author: mmainar;  state: Exp;  lines: +9 -0
+actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/06 02:02:44;  author: ismasg;  state: Exp;  lines: +0 -10
+Actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +24 -13
+actualizaciones
+----------------------------
+revision 1.25
+date: 2008/01/03 11:16:24;  author: jj_colomer;  state: Exp;  lines: +12 -4
+actualizado rankings
+----------------------------
+revision 1.24
+date: 2008/01/02 18:57:57;  author: jj_colomer;  state: Exp;  lines: +6 -30
+modif.
+----------------------------
+revision 1.23
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +14 -19
+actualizado
+----------------------------
+revision 1.22
+date: 2007/12/15 11:40:46;  author: jj_colomer;  state: Exp;  lines: +20 -0
+modif.
+----------------------------
+revision 1.21
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +22 -0
+actualizaciones
+----------------------------
+revision 1.20
+date: 2007/12/11 11:04:00;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif
+----------------------------
+revision 1.19
+date: 2007/12/08 21:49:40;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizado
+----------------------------
+revision 1.18
+date: 2007/12/08 12:44:27;  author: jj_colomer;  state: Exp;  lines: +11 -0
+actualizado.el envio de msjs con tareas pendientes al admin ya es completamente funcional
+----------------------------
+revision 1.17
+date: 2007/12/06 20:43:32;  author: jj_colomer;  state: Exp;  lines: +20 -18
+actualizado
+----------------------------
+revision 1.16
+date: 2007/12/06 19:31:21;  author: jj_colomer;  state: Exp;  lines: +6 -0
+actualiz.
+----------------------------
+revision 1.15
+date: 2007/12/04 14:58:42;  author: jj_colomer;  state: Exp;  lines: +15 -0
+actualizado
+----------------------------
+revision 1.14
+date: 2007/12/03 23:00:32;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizado
+----------------------------
+revision 1.13
+date: 2007/12/03 19:22:36;  author: jj_colomer;  state: Exp;  lines: +2 -1
+actualizado
+----------------------------
+revision 1.12
+date: 2007/12/03 17:45:38;  author: jj_colomer;  state: Exp;  lines: +4 -4
+actualizado
+----------------------------
+revision 1.11
+date: 2007/12/03 16:50:00;  author: jj_colomer;  state: Exp;  lines: +8 -1
+actualizado
+----------------------------
+revision 1.10
+date: 2007/12/03 16:32:27;  author: jj_colomer;  state: Exp;  lines: +18 -6
+actualizado
+----------------------------
+revision 1.9
+date: 2007/12/03 15:14:08;  author: jj_colomer;  state: Exp;  lines: +14 -15
+actualizado
+----------------------------
+revision 1.8
+date: 2007/12/03 12:48:02;  author: jj_colomer;  state: Exp;  lines: +18 -1
+actualizado
+----------------------------
+revision 1.7
+date: 2007/12/01 19:19:15;  author: jj_colomer;  state: Exp;  lines: +8 -0
+actualizados
+----------------------------
+revision 1.6
+date: 2007/12/01 19:05:12;  author: jj_colomer;  state: Exp;  lines: +51 -40
+actualidado
+----------------------------
+revision 1.5
+date: 2007/12/01 18:01:26;  author: jj_colomer;  state: Exp;  lines: +6 -6
+*** empty log message ***
+----------------------------
+revision 1.4
+date: 2007/11/30 20:27:45;  author: jj_colomer;  state: Exp;  lines: +64 -4
+actualizados
+----------------------------
+revision 1.3
+date: 2007/11/29 11:37:39;  author: mmainar;  state: Exp;  lines: +15 -10
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/27 17:19:25;  author: jj_colomer;  state: Exp;  lines: +55 -42
+iniciado
+----------------------------
+revision 1.1
+date: 2007/11/05 21:34:23;  author: mmainar;  state: Exp;
+interfaz de los modulos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_interna.pc,v
+Working file: gestion_interna.pc
+head: 1.51
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 51;	selected revisions: 51
+description:
+----------------------------
+revision 1.51
+date: 2008/01/26 12:13:47;  author: jj_colomer;  state: Exp;  lines: +1 -5
+modif
+----------------------------
+revision 1.50
+date: 2008/01/25 15:41:56;  author: ismasg;  state: Exp;  lines: +1 -19
+Actualizacion
+----------------------------
+revision 1.49
+date: 2008/01/11 13:16:35;  author: mmainar;  state: Exp;  lines: +10 -14
+actualizacion
+----------------------------
+revision 1.48
+date: 2008/01/10 20:01:19;  author: ismasg;  state: Exp;  lines: +18 -8
+Actualizacion
+----------------------------
+revision 1.47
+date: 2008/01/10 18:38:29;  author: ismasg;  state: Exp;  lines: +53 -26
+actualizacin
+----------------------------
+revision 1.46
+date: 2008/01/10 16:38:16;  author: mmainar;  state: Exp;  lines: +9 -38
+actualizacion
+----------------------------
+revision 1.45
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.44
+date: 2008/01/07 11:03:57;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/07 10:59:56;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.42
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.41
+date: 2008/01/07 01:44:38;  author: mmainar;  state: Exp;  lines: +60 -2
+actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/07 00:33:12;  author: mmainar;  state: Exp;  lines: +2 -2
+inicializacion de dias_mes en desplazar_fecha puesta a 30
+----------------------------
+revision 1.39
+date: 2008/01/06 15:19:04;  author: jj_colomer;  state: Exp;  lines: +8 -8
+actualizado
+----------------------------
+revision 1.38
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +1 -6
+actualizaciones
+----------------------------
+revision 1.37
+date: 2008/01/04 15:51:40;  author: mmainar;  state: Exp;  lines: +9 -7
+corregido error que hacia que se colgara al inicio
+----------------------------
+revision 1.36
+date: 2008/01/03 14:33:46;  author: mmainar;  state: Exp;  lines: +5 -1
+actualizaciones
+----------------------------
+revision 1.35
+date: 2008/01/03 11:16:24;  author: jj_colomer;  state: Exp;  lines: +122 -19
+actualizado rankings
+----------------------------
+revision 1.34
+date: 2008/01/03 10:13:04;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizacion
+----------------------------
+revision 1.33
+date: 2008/01/03 10:11:47;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.32
+date: 2008/01/02 18:57:57;  author: jj_colomer;  state: Exp;  lines: +18 -86
+modif.
+----------------------------
+revision 1.31
+date: 2008/01/02 16:52:53;  author: jj_colomer;  state: Exp;  lines: +73 -26
+modif.
+----------------------------
+revision 1.30
+date: 2007/12/26 18:21:29;  author: mmainar;  state: Exp;  lines: +18 -6
+actualizaciones
+----------------------------
+revision 1.29
+date: 2007/12/17 16:24:16;  author: jj_colomer;  state: Exp;  lines: +6 -6
+actualizado
+----------------------------
+revision 1.28
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +114 -191
+actualizado
+----------------------------
+revision 1.27
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.26
+date: 2007/12/16 13:15:35;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.25
+date: 2007/12/15 13:18:00;  author: jj_colomer;  state: Exp;  lines: +19 -15
+modif.
+----------------------------
+revision 1.24
+date: 2007/12/15 11:40:46;  author: jj_colomer;  state: Exp;  lines: +28 -27
+modif.
+----------------------------
+revision 1.23
+date: 2007/12/13 20:22:44;  author: ismasg;  state: Exp;  lines: +1 -2
+actualizaciones
+----------------------------
+revision 1.22
+date: 2007/12/13 00:02:01;  author: jj_colomer;  state: Exp;  lines: +100 -8
+modif.
+----------------------------
+revision 1.21
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +144 -0
+actualizaciones
+----------------------------
+revision 1.20
+date: 2007/12/09 16:01:08;  author: jj_colomer;  state: Exp;  lines: +1 -2
+actualizado
+----------------------------
+revision 1.19
+date: 2007/12/08 21:49:40;  author: jj_colomer;  state: Exp;  lines: +48 -32
+actualizado
+----------------------------
+revision 1.18
+date: 2007/12/08 12:44:27;  author: jj_colomer;  state: Exp;  lines: +72 -6
+actualizado.el envio de msjs con tareas pendientes al admin ya es completamente funcional
+----------------------------
+revision 1.17
+date: 2007/12/06 21:08:09;  author: jj_colomer;  state: Exp;  lines: +1 -13
+actualizado
+----------------------------
+revision 1.16
+date: 2007/12/06 20:43:32;  author: jj_colomer;  state: Exp;  lines: +142 -27
+actualizado
+----------------------------
+revision 1.15
+date: 2007/12/06 19:31:21;  author: jj_colomer;  state: Exp;  lines: +22 -6
+actualiz.
+----------------------------
+revision 1.14
+date: 2007/12/04 14:58:42;  author: jj_colomer;  state: Exp;  lines: +26 -0
+actualizado
+----------------------------
+revision 1.13
+date: 2007/12/03 23:00:32;  author: jj_colomer;  state: Exp;  lines: +9 -9
+actualizado
+----------------------------
+revision 1.12
+date: 2007/12/03 19:22:36;  author: jj_colomer;  state: Exp;  lines: +11 -8
+actualizado
+----------------------------
+revision 1.11
+date: 2007/12/03 17:45:38;  author: jj_colomer;  state: Exp;  lines: +15 -17
+actualizado
+----------------------------
+revision 1.10
+date: 2007/12/03 16:50:00;  author: jj_colomer;  state: Exp;  lines: +9 -7
+actualizado
+----------------------------
+revision 1.9
+date: 2007/12/03 16:32:27;  author: jj_colomer;  state: Exp;  lines: +31 -6
+actualizado
+----------------------------
+revision 1.8
+date: 2007/12/03 15:14:08;  author: jj_colomer;  state: Exp;  lines: +99 -17
+actualizado
+----------------------------
+revision 1.7
+date: 2007/12/03 12:48:01;  author: jj_colomer;  state: Exp;  lines: +56 -18
+actualizado
+----------------------------
+revision 1.6
+date: 2007/12/01 19:19:15;  author: jj_colomer;  state: Exp;  lines: +8 -9
+actualizados
+----------------------------
+revision 1.5
+date: 2007/12/01 19:05:12;  author: jj_colomer;  state: Exp;  lines: +138 -55
+actualidado
+----------------------------
+revision 1.4
+date: 2007/12/01 18:01:26;  author: jj_colomer;  state: Exp;  lines: +20 -14
+*** empty log message ***
+----------------------------
+revision 1.3
+date: 2007/11/30 20:27:45;  author: jj_colomer;  state: Exp;  lines: +184 -20
+actualizados
+----------------------------
+revision 1.2
+date: 2007/11/29 11:37:40;  author: mmainar;  state: Exp;  lines: +4 -1
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/27 18:10:35;  author: jj_colomer;  state: Exp;
+Inicial
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/gestion_usuarios.c,v
+Working file: gestion_usuarios.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/16 23:25:32;  author: mmainar;  state: dead;  lines: +0 -0
+ahora es .pc
+----------------------------
+revision 1.1
+date: 2007/11/15 17:08:56;  author: mmainar;  state: Exp;
+primeros pasos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_usuarios.h,v
+Working file: gestion_usuarios.h
+head: 1.33
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 33;	selected revisions: 33
+description:
+----------------------------
+revision 1.33
+date: 2008/01/27 16:38:58;  author: mmainar;  state: Exp;  lines: +15 -12
+actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/24 17:07:42;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/24 17:06:12;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +8 -0
+actualizaciones
+----------------------------
+revision 1.29
+date: 2008/01/04 09:23:48;  author: mmainar;  state: Exp;  lines: +7 -0
+actualizacion
+----------------------------
+revision 1.28
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +9 -0
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.27
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +19 -5
+actualizacion
+----------------------------
+revision 1.26
+date: 2007/12/17 16:20:22;  author: jj_colomer;  state: Exp;  lines: +2 -1
+actualizado
+----------------------------
+revision 1.25
+date: 2007/12/17 16:19:31;  author: jj_colomer;  state: Exp;  lines: +9 -0
+actualizado
+----------------------------
+revision 1.24
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +8 -0
+actualizado
+----------------------------
+revision 1.23
+date: 2007/12/16 13:15:35;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.22
+date: 2007/12/13 19:53:40;  author: ismasg;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.21
+date: 2007/12/02 01:56:45;  author: ismasg;  state: Exp;  lines: +3 -2
+Actualizacion
+----------------------------
+revision 1.20
+date: 2007/12/01 16:35:56;  author: jj_colomer;  state: Exp;  lines: +1 -31
+eliminada la definicion de tuplaUsuario (trasladada a tipos.h) e incluido tipos.h
+----------------------------
+revision 1.19
+date: 2007/11/29 14:20:16;  author: mmainar;  state: Exp;  lines: +10 -5
+actualizacion
+----------------------------
+revision 1.18
+date: 2007/11/29 12:32:36;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/11/29 11:37:40;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.16
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +10 -9
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/11/24 18:43:09;  author: mmainar;  state: Exp;  lines: +4 -2
+actualizacionES
+----------------------------
+revision 1.14
+date: 2007/11/24 14:26:10;  author: mmainar;  state: Exp;  lines: +137 -76
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/11/21 14:42:47;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/11/20 21:12:20;  author: mmainar;  state: Exp;  lines: +3 -3
+corregidos fallos
+----------------------------
+revision 1.11
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/11/19 18:53:04;  author: mmainar;  state: Exp;  lines: +17 -3
+actualizaciones
+----------------------------
+revision 1.9
+date: 2007/11/18 17:58:58;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/17 19:43:29;  author: mmainar;  state: Exp;  lines: +29 -2
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/16 23:30:56;  author: mmainar;  state: Exp;  lines: +10 -9
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/16 21:24:29;  author: mmainar;  state: Exp;  lines: +0 -7
+bueno
+----------------------------
+revision 1.5
+date: 2007/11/16 20:49:57;  author: mmainar;  state: Exp;  lines: +2 -58
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/16 20:02:18;  author: mmainar;  state: Exp;  lines: +140 -51
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/15 17:06:05;  author: mmainar;  state: Exp;  lines: +19 -8
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: Exp;  lines: +26 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/05 21:34:23;  author: mmainar;  state: Exp;
+interfaz de los modulos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/gestion_usuarios.pc,v
+Working file: gestion_usuarios.pc
+head: 1.49
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 49;	selected revisions: 49
+description:
+----------------------------
+revision 1.49
+date: 2008/01/25 16:35:45;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.48
+date: 2008/01/08 19:37:40;  author: ismasg;  state: Exp;  lines: +37 -3
+actualizaciones
+----------------------------
+revision 1.47
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +25 -0
+actualizaciones
+----------------------------
+revision 1.46
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +3 -2
+actualizacion
+----------------------------
+revision 1.45
+date: 2008/01/06 19:13:08;  author: mmainar;  state: Exp;  lines: +1 -17
+actualizacion
+----------------------------
+revision 1.44
+date: 2008/01/06 10:50:24;  author: jj_colomer;  state: Exp;  lines: +54 -27
+Arreglado el listado personalizado
+----------------------------
+revision 1.43
+date: 2008/01/05 18:47:56;  author: jj_colomer;  state: Exp;  lines: +4 -2
+modif.
+----------------------------
+revision 1.42
+date: 2008/01/05 01:39:18;  author: ismasg;  state: Exp;  lines: +152 -2
+Actualizcion
+----------------------------
+revision 1.41
+date: 2008/01/04 12:34:51;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/04 09:28:58;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.39
+date: 2008/01/04 09:23:48;  author: mmainar;  state: Exp;  lines: +44 -0
+actualizacion
+----------------------------
+revision 1.38
+date: 2008/01/03 12:32:50;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.37
+date: 2008/01/03 11:09:05;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.36
+date: 2008/01/03 10:11:47;  author: mmainar;  state: Exp;  lines: +28 -12
+actualizaciones
+----------------------------
+revision 1.35
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +55 -0
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.34
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +33 -34
+actualizacion
+----------------------------
+revision 1.33
+date: 2007/12/17 21:31:40;  author: jj_colomer;  state: Exp;  lines: +19 -18
+modif
+----------------------------
+revision 1.32
+date: 2007/12/17 18:01:20;  author: jj_colomer;  state: Exp;  lines: +0 -6
+modif.
+----------------------------
+revision 1.31
+date: 2007/12/17 16:19:31;  author: jj_colomer;  state: Exp;  lines: +22 -0
+actualizado
+----------------------------
+revision 1.30
+date: 2007/12/17 15:44:47;  author: mmainar;  state: Exp;  lines: +33 -2
+actualizacion
+----------------------------
+revision 1.29
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +41 -0
+actualizado
+----------------------------
+revision 1.28
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizacion
+----------------------------
+revision 1.27
+date: 2007/12/16 13:15:36;  author: mmainar;  state: Exp;  lines: +5 -11
+actualizaciones
+----------------------------
+revision 1.26
+date: 2007/12/16 10:59:56;  author: mmainar;  state: Exp;  lines: +37 -4
+actualizaciones
+----------------------------
+revision 1.25
+date: 2007/12/13 19:53:40;  author: ismasg;  state: Exp;  lines: +23 -2
+actualizaciones
+----------------------------
+revision 1.24
+date: 2007/12/02 01:56:45;  author: ismasg;  state: Exp;  lines: +2 -3
+Actualizacion
+----------------------------
+revision 1.23
+date: 2007/12/01 16:35:56;  author: jj_colomer;  state: Exp;  lines: +1 -0
+eliminada la definicion de tuplaUsuario (trasladada a tipos.h) e incluido tipos.h
+----------------------------
+revision 1.22
+date: 2007/11/29 14:20:17;  author: mmainar;  state: Exp;  lines: +3 -5
+actualizacion
+----------------------------
+revision 1.21
+date: 2007/11/29 12:32:36;  author: mmainar;  state: Exp;  lines: +20 -16
+actualizaciones
+----------------------------
+revision 1.20
+date: 2007/11/29 11:37:41;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizaciones
+----------------------------
+revision 1.19
+date: 2007/11/29 09:58:06;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.18
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +22 -11
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/11/24 18:43:09;  author: mmainar;  state: Exp;  lines: +30 -21
+actualizacionES
+----------------------------
+revision 1.16
+date: 2007/11/24 16:25:09;  author: mmainar;  state: Exp;  lines: +31 -4
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/11/24 14:58:45;  author: mmainar;  state: Exp;  lines: +8 -32
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/11/24 14:26:10;  author: mmainar;  state: Exp;  lines: +132 -504
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/11/24 12:12:17;  author: mmainar;  state: Exp;  lines: +8 -18
+actualizar
+----------------------------
+revision 1.12
+date: 2007/11/23 22:27:35;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.11
+date: 2007/11/21 14:42:47;  author: mmainar;  state: Exp;  lines: +7 -6
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/11/20 21:12:20;  author: mmainar;  state: Exp;  lines: +32 -37
+corregidos fallos
+----------------------------
+revision 1.9
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +39 -31
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/19 18:53:04;  author: mmainar;  state: Exp;  lines: +184 -13
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/18 17:58:58;  author: mmainar;  state: Exp;  lines: +31 -16
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/17 19:43:29;  author: mmainar;  state: Exp;  lines: +22 -38
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/16 23:30:56;  author: mmainar;  state: Exp;  lines: +146 -125
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/16 21:23:25;  author: mmainar;  state: Exp;  lines: +676 -336
+bueno
+----------------------------
+revision 1.3
+date: 2007/11/16 20:49:57;  author: mmainar;  state: Exp;  lines: +336 -650
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/16 20:02:18;  author: mmainar;  state: Exp;  lines: +559 -176
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/15 17:07:11;  author: mmainar;  state: Exp;
+primeros pasos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/getch.c,v
+Working file: getch.c
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2008/01/04 18:15:22;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/20 21:09:28;  author: ismasg;  state: Exp;  lines: +35 -29
+Funcion getch en ANSI
+----------------------------
+revision 1.1
+date: 2007/11/20 15:32:26;  author: ismasg;  state: Exp;
+Leer de la stdin sin mostrar por pantalla
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/help.txt,v
+Working file: help.txt
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2008/01/25 17:35:22;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.1
+date: 2008/01/25 16:34:58;  author: mmainar;  state: Exp;
+ficheros de ayuda
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/hilfe.txt,v
+Working file: hilfe.txt
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2008/01/25 17:35:23;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.1
+date: 2008/01/25 16:34:58;  author: mmainar;  state: Exp;
+ficheros de ayuda
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/infoBD.sql,v
+Working file: infoBD.sql
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2008/01/27 16:42:13;  author: mmainar;  state: Exp;  lines: +3 -1
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -16
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/10 10:54:37;  author: mmainar;  state: Exp;  lines: +19 -0
+Actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/09 21:03:30;  author: mmainar;  state: Exp;
+Muestra info. de las tablas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/informes.h,v
+Working file: informes.h
+head: 1.11
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 11;	selected revisions: 11
+description:
+----------------------------
+revision 1.11
+date: 2008/01/27 16:38:58;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/25 17:42:15;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/11 01:03:11;  author: jj_colomer;  state: Exp;  lines: +0 -7
+modif.
+----------------------------
+revision 1.8
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +9 -0
+actualizaciones
+----------------------------
+revision 1.7
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +13 -7
+actualizacion
+----------------------------
+revision 1.6
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +7 -19
+actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +7 -18
+actualizacion
+----------------------------
+revision 1.4
+date: 2008/01/06 22:43:15;  author: mmainar;  state: Exp;  lines: +28 -33
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +21 -7
+actualizacion
+----------------------------
+revision 1.2
+date: 2008/01/06 20:24:41;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.1
+date: 2008/01/06 19:13:09;  author: mmainar;  state: Exp;
+actualizacion
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/informes.pc,v
+Working file: informes.pc
+head: 1.15
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 15;	selected revisions: 15
+description:
+----------------------------
+revision 1.15
+date: 2008/01/27 16:38:58;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.14
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/25 19:41:15;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.12
+date: 2008/01/25 16:42:31;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizaciones
+----------------------------
+revision 1.11
+date: 2008/01/11 01:03:11;  author: jj_colomer;  state: Exp;  lines: +0 -52
+modif.
+----------------------------
+revision 1.10
+date: 2008/01/10 12:21:38;  author: ismasg;  state: Exp;  lines: +5 -6
+Actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/09 18:36:11;  author: mmainar;  state: Exp;  lines: +7 -2
+actualizacion
+----------------------------
+revision 1.8
+date: 2008/01/08 19:37:40;  author: ismasg;  state: Exp;  lines: +5 -4
+actualizaciones
+----------------------------
+revision 1.7
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +50 -0
+actualizaciones
+----------------------------
+revision 1.6
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +26 -10
+actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +50 -16
+actualizacion
+----------------------------
+revision 1.4
+date: 2008/01/06 22:43:15;  author: mmainar;  state: Exp;  lines: +7 -52
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +111 -8
+actualizacion
+----------------------------
+revision 1.2
+date: 2008/01/06 20:24:41;  author: mmainar;  state: Exp;  lines: +7 -6
+actualizaciones
+----------------------------
+revision 1.1
+date: 2008/01/06 19:13:08;  author: mmainar;  state: Exp;
+actualizacion
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/interfaz.c,v
+Working file: interfaz.c
+head: 1.9
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 9;	selected revisions: 9
+description:
+----------------------------
+revision 1.9
+date: 2007/11/29 16:55:16;  author: mmainar;  state: dead;  lines: +0 -0
+cambiada a .pc
+----------------------------
+revision 1.8
+date: 2007/11/29 16:54:01;  author: ismasg;  state: Exp;  lines: +353 -4
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/27 19:15:08;  author: ismasg;  state: Exp;  lines: +159 -108
+Actualizacion
+----------------------------
+revision 1.6
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +6 -0
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/27 11:43:31;  author: ismasg;  state: Exp;  lines: +142 -5
+Actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/24 18:40:43;  author: ismasg;  state: Exp;  lines: +7 -8
+Actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/22 11:54:43;  author: ismasg;  state: Exp;  lines: +233 -2
+Actualizacion interfaz
+----------------------------
+revision 1.2
+date: 2007/11/18 21:03:43;  author: ismasg;  state: Exp;  lines: +2 -0
+realizar_apuestas.pc
+----------------------------
+revision 1.1
+date: 2007/11/17 00:23:30;  author: ismasg;  state: Exp;
+actualizacion interfaz 16/11
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/interfaz.h,v
+Working file: interfaz.h
+head: 1.26
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 26;	selected revisions: 26
+description:
+----------------------------
+revision 1.26
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +95 -8
+actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/26 12:16:27;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif
+----------------------------
+revision 1.24
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/13 18:13:09;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/10 12:21:39;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +7 -0
+actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/03 11:43:10;  author: ismasg;  state: Exp;  lines: +6 -4
+Actualizaciones
+----------------------------
+revision 1.19
+date: 2007/12/27 12:29:53;  author: ismasg;  state: Exp;  lines: +12 -1
+Actualizacion
+----------------------------
+revision 1.18
+date: 2007/12/26 18:21:29;  author: mmainar;  state: Exp;  lines: +22 -8
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/12/25 11:55:43;  author: ismasg;  state: Exp;  lines: +8 -7
+Actualizacion
+----------------------------
+revision 1.16
+date: 2007/12/25 11:35:57;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/12/18 18:09:33;  author: ismasg;  state: Exp;  lines: +249 -79
+Actualizacion
+----------------------------
+revision 1.14
+date: 2007/12/17 19:50:37;  author: ismasg;  state: Exp;  lines: +4 -3
+Actualizacion
+----------------------------
+revision 1.13
+date: 2007/12/17 14:20:04;  author: ismasg;  state: Exp;  lines: +20 -8
+Actualizacion
+----------------------------
+revision 1.12
+date: 2007/12/17 09:16:27;  author: ismasg;  state: Exp;  lines: +42 -20
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +21 -0
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/12/02 18:13:40;  author: ismasg;  state: Exp;  lines: +1 -0
+Actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/02 01:57:26;  author: ismasg;  state: Exp;  lines: +10 -2
+�Actualizacion
+----------------------------
+revision 1.8
+date: 2007/11/29 16:54:01;  author: ismasg;  state: Exp;  lines: +31 -0
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/27 19:15:08;  author: ismasg;  state: Exp;  lines: +45 -17
+Actualizacion
+----------------------------
+revision 1.6
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +4 -3
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/27 11:43:31;  author: ismasg;  state: Exp;  lines: +3 -1
+Actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/22 11:54:43;  author: ismasg;  state: Exp;  lines: +26 -2
+Actualizacion interfaz
+----------------------------
+revision 1.3
+date: 2007/11/18 21:03:43;  author: ismasg;  state: Exp;  lines: +0 -1
+realizar_apuestas.pc
+----------------------------
+revision 1.2
+date: 2007/11/17 00:23:30;  author: ismasg;  state: Exp;  lines: +22 -25
+actualizacion interfaz 16/11
+----------------------------
+revision 1.1
+date: 2007/11/05 21:53:56;  author: ismasg;  state: Exp;
+Interfaz de los modulos de Isma, version preliminar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/interfaz.pc,v
+Working file: interfaz.pc
+head: 1.76
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 76;	selected revisions: 76
+description:
+----------------------------
+revision 1.76
+date: 2008/01/27 22:38:53;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.75
+date: 2008/01/27 19:47:48;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.74
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +46 -33
+actualizacion
+----------------------------
+revision 1.73
+date: 2008/01/27 16:30:50;  author: ismasg;  state: Exp;  lines: +24 -14
+Actualizacion
+----------------------------
+revision 1.72
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +47 -15
+Actualizacion
+----------------------------
+revision 1.71
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +3 -0
+Actualizacion
+----------------------------
+revision 1.70
+date: 2008/01/25 16:32:22;  author: ismasg;  state: Exp;  lines: +4 -4
+Actualizacion
+----------------------------
+revision 1.69
+date: 2008/01/20 22:26:40;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.68
+date: 2008/01/16 16:08:03;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.67
+date: 2008/01/15 17:27:11;  author: ismasg;  state: Exp;  lines: +5 -2
+Actualizacion
+----------------------------
+revision 1.66
+date: 2008/01/13 19:40:39;  author: ismasg;  state: Exp;  lines: +14 -6
+actualizacion
+----------------------------
+revision 1.65
+date: 2008/01/13 18:13:09;  author: ismasg;  state: Exp;  lines: +8 -6
+Actualizacion
+----------------------------
+revision 1.64
+date: 2008/01/10 12:51:28;  author: ismasg;  state: Exp;  lines: +27 -13
+Actualizacion
+----------------------------
+revision 1.63
+date: 2008/01/10 12:29:42;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.62
+date: 2008/01/10 12:21:39;  author: ismasg;  state: Exp;  lines: +69 -28
+Actualizacion
+----------------------------
+revision 1.61
+date: 2008/01/10 12:08:59;  author: mmainar;  state: Exp;  lines: +15 -4
+actualizacion
+----------------------------
+revision 1.60
+date: 2008/01/10 09:44:30;  author: ismasg;  state: Exp;  lines: +4 -3
+Actualizacion
+----------------------------
+revision 1.59
+date: 2008/01/10 09:41:40;  author: ismasg;  state: Exp;  lines: +4 -4
+Actualizacion
+----------------------------
+revision 1.58
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.57
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +21 -9
+Actualizacion
+----------------------------
+revision 1.56
+date: 2008/01/09 19:15:57;  author: ismasg;  state: Exp;  lines: +4 -4
+Actualizacion
+----------------------------
+revision 1.55
+date: 2008/01/09 19:08:52;  author: ismasg;  state: Exp;  lines: +92 -174
+actualizacion
+----------------------------
+revision 1.54
+date: 2008/01/08 19:37:40;  author: ismasg;  state: Exp;  lines: +249 -233
+actualizaciones
+----------------------------
+revision 1.53
+date: 2008/01/08 08:59:51;  author: ismasg;  state: Exp;  lines: +36 -35
+Actualizacion
+----------------------------
+revision 1.52
+date: 2008/01/07 19:07:31;  author: ismasg;  state: Exp;  lines: +275 -21
+Actualizacion
+----------------------------
+revision 1.51
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.50
+date: 2008/01/07 13:38:38;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.49
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +35 -5
+actualizacion
+----------------------------
+revision 1.48
+date: 2008/01/07 02:42:01;  author: ismasg;  state: Exp;  lines: +153 -22
+Actualizacion
+----------------------------
+revision 1.47
+date: 2008/01/06 02:02:44;  author: ismasg;  state: Exp;  lines: +65 -9
+Actualizacion
+----------------------------
+revision 1.46
+date: 2008/01/05 18:47:56;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif.
+----------------------------
+revision 1.45
+date: 2008/01/05 13:09:56;  author: mmainar;  state: Exp;  lines: +5 -17
+actualizacion
+----------------------------
+revision 1.44
+date: 2008/01/05 12:18:25;  author: mmainar;  state: Exp;  lines: +6 -6
+actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/05 01:39:17;  author: ismasg;  state: Exp;  lines: +65 -1
+Actualizcion
+----------------------------
+revision 1.42
+date: 2008/01/04 22:44:01;  author: ismasg;  state: Exp;  lines: +62 -6
+Actualizacion
+----------------------------
+revision 1.41
+date: 2008/01/04 21:33:44;  author: ismasg;  state: Exp;  lines: +2 -0
+Actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/04 21:30:31;  author: ismasg;  state: Exp;  lines: +53 -0
+Actualizacion
+----------------------------
+revision 1.39
+date: 2008/01/04 12:34:51;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.38
+date: 2008/01/04 11:37:10;  author: ismasg;  state: Exp;  lines: +52 -3
+Actualizacion
+----------------------------
+revision 1.37
+date: 2008/01/03 14:33:46;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.36
+date: 2008/01/03 12:32:50;  author: mmainar;  state: Exp;  lines: +2 -4
+actualizaciones
+----------------------------
+revision 1.35
+date: 2008/01/03 11:43:10;  author: ismasg;  state: Exp;  lines: +71 -27
+Actualizaciones
+----------------------------
+revision 1.34
+date: 2007/12/30 23:34:38;  author: ismasg;  state: Exp;  lines: +6 -6
+Actualizacion
+----------------------------
+revision 1.33
+date: 2007/12/30 22:38:17;  author: ismasg;  state: Exp;  lines: +0 -1
+Actualizacion de cara al interfaz
+----------------------------
+revision 1.32
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +6 -3
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.31
+date: 2007/12/28 19:40:47;  author: mmainar;  state: Exp;  lines: +240 -50
+actualizaciones
+----------------------------
+revision 1.30
+date: 2007/12/28 11:33:04;  author: ismasg;  state: Exp;  lines: +55 -99
+Actualizacion
+----------------------------
+revision 1.29
+date: 2007/12/27 21:41:03;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.28
+date: 2007/12/27 12:29:53;  author: ismasg;  state: Exp;  lines: +41 -6
+Actualizacion
+----------------------------
+revision 1.27
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +65 -4
+actualizaciones
+----------------------------
+revision 1.26
+date: 2007/12/26 09:29:15;  author: ismasg;  state: Exp;  lines: +11 -12
+Actualizacion
+----------------------------
+revision 1.25
+date: 2007/12/25 11:55:43;  author: ismasg;  state: Exp;  lines: +110 -102
+Actualizacion
+----------------------------
+revision 1.24
+date: 2007/12/25 11:35:58;  author: ismasg;  state: Exp;  lines: +74 -78
+Actualizacion
+----------------------------
+revision 1.23
+date: 2007/12/18 18:09:33;  author: ismasg;  state: Exp;  lines: +740 -543
+Actualizacion
+----------------------------
+revision 1.22
+date: 2007/12/17 23:11:13;  author: ismasg;  state: Exp;  lines: +9 -8
+Actualizacion
+----------------------------
+revision 1.21
+date: 2007/12/17 19:50:37;  author: ismasg;  state: Exp;  lines: +147 -61
+Actualizacion
+----------------------------
+revision 1.20
+date: 2007/12/17 18:01:20;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif.
+----------------------------
+revision 1.19
+date: 2007/12/17 14:54:15;  author: jj_colomer;  state: Exp;  lines: +3 -13
+modif.
+----------------------------
+revision 1.18
+date: 2007/12/17 12:59:22;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.17
+date: 2007/12/17 12:56:21;  author: ismasg;  state: Exp;  lines: +151 -67
+Actualizacion
+----------------------------
+revision 1.16
+date: 2007/12/17 09:16:27;  author: ismasg;  state: Exp;  lines: +521 -212
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/12/16 13:15:36;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/12/15 12:14:07;  author: jj_colomer;  state: Exp;  lines: +3 -2
+actualizado
+----------------------------
+revision 1.13
+date: 2007/12/13 20:22:44;  author: ismasg;  state: Exp;  lines: +13 -6
+actualizaciones
+----------------------------
+revision 1.12
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +383 -32
+actualizaciones
+----------------------------
+revision 1.11
+date: 2007/12/06 12:51:37;  author: mmainar;  state: Exp;  lines: +13 -0
+pedir preferencias usuario al registrarse falta completar
+----------------------------
+revision 1.10
+date: 2007/12/04 18:52:23;  author: jj_colomer;  state: Exp;  lines: +6 -1
+actualizado
+----------------------------
+revision 1.9
+date: 2007/12/04 18:50:20;  author: jj_colomer;  state: Exp;  lines: +5 -3
+actualizado
+----------------------------
+revision 1.8
+date: 2007/12/03 22:28:25;  author: ismasg;  state: Exp;  lines: +38 -13
+Actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/03 15:38:04;  author: mmainar;  state: Exp;  lines: +24 -24
+mirar comprobar DNI
+----------------------------
+revision 1.6
+date: 2007/12/03 15:19:44;  author: mmainar;  state: Exp;  lines: +37 -1
+falta completar letra DNI
+----------------------------
+revision 1.5
+date: 2007/12/03 12:49:44;  author: ismasg;  state: Exp;  lines: +114 -10
+Actualizacion
+----------------------------
+revision 1.4
+date: 2007/12/02 20:10:34;  author: mmainar;  state: Exp;  lines: +68 -3
+falta completar comprobarfecha
+----------------------------
+revision 1.3
+date: 2007/12/02 18:13:40;  author: ismasg;  state: Exp;  lines: +190 -10
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/12/02 01:57:26;  author: ismasg;  state: Exp;  lines: +380 -50
+�Actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/29 16:55:03;  author: ismasg;  state: Exp;
+Actualizacion
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/jornadaLiga.txt,v
+Working file: jornadaLiga.txt
+head: 1.1
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 1;	selected revisions: 1
+description:
+----------------------------
+revision 1.1
+date: 2008/01/27 22:15:47;  author: mmainar;  state: Exp;
+partidos de la jornada 21 liga 1ª division
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/juegos.h,v
+Working file: juegos.h
+head: 1.15
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 15;	selected revisions: 15
+description:
+----------------------------
+revision 1.15
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +0 -20
+actualizacion
+----------------------------
+revision 1.14
+date: 2008/01/03 12:26:00;  author: mmainar;  state: Exp;  lines: +19 -8
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/03 11:35:26;  author: mmainar;  state: Exp;  lines: +20 -0
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +31 -21
+actualizacion
+----------------------------
+revision 1.11
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +42 -21
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/12/18 17:24:29;  author: mmainar;  state: Exp;  lines: +9 -4
+actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/18 17:06:35;  author: mmainar;  state: Exp;  lines: +28 -22
+actualizacion
+----------------------------
+revision 1.8
+date: 2007/12/17 16:50:50;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +17 -0
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +1 -34
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/11 10:01:00;  author: mmainar;  state: Exp;  lines: +16 -16
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/12/10 21:13:34;  author: mmainar;  state: Exp;  lines: +22 -14
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/12/06 20:58:49;  author: mmainar;  state: Exp;  lines: +12 -0
+primeros pasos
+----------------------------
+revision 1.2
+date: 2007/11/29 14:30:49;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion de las cabeceras
+----------------------------
+revision 1.1
+date: 2007/11/05 21:34:23;  author: mmainar;  state: Exp;
+interfaz de los modulos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/juegos.pc,v
+Working file: juegos.pc
+head: 1.29
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 29;	selected revisions: 29
+description:
+----------------------------
+revision 1.29
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +4 -4
+Actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +58 -58
+Actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/25 16:42:31;  author: mmainar;  state: Exp;  lines: +0 -3
+actualizaciones
+----------------------------
+revision 1.26
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.25
+date: 2008/01/07 02:39:40;  author: ismasg;  state: Exp;  lines: +20 -16
+Actualizacion
+----------------------------
+revision 1.24
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +0 -53
+actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.22
+date: 2008/01/03 14:34:34;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.21
+date: 2008/01/03 14:33:46;  author: mmainar;  state: Exp;  lines: +19 -20
+actualizaciones
+----------------------------
+revision 1.20
+date: 2008/01/03 12:26:02;  author: mmainar;  state: Exp;  lines: +22 -10
+actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/03 11:43:11;  author: ismasg;  state: Exp;  lines: +173 -45
+Actualizaciones
+----------------------------
+revision 1.18
+date: 2008/01/03 11:35:27;  author: mmainar;  state: Exp;  lines: +53 -0
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/03 11:09:05;  author: mmainar;  state: Exp;  lines: +52 -41
+actualizacion
+----------------------------
+revision 1.16
+date: 2007/12/28 19:40:47;  author: mmainar;  state: Exp;  lines: +3 -5
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/12/27 21:41:03;  author: mmainar;  state: Exp;  lines: +7 -1
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.13
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +207 -105
+actualizaciones
+----------------------------
+revision 1.12
+date: 2007/12/25 11:35:58;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/12/18 17:24:29;  author: mmainar;  state: Exp;  lines: +63 -73
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/12/18 17:06:35;  author: mmainar;  state: Exp;  lines: +278 -12
+actualizacion
+----------------------------
+revision 1.9
+date: 2007/12/17 16:50:50;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion
+----------------------------
+revision 1.8
+date: 2007/12/16 19:33:51;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +54 -0
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/13 20:22:44;  author: ismasg;  state: Exp;  lines: +24 -24
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +13 -352
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/12/12 19:01:00;  author: mmainar;  state: Exp;  lines: +17 -17
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/12/11 10:01:00;  author: mmainar;  state: Exp;  lines: +90 -93
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/12/10 21:13:35;  author: mmainar;  state: Exp;  lines: +404 -13
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/12/06 20:58:23;  author: mmainar;  state: Exp;
+primeros pasos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/macros.h,v
+Working file: macros.h
+head: 1.47
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 47;	selected revisions: 47
+description:
+----------------------------
+revision 1.47
+date: 2008/01/25 16:35:45;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizaciones
+----------------------------
+revision 1.46
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +1 -2
+actualizaciones
+----------------------------
+revision 1.45
+date: 2008/01/07 14:58:10;  author: mmainar;  state: Exp;  lines: +2 -7
+actualizaciones
+----------------------------
+revision 1.44
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +5 -1
+actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/07 02:40:09;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.42
+date: 2008/01/06 15:19:04;  author: jj_colomer;  state: Exp;  lines: +1 -0
+actualizado
+----------------------------
+revision 1.41
+date: 2008/01/05 18:18:06;  author: jj_colomer;  state: Exp;  lines: +13 -6
+actualizado
+----------------------------
+revision 1.40
+date: 2008/01/05 12:50:11;  author: jj_colomer;  state: Exp;  lines: +4 -2
+actualizado
+----------------------------
+revision 1.39
+date: 2008/01/05 01:39:18;  author: ismasg;  state: Exp;  lines: +6 -0
+Actualizcion
+----------------------------
+revision 1.38
+date: 2008/01/04 12:17:53;  author: jj_colomer;  state: Exp;  lines: +6 -0
+actualizado promociones
+----------------------------
+revision 1.37
+date: 2008/01/03 18:35:41;  author: jj_colomer;  state: Exp;  lines: +0 -1
+actualizado. eliminado max_info_promocion
+----------------------------
+revision 1.36
+date: 2008/01/03 15:48:20;  author: jj_colomer;  state: Exp;  lines: +2 -1
+modificado, echar un ojo. se usa el valor max_info_promo_len?? en todos los sitios que la he visto,las promociones tienen su nombre acotado por 100
+----------------------------
+revision 1.35
+date: 2008/01/03 11:27:31;  author: jj_colomer;  state: Exp;  lines: +10 -10
+modif
+----------------------------
+revision 1.34
+date: 2008/01/03 09:34:20;  author: jj_colomer;  state: Exp;  lines: +12 -0
+actualizado
+----------------------------
+revision 1.33
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.32
+date: 2007/12/17 09:20:52;  author: ismasg;  state: Exp;  lines: +5 -0
+Actualizacion
+----------------------------
+revision 1.31
+date: 2007/12/16 18:07:44;  author: mmainar;  state: Exp;  lines: +10 -1
+actualizacion
+----------------------------
+revision 1.30
+date: 2007/12/12 21:24:56;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.29
+date: 2007/12/10 21:13:35;  author: mmainar;  state: Exp;  lines: +6 -0
+actualizaciones
+----------------------------
+revision 1.28
+date: 2007/12/06 11:42:51;  author: mmainar;  state: Exp;  lines: +4 -0
+actualizaciones
+----------------------------
+revision 1.27
+date: 2007/12/04 14:53:40;  author: jj_colomer;  state: Exp;  lines: +1 -0
+actualizado
+----------------------------
+revision 1.26
+date: 2007/12/04 14:31:33;  author: jj_colomer;  state: Exp;  lines: +7 -1
+actualizado
+----------------------------
+revision 1.25
+date: 2007/12/04 00:34:13;  author: jj_colomer;  state: Exp;  lines: +3 -2
+actualizado
+----------------------------
+revision 1.24
+date: 2007/12/03 19:27:31;  author: mmainar;  state: Exp;  lines: +0 -6
+eliminados includes innecesarios
+----------------------------
+revision 1.23
+date: 2007/12/03 16:50:39;  author: jj_colomer;  state: Exp;  lines: +0 -1
+eliminado max_len_mail
+----------------------------
+revision 1.22
+date: 2007/12/03 12:32:17;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizaciones
+----------------------------
+revision 1.21
+date: 2007/12/01 16:30:49;  author: jj_colomer;  state: Exp;  lines: +7 -1
+introducidos tipos apuestas
+----------------------------
+revision 1.20
+date: 2007/11/29 15:31:41;  author: mmainar;  state: Exp;  lines: +11 -25
+actualizaciones
+----------------------------
+revision 1.19
+date: 2007/11/29 12:31:48;  author: jj_colomer;  state: Exp;  lines: +3 -2
+actualizaciones
+----------------------------
+revision 1.18
+date: 2007/11/27 22:42:43;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizado para poder compilar parser.pc
+----------------------------
+revision 1.17
+date: 2007/11/24 18:48:18;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.16
+date: 2007/11/24 18:43:09;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizacionES
+----------------------------
+revision 1.15
+date: 2007/11/24 16:48:39;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.14
+date: 2007/11/24 16:11:21;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizacion
+----------------------------
+revision 1.13
+date: 2007/11/24 16:08:23;  author: mmainar;  state: Exp;  lines: +9 -0
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/11/22 11:34:36;  author: ismasg;  state: Exp;  lines: +21 -0
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/11/21 14:28:37;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizaciones
+----------------------------
+revision 1.9
+date: 2007/11/17 19:28:02;  author: jj_colomer;  state: Exp;  lines: +15 -15
+Actualizado a 17/11/07
+----------------------------
+revision 1.8
+date: 2007/11/16 17:33:06;  author: mmainar;  state: Exp;  lines: +3 -5
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/15 10:56:36;  author: jj_colomer;  state: Exp;  lines: +12 -15
+Actualizacion 15.11.07
+----------------------------
+revision 1.6
+date: 2007/11/13 21:13:50;  author: mmainar;  state: Exp;  lines: +6 -6
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/13 20:21:25;  author: mmainar;  state: Exp;  lines: +8 -19
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/13 16:27:26;  author: mmainar;  state: Exp;  lines: +43 -7
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/12 11:30:08;  author: ismasg;  state: Exp;  lines: +7 -0
+Macros actualizadas
+----------------------------
+revision 1.2
+date: 2007/11/06 22:19:13;  author: mmainar;  state: Exp;  lines: +30 -2
+agregados mas defines
+----------------------------
+revision 1.1
+date: 2007/11/06 11:28:29;  author: jj_colomer;  state: Exp;
+hola
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/menu1.c,v
+Working file: menu1.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 19:54:34;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesitan
+----------------------------
+revision 1.1
+date: 2007/11/12 11:28:45;  author: ismasg;  state: Exp;
+Interfaz
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/nota_de_compilacion,v
+Working file: nota_de_compilacion
+head: 1.12
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 12;	selected revisions: 12
+description:
+----------------------------
+revision 1.12
+date: 2008/01/27 15:24:53;  author: mmainar;  state: dead;  lines: +0 -0
+ya no hace falta
+----------------------------
+revision 1.11
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/06 23:29:10;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;  lines: +2 -1
+actualizado para promociones
+----------------------------
+revision 1.8
+date: 2007/12/16 13:15:36;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/12/12 19:01:01;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/12/11 11:11:31;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/03 22:16:28;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizado con gestion_interna
+----------------------------
+revision 1.4
+date: 2007/12/03 20:03:07;  author: mmainar;  state: Exp;  lines: +8 -0
+agregado el antiguo compilar.txt al final de este
+----------------------------
+revision 1.3
+date: 2007/12/03 17:20:15;  author: ismasg;  state: Exp;  lines: +2 -3
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/12/03 17:15:40;  author: ismasg;  state: Exp;  lines: +3 -1
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/12/02 02:03:14;  author: ismasg;  state: Exp;
+Nota para compilar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/oracle.txt,v
+Working file: oracle.txt
+head: 1.6
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 6;	selected revisions: 6
+description:
+----------------------------
+revision 1.6
+date: 2008/01/04 11:55:19;  author: mmainar;  state: Exp;  lines: +36 -0
+actualizacion
+----------------------------
+revision 1.5
+date: 2007/11/29 12:32:05;  author: jj_colomer;  state: Exp;  lines: +17 -6
+actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/19 20:00:51;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/19 20:00:32;  author: ismasg;  state: Exp;  lines: +9 -0
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/19 18:18:37;  author: mmainar;  state: Exp;
+cuestiones importantes
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/parser.pc,v
+Working file: parser.pc
+head: 1.8
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 8;	selected revisions: 8
+description:
+----------------------------
+revision 1.8
+date: 2008/01/19 13:14:39;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizacion
+----------------------------
+revision 1.7
+date: 2008/01/05 16:16:25;  author: mmainar;  state: Exp;  lines: +21 -9
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/03 17:38:04;  author: mmainar;  state: Exp;  lines: +6 -28
+actualizacion para poder introducir en cualquier BD, no solo en la mia
+----------------------------
+revision 1.5
+date: 2007/11/29 14:20:17;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/29 11:37:41;  author: mmainar;  state: Exp;  lines: +7 -7
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/28 18:06:12;  author: mmainar;  state: Exp;  lines: +1 -1
+version utilizable, leer parser.txt
+----------------------------
+revision 1.2
+date: 2007/11/28 17:44:47;  author: mmainar;  state: Exp;  lines: +45 -56
+version que funciona
+----------------------------
+revision 1.1
+date: 2007/11/27 23:56:58;  author: mmainar;  state: Exp;
+parser
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/parser.sh,v
+Working file: parser.sh
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2008/01/11 20:09:08;  author: mmainar;  state: dead;  lines: +0 -0
+se compila con el Makefile
+----------------------------
+revision 1.2
+date: 2007/12/03 17:38:04;  author: mmainar;  state: Exp;  lines: +19 -6
+actualizacion para poder introducir en cualquier BD, no solo en la mia
+----------------------------
+revision 1.1
+date: 2007/11/27 23:57:14;  author: mmainar;  state: Exp;
+script para compilar el parser
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/parser.txt,v
+Working file: parser.txt
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/25 18:00:27;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/28 18:16:57;  author: mmainar;  state: Exp;  lines: +29 -51
+LEEME para usar parser.pc
+----------------------------
+revision 1.1
+date: 2007/11/13 21:10:18;  author: mmainar;  state: Exp;
+primeras observaciones
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/pendiente.txt,v
+Working file: pendiente.txt
+head: 1.47
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 47;	selected revisions: 47
+description:
+----------------------------
+revision 1.47
+date: 2008/01/28 00:34:47;  author: mmainar;  state: dead;  lines: +0 -0
+ya esta
+----------------------------
+revision 1.46
+date: 2008/01/25 19:44:35;  author: mmainar;  state: Exp;  lines: +3 -3
+revisar
+----------------------------
+revision 1.45
+date: 2008/01/25 19:41:46;  author: mmainar;  state: Exp;  lines: +3 -1
+revisar
+----------------------------
+revision 1.44
+date: 2008/01/25 19:41:15;  author: mmainar;  state: Exp;  lines: +7 -27
+actualizacion
+----------------------------
+revision 1.43
+date: 2008/01/25 18:50:41;  author: mmainar;  state: Exp;  lines: +3 -16
+actualizacion
+----------------------------
+revision 1.42
+date: 2008/01/25 18:00:27;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.41
+date: 2008/01/25 17:00:40;  author: mmainar;  state: Exp;  lines: +1 -14
+actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/18 11:14:44;  author: jj_colomer;  state: Exp;  lines: +43 -0
+actualizados con aleman
+----------------------------
+revision 1.39
+date: 2008/01/17 12:08:27;  author: mmainar;  state: Exp;  lines: +2 -8
+revisar tareas pendientes
+----------------------------
+revision 1.38
+date: 2008/01/13 18:13:09;  author: ismasg;  state: Exp;  lines: +2 -1
+Actualizacion
+----------------------------
+revision 1.37
+date: 2008/01/12 12:53:22;  author: mmainar;  state: Exp;  lines: +6 -0
+revisar tareas pendientes
+----------------------------
+revision 1.36
+date: 2008/01/11 14:22:32;  author: mmainar;  state: Exp;  lines: +4 -0
+actualizacion
+----------------------------
+revision 1.35
+date: 2008/01/11 13:16:35;  author: mmainar;  state: Exp;  lines: +5 -0
+actualizacion
+----------------------------
+revision 1.34
+date: 2008/01/10 12:10:54;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.33
+date: 2008/01/10 09:42:42;  author: mmainar;  state: Exp;  lines: +0 -3
+actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/10 09:41:40;  author: ismasg;  state: Exp;  lines: +0 -2
+Actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +0 -2
+actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/08 19:37:41;  author: ismasg;  state: Exp;  lines: +2 -0
+actualizaciones
+----------------------------
+revision 1.29
+date: 2008/01/08 10:32:16;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/08 08:59:28;  author: ismasg;  state: Exp;  lines: +3 -12
+Actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/07 19:07:33;  author: ismasg;  state: Exp;  lines: +0 -8
+Actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/07 16:57:44;  author: ismasg;  state: Exp;  lines: +0 -2
+Actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +33 -38
+actualizaciones
+----------------------------
+revision 1.24
+date: 2008/01/07 13:38:38;  author: mmainar;  state: Exp;  lines: +3 -1
+actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/07 12:56:51;  author: mmainar;  state: Exp;  lines: +11 -4
+actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/07 02:46:27;  author: mmainar;  state: Exp;  lines: +6 -8
+actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +4 -7
+actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +7 -9
+actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/06 23:29:10;  author: mmainar;  state: Exp;  lines: +12 -8
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/06 23:23:03;  author: ismasg;  state: Exp;  lines: +21 -27
+Actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/06 22:55:36;  author: mmainar;  state: Exp;  lines: +2 -0
+actualizacion
+----------------------------
+revision 1.16
+date: 2008/01/06 14:50:24;  author: mmainar;  state: Exp;  lines: +5 -7
+actualizaciones
+----------------------------
+revision 1.15
+date: 2008/01/05 18:47:56;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif.
+----------------------------
+revision 1.14
+date: 2008/01/05 15:01:34;  author: mmainar;  state: Exp;  lines: +11 -14
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/05 13:34:56;  author: jj_colomer;  state: Exp;  lines: +3 -0
+modif
+----------------------------
+revision 1.12
+date: 2008/01/05 13:04:36;  author: jj_colomer;  state: Exp;  lines: +3 -1
+modif
+----------------------------
+revision 1.11
+date: 2008/01/05 12:45:00;  author: jj_colomer;  state: Exp;  lines: +2 -1
+modif
+----------------------------
+revision 1.10
+date: 2008/01/05 09:56:53;  author: mmainar;  state: Exp;  lines: +13 -15
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/05 01:39:17;  author: ismasg;  state: Exp;  lines: +3 -3
+Actualizcion
+----------------------------
+revision 1.8
+date: 2008/01/04 23:39:03;  author: mmainar;  state: Exp;  lines: +13 -0
+actualizacion
+----------------------------
+revision 1.7
+date: 2008/01/04 23:29:19;  author: mmainar;  state: Exp;  lines: +4 -2
+actualizaciones
+----------------------------
+revision 1.6
+date: 2008/01/04 23:23:50;  author: mmainar;  state: Exp;  lines: +14 -4
+actualizacion
+----------------------------
+revision 1.5
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +15 -6
+actualizaciones
+----------------------------
+revision 1.4
+date: 2008/01/04 21:30:20;  author: mmainar;  state: Exp;  lines: +5 -11
+actualizacion
+----------------------------
+revision 1.3
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;  lines: +2 -1
+actualizado para promociones
+----------------------------
+revision 1.2
+date: 2008/01/03 11:27:31;  author: jj_colomer;  state: Exp;  lines: +3 -1
+modif
+----------------------------
+revision 1.1
+date: 2007/12/17 15:15:44;  author: jj_colomer;  state: Exp;
+Cosas pendientes. Actualizadlo segun creais oportuno
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/pgu.c,v
+Working file: pgu.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 17:48:31;  author: mmainar;  state: dead;  lines: +0 -0
+ahora es .pc
+----------------------------
+revision 1.1
+date: 2007/11/17 17:45:07;  author: mmainar;  state: Exp;
+renombrado a pgu.c
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/pgu.pc,v
+Working file: pgu.pc
+head: 1.28
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 28;	selected revisions: 28
+description:
+----------------------------
+revision 1.28
+date: 2008/01/04 18:23:07;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.27
+date: 2007/11/29 14:20:17;  author: mmainar;  state: Exp;  lines: +2 -1
+actualizacion
+----------------------------
+revision 1.26
+date: 2007/11/29 12:32:36;  author: mmainar;  state: Exp;  lines: +23 -12
+actualizaciones
+----------------------------
+revision 1.25
+date: 2007/11/29 11:37:42;  author: mmainar;  state: Exp;  lines: +6 -1
+actualizaciones
+----------------------------
+revision 1.24
+date: 2007/11/29 09:58:06;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.23
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +4 -4
+actualizaciones
+----------------------------
+revision 1.22
+date: 2007/11/24 18:43:09;  author: mmainar;  state: Exp;  lines: +66 -71
+actualizacionES
+----------------------------
+revision 1.21
+date: 2007/11/24 16:48:39;  author: mmainar;  state: Exp;  lines: +174 -75
+actualizaciones
+----------------------------
+revision 1.20
+date: 2007/11/24 16:25:09;  author: mmainar;  state: Exp;  lines: +43 -9
+actualizaciones
+----------------------------
+revision 1.19
+date: 2007/11/24 14:58:45;  author: mmainar;  state: Exp;  lines: +20 -17
+actualizaciones
+----------------------------
+revision 1.18
+date: 2007/11/24 14:26:10;  author: mmainar;  state: Exp;  lines: +114 -98
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/11/24 12:12:17;  author: mmainar;  state: Exp;  lines: +19 -13
+actualizar
+----------------------------
+revision 1.16
+date: 2007/11/23 22:27:35;  author: mmainar;  state: Exp;  lines: +37 -30
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/11/23 21:20:35;  author: mmainar;  state: Exp;  lines: +67 -41
+actualizacion
+----------------------------
+revision 1.14
+date: 2007/11/23 20:53:07;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.13
+date: 2007/11/21 15:06:31;  author: mmainar;  state: Exp;  lines: +31 -15
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/11/21 14:42:47;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.11
+date: 2007/11/21 13:37:53;  author: mmainar;  state: Exp;  lines: +6 -1
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/11/20 21:12:20;  author: mmainar;  state: Exp;  lines: +43 -28
+corregidos fallos
+----------------------------
+revision 1.9
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +43 -32
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/19 18:53:04;  author: mmainar;  state: Exp;  lines: +56 -16
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/18 17:58:58;  author: mmainar;  state: Exp;  lines: +36 -47
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/17 19:43:29;  author: mmainar;  state: Exp;  lines: +46 -32
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/17 17:57:53;  author: mmainar;  state: Exp;  lines: +10 -4
+actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/17 17:53:25;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/11/17 17:50:52;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/17 17:49:54;  author: mmainar;  state: Exp;  lines: +1 -29
+actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/17 17:48:08;  author: mmainar;  state: Exp;
+programa de prueba del modulo de gestion de usuarios
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/ponDatBD.sql,v
+Working file: ponDatBD.sql
+head: 1.37
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 37;	selected revisions: 37
+description:
+----------------------------
+revision 1.37
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.36
+date: 2008/01/07 16:15:26;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.35
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.34
+date: 2008/01/05 16:16:24;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizacion
+----------------------------
+revision 1.33
+date: 2008/01/05 15:01:34;  author: mmainar;  state: Exp;  lines: +3 -5
+actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/04 10:09:26;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/03 10:28:44;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/03 10:11:47;  author: mmainar;  state: Exp;  lines: +8 -8
+actualizaciones
+----------------------------
+revision 1.29
+date: 2007/12/28 19:40:58;  author: mmainar;  state: Exp;  lines: +36 -1
+actualizaciones
+----------------------------
+revision 1.28
+date: 2007/12/26 19:23:37;  author: mmainar;  state: Exp;  lines: +3 -11
+actualizacion
+----------------------------
+revision 1.27
+date: 2007/12/26 19:21:11;  author: mmainar;  state: Exp;  lines: +7 -5
+actualizacion
+----------------------------
+revision 1.26
+date: 2007/12/26 19:15:01;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.25
+date: 2007/12/26 19:14:10;  author: mmainar;  state: Exp;  lines: +1 -3
+actualizacion
+----------------------------
+revision 1.24
+date: 2007/12/26 19:12:39;  author: mmainar;  state: Exp;  lines: +179 -1
+actualizacion
+----------------------------
+revision 1.23
+date: 2007/12/17 14:56:31;  author: mmainar;  state: Exp;  lines: +6 -6
+credito para todos los usuarios
+----------------------------
+revision 1.22
+date: 2007/12/16 18:06:04;  author: mmainar;  state: Exp;  lines: +20 -1
+actualizacion
+----------------------------
+revision 1.21
+date: 2007/12/16 15:24:19;  author: mmainar;  state: Exp;  lines: +107 -106
+actualizacion
+----------------------------
+revision 1.20
+date: 2007/12/16 10:59:56;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizaciones
+----------------------------
+revision 1.19
+date: 2007/12/12 21:40:32;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.18
+date: 2007/12/12 21:24:56;  author: mmainar;  state: Exp;  lines: +218 -8
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/12/12 19:01:01;  author: mmainar;  state: Exp;  lines: +111 -0
+actualizaciones
+----------------------------
+revision 1.16
+date: 2007/12/10 21:13:35;  author: mmainar;  state: Exp;  lines: +51 -46
+actualizaciones
+----------------------------
+revision 1.15
+date: 2007/12/06 12:51:55;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion datos preferencias usuario
+----------------------------
+revision 1.14
+date: 2007/12/06 11:42:51;  author: mmainar;  state: Exp;  lines: +19 -4
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/12/03 16:01:00;  author: mmainar;  state: Exp;  lines: +30 -21
+agregados eventos F1 y politicos
+----------------------------
+revision 1.12
+date: 2007/12/03 12:32:17;  author: mmainar;  state: Exp;  lines: +37 -3
+actualizaciones
+----------------------------
+revision 1.11
+date: 2007/12/02 14:24:12;  author: ismasg;  state: Exp;  lines: +3 -4
+Actualizacion apuestas
+----------------------------
+revision 1.10
+date: 2007/11/29 15:31:41;  author: mmainar;  state: Exp;  lines: +9 -0
+actualizaciones
+----------------------------
+revision 1.9
+date: 2007/11/29 11:37:42;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +7 -7
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/19 21:33:41;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/11/17 18:43:14;  author: mmainar;  state: Exp;  lines: +5 -5
+arreglados errores
+----------------------------
+revision 1.5
+date: 2007/11/16 23:30:56;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/16 20:02:18;  author: mmainar;  state: Exp;  lines: +14 -14
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/13 21:13:50;  author: mmainar;  state: Exp;  lines: +53 -17
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/13 16:27:26;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/09 21:03:08;  author: mmainar;  state: Exp;
+Pone datos de prueba en la BD
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ponDatBDIngles.sql,v
+Working file: ponDatBDIngles.sql
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2008/01/04 18:15:22;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/12/03 16:01:00;  author: mmainar;  state: Exp;  lines: +47 -20
+agregados eventos F1 y politicos
+----------------------------
+revision 1.1
+date: 2007/12/03 15:39:34;  author: mmainar;  state: Exp;
+para la BD Isma
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/ponDat_clientes.sql,v
+Working file: ponDat_clientes.sql
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 19:53:21;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesitan
+----------------------------
+revision 1.1
+date: 2007/11/07 16:40:11;  author: mmainar;  state: Exp;
+Datos de prueba base seminario
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prap.pc,v
+Working file: prap.pc
+head: 1.7
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 7;	selected revisions: 7
+description:
+----------------------------
+revision 1.7
+date: 2008/01/04 18:15:23;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.6
+date: 2007/12/02 18:14:00;  author: ismasg;  state: Exp;  lines: +101 -5
+Actualizacion
+----------------------------
+revision 1.5
+date: 2007/12/02 02:00:01;  author: ismasg;  state: Exp;  lines: +31 -54
+Actualizacion
+----------------------------
+revision 1.4
+date: 2007/11/29 15:01:59;  author: mmainar;  state: Exp;  lines: +11 -6
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/11/29 13:52:27;  author: ismasg;  state: Exp;  lines: +12 -4
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/20 10:44:59;  author: ismasg;  state: Exp;  lines: +11 -6
+Prueba de realizar apuestas
+----------------------------
+revision 1.1
+date: 2007/11/19 01:01:31;  author: ismasg;  state: Exp;
+Programa de prueba para realizar apuestas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prge.pc,v
+Working file: prge.pc
+head: 1.4
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 4;	selected revisions: 4
+description:
+----------------------------
+revision 1.4
+date: 2008/01/04 18:15:23;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.3
+date: 2007/11/25 19:20:56;  author: jj_colomer;  state: Exp;  lines: +9 -3
+actualizado
+----------------------------
+revision 1.2
+date: 2007/11/24 19:38:27;  author: jj_colomer;  state: Exp;  lines: +12 -8
+actualizado
+----------------------------
+revision 1.1
+date: 2007/11/22 11:24:01;  author: jj_colomer;  state: Exp;
+Fich. pruebas gestion_eventos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/principal.c,v
+Working file: principal.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 20:48:12;  author: mmainar;  state: dead;  lines: +0 -0
+ahora es .pc
+----------------------------
+revision 1.1
+date: 2007/11/12 11:28:16;  author: ismasg;  state: Exp;
+programa principal
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/principal.pc,v
+Working file: principal.pc
+head: 1.110
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 110;	selected revisions: 110
+description:
+----------------------------
+revision 1.110
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.109
+date: 2008/01/27 16:30:51;  author: ismasg;  state: Exp;  lines: +6 -13
+Actualizacion
+----------------------------
+revision 1.108
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +51 -10
+actualizacion
+----------------------------
+revision 1.107
+date: 2008/01/26 20:25:45;  author: jj_colomer;  state: Exp;  lines: +6 -7
+modif.
+----------------------------
+revision 1.106
+date: 2008/01/26 12:53:16;  author: jj_colomer;  state: Exp;  lines: +5 -0
+modif
+----------------------------
+revision 1.105
+date: 2008/01/26 12:09:19;  author: jj_colomer;  state: Exp;  lines: +2 -10
+modif
+----------------------------
+revision 1.104
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +14 -9
+Actualizacion
+----------------------------
+revision 1.103
+date: 2008/01/25 19:11:11;  author: ismasg;  state: Exp;  lines: +1 -2
+Actualizacion
+----------------------------
+revision 1.102
+date: 2008/01/25 18:58:35;  author: jj_colomer;  state: Exp;  lines: +8 -7
+modif.
+----------------------------
+revision 1.101
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +21 -8
+Actualizacion
+----------------------------
+revision 1.100
+date: 2008/01/16 16:08:03;  author: ismasg;  state: Exp;  lines: +11 -0
+actualizacion
+----------------------------
+revision 1.99
+date: 2008/01/15 17:27:11;  author: ismasg;  state: Exp;  lines: +6 -4
+Actualizacion
+----------------------------
+revision 1.98
+date: 2008/01/14 21:47:11;  author: ismasg;  state: Exp;  lines: +31 -24
+Actualizacion
+----------------------------
+revision 1.97
+date: 2008/01/13 19:40:39;  author: ismasg;  state: Exp;  lines: +21 -19
+actualizacion
+----------------------------
+revision 1.96
+date: 2008/01/13 18:13:11;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.95
+date: 2008/01/11 13:16:35;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.94
+date: 2008/01/10 12:51:28;  author: ismasg;  state: Exp;  lines: +10 -9
+Actualizacion
+----------------------------
+revision 1.93
+date: 2008/01/10 12:21:40;  author: ismasg;  state: Exp;  lines: +66 -46
+Actualizacion
+----------------------------
+revision 1.92
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +9 -1
+actualizacion
+----------------------------
+revision 1.91
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +4 -3
+Actualizacion
+----------------------------
+revision 1.90
+date: 2008/01/09 18:45:12;  author: mmainar;  state: Exp;  lines: +1 -7
+actualizacion
+----------------------------
+revision 1.89
+date: 2008/01/09 17:44:14;  author: mmainar;  state: Exp;  lines: +14 -33
+actualizacion
+----------------------------
+revision 1.88
+date: 2008/01/09 17:26:18;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.87
+date: 2008/01/08 19:37:41;  author: ismasg;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.86
+date: 2008/01/08 12:31:38;  author: ismasg;  state: Exp;  lines: +124 -120
+Actualizacion
+----------------------------
+revision 1.85
+date: 2008/01/08 08:59:28;  author: ismasg;  state: Exp;  lines: +12 -9
+Actualizacion
+----------------------------
+revision 1.84
+date: 2008/01/07 19:07:31;  author: ismasg;  state: Exp;  lines: +72 -12
+Actualizacion
+----------------------------
+revision 1.83
+date: 2008/01/07 16:15:26;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.82
+date: 2008/01/07 15:10:38;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.81
+date: 2008/01/07 14:58:10;  author: mmainar;  state: Exp;  lines: +5 -23
+actualizaciones
+----------------------------
+revision 1.80
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +6 -1
+actualizaciones
+----------------------------
+revision 1.79
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +72 -21
+actualizacion
+----------------------------
+revision 1.78
+date: 2008/01/07 10:59:56;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.77
+date: 2008/01/07 02:41:22;  author: ismasg;  state: Exp;  lines: +11 -69
+Actualizacion
+----------------------------
+revision 1.76
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.75
+date: 2008/01/06 22:12:55;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.74
+date: 2008/01/06 15:19:04;  author: jj_colomer;  state: Exp;  lines: +43 -3
+actualizado
+----------------------------
+revision 1.73
+date: 2008/01/06 02:03:27;  author: ismasg;  state: Exp;  lines: +11 -3
+Actualizacion
+----------------------------
+revision 1.72
+date: 2008/01/05 13:09:56;  author: mmainar;  state: Exp;  lines: +5 -3
+actualizacion
+----------------------------
+revision 1.71
+date: 2008/01/05 01:39:18;  author: ismasg;  state: Exp;  lines: +14 -20
+Actualizcion
+----------------------------
+revision 1.70
+date: 2008/01/04 22:45:45;  author: ismasg;  state: Exp;  lines: +8 -3
+Actualizacion
+----------------------------
+revision 1.69
+date: 2008/01/04 21:33:23;  author: ismasg;  state: Exp;  lines: +12 -0
+Actualizacion
+----------------------------
+revision 1.68
+date: 2008/01/04 21:00:23;  author: ismasg;  state: Exp;  lines: +5 -4
+Actualizacion
+----------------------------
+revision 1.67
+date: 2008/01/04 15:51:40;  author: mmainar;  state: Exp;  lines: +3 -3
+corregido error que hacia que se colgara al inicio
+----------------------------
+revision 1.66
+date: 2008/01/04 12:34:51;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.65
+date: 2008/01/04 12:03:55;  author: ismasg;  state: Exp;  lines: +57 -39
+Actualizacion
+----------------------------
+revision 1.64
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;  lines: +1 -2
+actualizado para promociones
+----------------------------
+revision 1.63
+date: 2008/01/03 12:34:25;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.62
+date: 2008/01/03 12:26:02;  author: mmainar;  state: Exp;  lines: +19 -12
+actualizacion
+----------------------------
+revision 1.61
+date: 2008/01/03 12:23:55;  author: ismasg;  state: Exp;  lines: +91 -26
+Actualizacion
+----------------------------
+revision 1.60
+date: 2008/01/03 11:43:11;  author: ismasg;  state: Exp;  lines: +30 -17
+Actualizaciones
+----------------------------
+revision 1.59
+date: 2008/01/03 11:16:24;  author: jj_colomer;  state: Exp;  lines: +2 -1
+actualizado rankings
+----------------------------
+revision 1.58
+date: 2008/01/03 11:09:05;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.57
+date: 2008/01/03 10:11:47;  author: mmainar;  state: Exp;  lines: +13 -7
+actualizaciones
+----------------------------
+revision 1.56
+date: 2008/01/02 18:57:57;  author: jj_colomer;  state: Exp;  lines: +2 -2
+modif.
+----------------------------
+revision 1.55
+date: 2007/12/30 23:34:38;  author: ismasg;  state: Exp;  lines: +31 -16
+Actualizacion
+----------------------------
+revision 1.54
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +49 -12
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.53
+date: 2007/12/28 11:33:04;  author: ismasg;  state: Exp;  lines: +25 -5
+Actualizacion
+----------------------------
+revision 1.52
+date: 2007/12/27 21:41:03;  author: mmainar;  state: Exp;  lines: +2 -3
+actualizaciones
+----------------------------
+revision 1.51
+date: 2007/12/27 19:01:42;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.50
+date: 2007/12/27 12:29:53;  author: ismasg;  state: Exp;  lines: +323 -289
+Actualizacion
+----------------------------
+revision 1.49
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizaciones
+----------------------------
+revision 1.48
+date: 2007/12/25 11:55:43;  author: ismasg;  state: Exp;  lines: +5 -7
+Actualizacion
+----------------------------
+revision 1.47
+date: 2007/12/25 11:35:59;  author: ismasg;  state: Exp;  lines: +45 -6
+Actualizacion
+----------------------------
+revision 1.46
+date: 2007/12/18 18:09:34;  author: ismasg;  state: Exp;  lines: +4 -2
+Actualizacion
+----------------------------
+revision 1.45
+date: 2007/12/17 20:00:45;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.44
+date: 2007/12/17 19:50:37;  author: ismasg;  state: Exp;  lines: +258 -155
+Actualizacion
+----------------------------
+revision 1.43
+date: 2007/12/17 16:24:16;  author: jj_colomer;  state: Exp;  lines: +2 -2
+actualizado
+----------------------------
+revision 1.42
+date: 2007/12/17 14:56:38;  author: jj_colomer;  state: Exp;  lines: +7 -7
+actualizado
+----------------------------
+revision 1.41
+date: 2007/12/17 14:30:50;  author: ismasg;  state: Exp;  lines: +55 -65
+Actualizacion
+----------------------------
+revision 1.40
+date: 2007/12/17 11:49:22;  author: jj_colomer;  state: Exp;  lines: +9 -9
+modif.
+----------------------------
+revision 1.39
+date: 2007/12/16 13:15:36;  author: mmainar;  state: Exp;  lines: +23 -15
+actualizaciones
+----------------------------
+revision 1.38
+date: 2007/12/15 19:31:42;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif.
+----------------------------
+revision 1.37
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +167 -183
+actualizaciones
+----------------------------
+revision 1.36
+date: 2007/12/12 23:03:08;  author: jj_colomer;  state: Exp;  lines: +3 -1
+modif
+----------------------------
+revision 1.35
+date: 2007/12/11 11:03:59;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif
+----------------------------
+revision 1.34
+date: 2007/12/08 21:49:40;  author: jj_colomer;  state: Exp;  lines: +5 -1
+actualizado
+----------------------------
+revision 1.33
+date: 2007/12/08 12:44:27;  author: jj_colomer;  state: Exp;  lines: +83 -9
+actualizado.el envio de msjs con tareas pendientes al admin ya es completamente funcional
+----------------------------
+revision 1.32
+date: 2007/12/07 20:12:58;  author: jj_colomer;  state: Exp;  lines: +9 -68
+feed back
+----------------------------
+revision 1.31
+date: 2007/12/07 13:15:31;  author: jj_colomer;  state: Exp;  lines: +68 -9
+actualizado
+----------------------------
+revision 1.30
+date: 2007/12/06 21:12:49;  author: jj_colomer;  state: Exp;  lines: +1 -4
+actualizado
+----------------------------
+revision 1.29
+date: 2007/12/06 21:03:50;  author: jj_colomer;  state: Exp;  lines: +7 -1
+actualizado
+----------------------------
+revision 1.28
+date: 2007/12/05 19:51:03;  author: jj_colomer;  state: Exp;  lines: +5 -4
+actualizado
+----------------------------
+revision 1.27
+date: 2007/12/04 18:50:20;  author: jj_colomer;  state: Exp;  lines: +1 -0
+actualizado
+----------------------------
+revision 1.26
+date: 2007/12/04 14:58:42;  author: jj_colomer;  state: Exp;  lines: +17 -6
+actualizado
+----------------------------
+revision 1.25
+date: 2007/12/04 00:34:13;  author: jj_colomer;  state: Exp;  lines: +6 -4
+actualizado
+----------------------------
+revision 1.24
+date: 2007/12/03 23:12:28;  author: jj_colomer;  state: Exp;  lines: +27 -9
+actualizado
+----------------------------
+revision 1.23
+date: 2007/12/03 23:00:32;  author: jj_colomer;  state: Exp;  lines: +8 -2
+actualizado
+----------------------------
+revision 1.22
+date: 2007/12/03 22:28:25;  author: ismasg;  state: Exp;  lines: +171 -48
+Actualizacion
+----------------------------
+revision 1.21
+date: 2007/12/03 19:44:54;  author: mmainar;  state: Exp;  lines: +3 -2
+lista eventos sociales
+----------------------------
+revision 1.20
+date: 2007/12/03 19:27:44;  author: mmainar;  state: Exp;  lines: +3 -1
+agregado listar eventos sociales
+----------------------------
+revision 1.19
+date: 2007/12/03 19:24:06;  author: mmainar;  state: Exp;  lines: +1 -0
+agregado boton social para los eventos
+----------------------------
+revision 1.18
+date: 2007/12/03 12:32:17;  author: mmainar;  state: Exp;  lines: +16 -7
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/12/03 11:25:04;  author: jj_colomer;  state: Exp;  lines: +1 -2
+actualizado
+----------------------------
+revision 1.16
+date: 2007/12/02 01:56:27;  author: ismasg;  state: Exp;  lines: +50 -275
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/11/29 22:06:09;  author: mmainar;  state: Exp;  lines: +32 -24
+mirar mostrar_eventos
+----------------------------
+revision 1.14
+date: 2007/11/29 16:54:01;  author: ismasg;  state: Exp;  lines: +134 -28
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/11/29 12:48:19;  author: ismasg;  state: Exp;  lines: +11 -3
+Actualizacion
+----------------------------
+revision 1.12
+date: 2007/11/27 19:15:08;  author: ismasg;  state: Exp;  lines: +208 -157
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +6 -7
+actualizaciones
+----------------------------
+revision 1.10
+date: 2007/11/27 11:43:31;  author: ismasg;  state: Exp;  lines: +60 -48
+Actualizacion
+----------------------------
+revision 1.9
+date: 2007/11/24 18:40:43;  author: ismasg;  state: Exp;  lines: +92 -65
+Actualizaciones
+----------------------------
+revision 1.8
+date: 2007/11/17 17:14:06;  author: ismasg;  state: Exp;  lines: +385 -114
+Principal, permite navegar y conecta a la BD
+----------------------------
+revision 1.7
+date: 2007/11/17 12:22:08;  author: ismasg;  state: Exp;  lines: +484 -219
+Principal con navegacion, de momento sin interaccion con SQL
+----------------------------
+revision 1.6
+date: 2007/11/16 23:30:57;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/16 20:49:58;  author: mmainar;  state: Exp;  lines: +0 -1
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/11/15 17:06:05;  author: mmainar;  state: Exp;  lines: +12 -15
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/11/15 15:11:51;  author: mmainar;  state: Exp;  lines: +29 -30
+Compila con Makefile 1.4
+----------------------------
+revision 1.2
+date: 2007/11/15 10:54:11;  author: mmainar;  state: Exp;  lines: +35 -20
+copia seguridad
+----------------------------
+revision 1.1
+date: 2007/11/15 10:27:50;  author: mmainar;  state: Exp;
+principal con oracle
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/profile,v
+Working file: profile
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/27 12:38:39;  author: ismasg;  state: dead;  lines: +0 -0
+ya no sirven
+----------------------------
+revision 1.1
+date: 2007/11/24 14:58:55;  author: mmainar;  state: Exp;
+para Isma
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/profile.user,v
+Working file: profile.user
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/27 12:38:39;  author: ismasg;  state: dead;  lines: +0 -0
+ya no sirven
+----------------------------
+revision 1.1
+date: 2007/11/24 14:58:55;  author: mmainar;  state: Exp;
+para Isma
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/promociones.h,v
+Working file: promociones.h
+head: 1.14
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 14;	selected revisions: 14
+description:
+----------------------------
+revision 1.14
+date: 2008/01/26 20:25:45;  author: jj_colomer;  state: Exp;  lines: +69 -58
+modif.
+----------------------------
+revision 1.13
+date: 2008/01/25 19:11:36;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.12
+date: 2008/01/25 18:58:35;  author: jj_colomer;  state: Exp;  lines: +1 -10
+modif.
+----------------------------
+revision 1.11
+date: 2008/01/11 01:03:11;  author: jj_colomer;  state: Exp;  lines: +11 -0
+modif.
+----------------------------
+revision 1.10
+date: 2008/01/07 17:55:09;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/06 15:19:04;  author: jj_colomer;  state: Exp;  lines: +20 -2
+actualizado
+----------------------------
+revision 1.8
+date: 2008/01/05 18:07:27;  author: jj_colomer;  state: Exp;  lines: +8 -0
+promociones.pc
+----------------------------
+revision 1.7
+date: 2008/01/05 17:41:55;  author: jj_colomer;  state: Exp;  lines: +30 -25
+actualizado
+----------------------------
+revision 1.6
+date: 2008/01/04 11:34:47;  author: jj_colomer;  state: Exp;  lines: +10 -6
+actualizado
+----------------------------
+revision 1.5
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;  lines: +36 -116
+actualizado para promociones
+----------------------------
+revision 1.4
+date: 2008/01/03 18:30:51;  author: jj_colomer;  state: Exp;  lines: +117 -21
+modif
+----------------------------
+revision 1.3
+date: 2007/11/29 14:30:49;  author: mmainar;  state: Exp;  lines: +6 -2
+actualizacion de las cabeceras
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: Exp;  lines: +10 -1
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/05 21:53:56;  author: ismasg;  state: Exp;
+Interfaz de los modulos de Isma, version preliminar
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/promociones.pc,v
+Working file: promociones.pc
+head: 1.21
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 21;	selected revisions: 21
+description:
+----------------------------
+revision 1.21
+date: 2008/01/27 22:51:36;  author: ismasg;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/27 16:30:52;  author: ismasg;  state: Exp;  lines: +15 -4
+Actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/27 14:58:47;  author: mmainar;  state: Exp;  lines: +4 -4
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/27 14:13:24;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/26 20:25:45;  author: jj_colomer;  state: Exp;  lines: +93 -49
+modif.
+----------------------------
+revision 1.16
+date: 2008/01/26 12:53:16;  author: jj_colomer;  state: Exp;  lines: +0 -3
+modif
+----------------------------
+revision 1.15
+date: 2008/01/26 11:40:47;  author: jj_colomer;  state: Exp;  lines: +27 -26
+def.
+----------------------------
+revision 1.14
+date: 2008/01/25 19:11:36;  author: mmainar;  state: Exp;  lines: +13 -9
+actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/25 18:58:35;  author: jj_colomer;  state: Exp;  lines: +38 -30
+modif.
+----------------------------
+revision 1.12
+date: 2008/01/25 18:19:10;  author: ismasg;  state: Exp;  lines: +4 -4
+Actualizacion
+----------------------------
+revision 1.11
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +24 -23
+Actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/14 21:47:11;  author: ismasg;  state: Exp;  lines: +9 -6
+Actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/11 01:03:11;  author: jj_colomer;  state: Exp;  lines: +65 -8
+modif.
+----------------------------
+revision 1.8
+date: 2008/01/07 17:55:10;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.7
+date: 2008/01/06 15:19:04;  author: jj_colomer;  state: Exp;  lines: +120 -20
+actualizado
+----------------------------
+revision 1.6
+date: 2008/01/05 18:23:20;  author: jj_colomer;  state: Exp;  lines: +1 -1
+actualizado
+----------------------------
+revision 1.5
+date: 2008/01/05 18:18:06;  author: jj_colomer;  state: Exp;  lines: +24 -9
+actualizado
+----------------------------
+revision 1.4
+date: 2008/01/05 17:41:55;  author: jj_colomer;  state: Exp;  lines: +278 -148
+actualizado
+----------------------------
+revision 1.3
+date: 2008/01/04 11:55:06;  author: jj_colomer;  state: Exp;  lines: +29 -1
+mod
+----------------------------
+revision 1.2
+date: 2008/01/04 11:34:47;  author: jj_colomer;  state: Exp;  lines: +164 -21
+actualizado
+----------------------------
+revision 1.1
+date: 2008/01/04 10:01:45;  author: jj_colomer;  state: Exp;
+actualizado para promociones
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prueba.c,v
+Working file: prueba.c
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 19:51:07;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesita
+----------------------------
+revision 1.1
+date: 2007/11/12 11:28:47;  author: ismasg;  state: Exp;
+Interfaz
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prueba.pc,v
+Working file: prueba.pc
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/11/17 19:54:34;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesitan
+----------------------------
+revision 1.2
+date: 2007/11/07 16:40:11;  author: mmainar;  state: Exp;  lines: +17 -0
+Datos de prueba base seminario
+----------------------------
+revision 1.1
+date: 2007/11/06 21:34:26;  author: mmainar;  state: Exp;
+Ejemplos del seminario
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prueba.sh,v
+Working file: prueba.sh
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/17 19:53:21;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesitan
+----------------------------
+revision 1.1
+date: 2007/11/06 21:35:02;  author: mmainar;  state: Exp;
+script para compilar prueba.pc
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prueba_dinam.c,v
+Working file: prueba_dinam.c
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2008/01/04 18:15:23;  author: mmainar;  state: dead;  lines: +0 -0
+actualizacion
+----------------------------
+revision 1.2
+date: 2007/11/29 09:51:37;  author: ismasg;  state: Exp;  lines: +4 -2
+Programa de prueba de listas dinamicas
+----------------------------
+revision 1.1
+date: 2007/11/28 22:51:38;  author: ismasg;  state: Exp;
+Prueba de listas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/prueba_gestion_usuarios.c,v
+Working file: prueba_gestion_usuarios.c
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/11/17 17:45:21;  author: mmainar;  state: dead;  lines: +0 -0
+renombrado a pgu.c
+----------------------------
+revision 1.2
+date: 2007/11/17 17:39:45;  author: mmainar;  state: Exp;  lines: +97 -2
+actualizaciones
+----------------------------
+revision 1.1
+date: 2007/11/17 16:53:56;  author: mmainar;  state: Exp;
+para probar el modulo gestion_usuarios
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/re_apuestas.sh,v
+Working file: re_apuestas.sh
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.3
+date: 2007/12/06 13:04:37;  author: mmainar;  state: dead;  lines: +0 -0
+ya no se necesita
+----------------------------
+revision 1.2
+date: 2007/12/02 01:57:52;  author: ismasg;  state: Exp;  lines: +4 -2
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/11/29 14:45:42;  author: ismasg;  state: Exp;
+Script para compilar realizar apuestas
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/realizar_apuestas.h,v
+Working file: realizar_apuestas.h
+head: 1.18
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 18;	selected revisions: 18
+description:
+----------------------------
+revision 1.18
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +57 -0
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +8 -0
+actualizacion
+----------------------------
+revision 1.16
+date: 2008/01/04 23:07:58;  author: mmainar;  state: Exp;  lines: +20 -18
+actualizaciones
+----------------------------
+revision 1.15
+date: 2008/01/03 10:28:44;  author: mmainar;  state: Exp;  lines: +8 -1
+actualizacion
+----------------------------
+revision 1.14
+date: 2007/12/28 11:33:06;  author: ismasg;  state: Exp;  lines: +4 -1
+Actualizacion
+----------------------------
+revision 1.13
+date: 2007/12/02 18:13:40;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.12
+date: 2007/12/02 01:56:27;  author: ismasg;  state: Exp;  lines: +52 -84
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/11/29 15:01:59;  author: mmainar;  state: Exp;  lines: +2 -27
+actualizacion
+----------------------------
+revision 1.10
+date: 2007/11/29 12:48:19;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.9
+date: 2007/11/27 19:15:08;  author: ismasg;  state: Exp;  lines: +5 -1
+Actualizacion
+----------------------------
+revision 1.8
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +7 -1
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/11/19 23:07:08;  author: ismasg;  state: Exp;  lines: +4 -11
+Actualizacion
+----------------------------
+revision 1.6
+date: 2007/11/19 10:57:44;  author: ismasg;  state: Exp;  lines: +31 -4
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/18 21:03:43;  author: ismasg;  state: Exp;  lines: +10 -13
+realizar_apuestas.pc
+----------------------------
+revision 1.4
+date: 2007/11/17 20:46:02;  author: ismasg;  state: Exp;  lines: +51 -21
+Version ++
+----------------------------
+revision 1.3
+date: 2007/11/15 17:06:05;  author: mmainar;  state: Exp;  lines: +32 -14
+actualizaciones
+----------------------------
+revision 1.2
+date: 2007/11/12 10:48:16;  author: mmainar;  state: Exp;  lines: +9 -0
+Borrado ejemplos SQL embebido
+----------------------------
+revision 1.1
+date: 2007/11/06 11:26:34;  author: jj_colomer;  state: Exp;
+hola
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/realizar_apuestas.pc,v
+Working file: realizar_apuestas.pc
+head: 1.46
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 46;	selected revisions: 46
+description:
+----------------------------
+revision 1.46
+date: 2008/01/27 18:21:11;  author: ismasg;  state: Exp;  lines: +69 -204
+actualizacion
+----------------------------
+revision 1.45
+date: 2008/01/27 16:30:52;  author: ismasg;  state: Exp;  lines: +1 -3
+Actualizacion
+----------------------------
+revision 1.44
+date: 2008/01/25 16:42:31;  author: mmainar;  state: Exp;  lines: +0 -2
+actualizaciones
+----------------------------
+revision 1.43
+date: 2008/01/25 16:32:22;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.42
+date: 2008/01/14 21:47:11;  author: ismasg;  state: Exp;  lines: +5 -3
+Actualizacion
+----------------------------
+revision 1.41
+date: 2008/01/13 19:40:39;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.40
+date: 2008/01/11 13:16:35;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.39
+date: 2008/01/10 20:01:19;  author: ismasg;  state: Exp;  lines: +27 -0
+Actualizacion
+----------------------------
+revision 1.38
+date: 2008/01/10 18:38:29;  author: ismasg;  state: Exp;  lines: +67 -52
+actualizacin
+----------------------------
+revision 1.37
+date: 2008/01/10 16:38:16;  author: mmainar;  state: Exp;  lines: +27 -37
+actualizacion
+----------------------------
+revision 1.36
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +11 -0
+actualizacion
+----------------------------
+revision 1.35
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +89 -4
+Actualizacion
+----------------------------
+revision 1.34
+date: 2008/01/08 19:37:41;  author: ismasg;  state: Exp;  lines: +2 -2
+actualizaciones
+----------------------------
+revision 1.33
+date: 2008/01/08 09:13:01;  author: mmainar;  state: Exp;  lines: +6 -28
+actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/07 13:33:46;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/07 02:41:22;  author: ismasg;  state: Exp;  lines: +42 -6
+Actualizacion
+----------------------------
+revision 1.30
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.29
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +56 -3
+actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/06 02:02:44;  author: ismasg;  state: Exp;  lines: +250 -3
+Actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/05 13:09:56;  author: mmainar;  state: Exp;  lines: +5 -5
+actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/04 11:36:35;  author: ismasg;  state: Exp;  lines: +58 -10
+Actualizacion maxapostable
+----------------------------
+revision 1.25
+date: 2008/01/03 10:28:44;  author: mmainar;  state: Exp;  lines: +24 -1
+actualizacion
+----------------------------
+revision 1.24
+date: 2007/12/30 23:34:38;  author: ismasg;  state: Exp;  lines: +82 -0
+Actualizacion
+----------------------------
+revision 1.23
+date: 2007/12/30 22:38:17;  author: ismasg;  state: Exp;  lines: +5 -1
+Actualizacion de cara al interfaz
+----------------------------
+revision 1.22
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +107 -9
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.21
+date: 2007/12/28 11:33:07;  author: ismasg;  state: Exp;  lines: +27 -0
+Actualizacion
+----------------------------
+revision 1.20
+date: 2007/12/03 19:44:43;  author: mmainar;  state: Exp;  lines: +40 -3
+agregado listar_eventos sociales
+----------------------------
+revision 1.19
+date: 2007/12/03 11:16:04;  author: mmainar;  state: Exp;  lines: +1 -1
+modificada apuesta simple con combinadas = 0 en lugar de NULL
+----------------------------
+revision 1.18
+date: 2007/12/02 18:44:19;  author: mmainar;  state: Exp;  lines: +6 -0
+actualizaciones
+----------------------------
+revision 1.17
+date: 2007/12/02 18:35:28;  author: mmainar;  state: Exp;  lines: +1 -6
+actualizada la funcion apostable por el cambio de fechaFin a fechaInicio
+----------------------------
+revision 1.16
+date: 2007/12/02 18:13:40;  author: ismasg;  state: Exp;  lines: +42 -11
+Actualizacion
+----------------------------
+revision 1.15
+date: 2007/12/02 01:56:27;  author: ismasg;  state: Exp;  lines: +188 -185
+Actualizacion
+----------------------------
+revision 1.14
+date: 2007/11/29 15:31:41;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.13
+date: 2007/11/29 15:01:59;  author: mmainar;  state: Exp;  lines: +9 -13
+actualizacion
+----------------------------
+revision 1.12
+date: 2007/11/29 12:48:19;  author: ismasg;  state: Exp;  lines: +11 -11
+Actualizacion
+----------------------------
+revision 1.11
+date: 2007/11/27 19:15:08;  author: ismasg;  state: Exp;  lines: +53 -23
+Actualizacion
+----------------------------
+revision 1.10
+date: 2007/11/27 14:35:43;  author: ismasg;  state: Exp;  lines: +48 -58
+actualizaciones
+----------------------------
+revision 1.9
+date: 2007/11/20 10:44:15;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.8
+date: 2007/11/20 10:35:44;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.7
+date: 2007/11/19 23:07:08;  author: ismasg;  state: Exp;  lines: +48 -28
+Actualizacion
+----------------------------
+revision 1.6
+date: 2007/11/19 10:57:44;  author: ismasg;  state: Exp;  lines: +224 -76
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/11/18 21:03:43;  author: ismasg;  state: Exp;  lines: +54 -13
+realizar_apuestas.pc
+----------------------------
+revision 1.4
+date: 2007/11/18 18:52:52;  author: ismasg;  state: Exp;  lines: +162 -11
+Actualizacion
+----------------------------
+revision 1.3
+date: 2007/11/18 11:20:25;  author: ismasg;  state: Exp;  lines: +25 -18
+Actualiacion
+----------------------------
+revision 1.2
+date: 2007/11/17 20:45:21;  author: ismasg;  state: Exp;  lines: +107 -14
+Version ++
+----------------------------
+revision 1.1
+date: 2007/11/15 17:07:11;  author: mmainar;  state: Exp;
+primeros pasos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/relacional.doc,v
+Working file: relacional.doc
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/06 21:54:53;  author: mmainar;  state: dead;  lines: +0 -0
+borrado
+----------------------------
+revision 1.1
+date: 2007/11/06 21:53:47;  author: mmainar;  state: Exp;
+Modelo Relacional de la B.D.
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/servidor.c,v
+Working file: servidor.c
+head: 1.3
+branch:
+locks: strict
+access list:
+symbolic names:
+	start: 1.1.1.2
+	mmainar: 1.1.1
+keyword substitution: kv
+total revisions: 5;	selected revisions: 5
+description:
+----------------------------
+revision 1.3
+date: 2007/11/05 21:34:23;  author: mmainar;  state: dead;  lines: +0 -0
+interfaz de los modulos
+----------------------------
+revision 1.2
+date: 2007/10/19 14:39:53;  author: mmainar;  state: Exp;  lines: +2 -0
+modificacion chorras 1
+----------------------------
+revision 1.1
+date: 2007/10/19 14:03:46;  author: mmainar;  state: Exp;
+branches:  1.1.1;
+Initial revision
+----------------------------
+revision 1.1.1.2
+date: 2007/10/19 15:40:57;  author: mmainar;  state: Exp;  lines: +2 -0
+prueba
+----------------------------
+revision 1.1.1.1
+date: 2007/10/19 14:03:46;  author: mmainar;  state: Exp;  lines: +0 -0
+Importe inicial al CVS
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/spanish.txt,v
+Working file: spanish.txt
+head: 1.35
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 35;	selected revisions: 35
+description:
+----------------------------
+revision 1.35
+date: 2008/01/27 22:34:47;  author: ismasg;  state: Exp;  lines: +90 -99
+actualizacion
+----------------------------
+revision 1.34
+date: 2008/01/27 19:47:48;  author: ismasg;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.33
+date: 2008/01/27 16:30:52;  author: ismasg;  state: Exp;  lines: +4 -5
+Actualizacion
+----------------------------
+revision 1.32
+date: 2008/01/27 14:58:47;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.31
+date: 2008/01/26 19:23:22;  author: jj_colomer;  state: Exp;  lines: +5 -0
+actualizado
+----------------------------
+revision 1.30
+date: 2008/01/25 19:47:13;  author: ismasg;  state: Exp;  lines: +6 -5
+Actualizacion
+----------------------------
+revision 1.29
+date: 2008/01/25 18:19:10;  author: ismasg;  state: Exp;  lines: +4 -0
+Actualizacion
+----------------------------
+revision 1.28
+date: 2008/01/25 17:53:28;  author: ismasg;  state: Exp;  lines: +62 -0
+Actualizacion
+----------------------------
+revision 1.27
+date: 2008/01/25 17:00:40;  author: mmainar;  state: Exp;  lines: +4 -3
+actualizacion
+----------------------------
+revision 1.26
+date: 2008/01/10 12:21:41;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/10 11:49:59;  author: ismasg;  state: Exp;  lines: +8 -2
+Actualizacion
+----------------------------
+revision 1.24
+date: 2008/01/10 09:44:30;  author: ismasg;  state: Exp;  lines: +0 -2
+Actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/10 09:41:40;  author: ismasg;  state: Exp;  lines: +3 -0
+Actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/10 09:31:55;  author: ismasg;  state: Exp;  lines: +9 -8
+actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/09 23:49:58;  author: ismasg;  state: Exp;  lines: +2 -4
+Actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/09 19:08:35;  author: ismasg;  state: Exp;  lines: +21 -2
+actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/09 17:50:44;  author: mmainar;  state: Exp;  lines: +8 -8
+actualizacion
+----------------------------
+revision 1.18
+date: 2008/01/09 17:40:52;  author: ismasg;  state: Exp;  lines: +7 -7
+actualizacion
+----------------------------
+revision 1.17
+date: 2008/01/08 19:45:32;  author: ismasg;  state: Exp;  lines: +170 -171
+actualizacion
+----------------------------
+revision 1.16
+date: 2008/01/08 19:33:05;  author: mmainar;  state: Exp;  lines: +1 -4
+actualizacion
+----------------------------
+revision 1.15
+date: 2008/01/08 18:08:45;  author: ismasg;  state: Exp;  lines: +22 -0
+Actualizacion
+----------------------------
+revision 1.14
+date: 2008/01/08 17:51:41;  author: ismasg;  state: Exp;  lines: +103 -9
+Actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/08 12:31:39;  author: ismasg;  state: Exp;  lines: +207 -151
+Actualizacion
+----------------------------
+revision 1.12
+date: 2008/01/07 17:28:37;  author: mmainar;  state: Exp;  lines: +5 -6
+actualizacion
+----------------------------
+revision 1.11
+date: 2008/01/07 14:11:07;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.10
+date: 2008/01/04 23:29:19;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.9
+date: 2008/01/03 11:43:11;  author: ismasg;  state: Exp;  lines: +2 -1
+Actualizaciones
+----------------------------
+revision 1.8
+date: 2007/12/30 23:34:38;  author: ismasg;  state: Exp;  lines: +3 -3
+Actualizacion
+----------------------------
+revision 1.7
+date: 2007/12/30 22:30:53;  author: ismasg;  state: Exp;  lines: +1 -1
+Actualizaciones de cara al interfaz
+----------------------------
+revision 1.6
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/25 11:35:59;  author: ismasg;  state: Exp;  lines: +2 -2
+Actualizacion
+----------------------------
+revision 1.4
+date: 2007/12/17 17:11:50;  author: ismasg;  state: Exp;  lines: +3 -2
+Actualizacion
+----------------------------
+revision 1.3
+date: 2007/12/17 14:33:42;  author: ismasg;  state: Exp;  lines: +84 -2
+Actualizacion
+----------------------------
+revision 1.2
+date: 2007/12/11 09:04:02;  author: ismasg;  state: Exp;  lines: +94 -118
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/12/03 19:10:28;  author: mmainar;  state: Exp;
+boceto de fichero de idioma español
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/tipos.h,v
+Working file: tipos.h
+head: 1.26
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 26;	selected revisions: 26
+description:
+----------------------------
+revision 1.26
+date: 2008/01/27 14:38:30;  author: mmainar;  state: Exp;  lines: +34 -24
+actualizacion
+----------------------------
+revision 1.25
+date: 2008/01/11 13:16:35;  author: mmainar;  state: Exp;  lines: +0 -3
+actualizacion
+----------------------------
+revision 1.24
+date: 2008/01/10 16:38:16;  author: mmainar;  state: Exp;  lines: +2 -2
+actualizacion
+----------------------------
+revision 1.23
+date: 2008/01/10 12:21:42;  author: ismasg;  state: Exp;  lines: +7 -0
+Actualizacion
+----------------------------
+revision 1.22
+date: 2008/01/07 02:36:32;  author: mmainar;  state: Exp;  lines: +3 -3
+actualizacion
+----------------------------
+revision 1.21
+date: 2008/01/07 01:44:39;  author: mmainar;  state: Exp;  lines: +15 -0
+actualizacion
+----------------------------
+revision 1.20
+date: 2008/01/06 02:02:44;  author: ismasg;  state: Exp;  lines: +13 -2
+Actualizacion
+----------------------------
+revision 1.19
+date: 2008/01/05 17:11:10;  author: jj_colomer;  state: Exp;  lines: +1 -0
+modificado
+----------------------------
+revision 1.18
+date: 2008/01/05 12:45:00;  author: jj_colomer;  state: Exp;  lines: +8 -0
+modif
+----------------------------
+revision 1.17
+date: 2008/01/04 23:29:19;  author: mmainar;  state: Exp;  lines: +7 -4
+actualizaciones
+----------------------------
+revision 1.16
+date: 2008/01/04 23:23:50;  author: mmainar;  state: Exp;  lines: +3 -1
+actualizacion
+----------------------------
+revision 1.15
+date: 2008/01/04 11:56:15;  author: jj_colomer;  state: Exp;  lines: +1 -1
+modif
+----------------------------
+revision 1.14
+date: 2008/01/04 10:03:25;  author: ismasg;  state: Exp;  lines: +11 -0
+Actualizacion
+----------------------------
+revision 1.13
+date: 2008/01/03 16:33:44;  author: jj_colomer;  state: Exp;  lines: +4 -1
+modif
+----------------------------
+revision 1.12
+date: 2008/01/03 15:47:40;  author: jj_colomer;  state: Exp;  lines: +6 -0
+actualizado
+----------------------------
+revision 1.11
+date: 2008/01/03 12:26:02;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizacion
+----------------------------
+revision 1.10
+date: 2008/01/03 11:35:27;  author: mmainar;  state: Exp;  lines: +8 -0
+actualizacion
+----------------------------
+revision 1.9
+date: 2008/01/03 11:09:05;  author: mmainar;  state: Exp;  lines: +1 -0
+actualizacion
+----------------------------
+revision 1.8
+date: 2007/12/26 18:21:30;  author: mmainar;  state: Exp;  lines: +9 -0
+actualizaciones
+----------------------------
+revision 1.7
+date: 2007/12/16 13:15:36;  author: mmainar;  state: Exp;  lines: +33 -0
+actualizaciones
+----------------------------
+revision 1.6
+date: 2007/12/16 10:59:56;  author: mmainar;  state: Exp;  lines: +1 -1
+actualizaciones
+----------------------------
+revision 1.5
+date: 2007/12/13 19:53:41;  author: ismasg;  state: Exp;  lines: +8 -0
+actualizaciones
+----------------------------
+revision 1.4
+date: 2007/12/12 19:01:01;  author: mmainar;  state: Exp;  lines: +34 -0
+actualizaciones
+----------------------------
+revision 1.3
+date: 2007/12/02 18:34:19;  author: mmainar;  state: Exp;  lines: +8 -3
+agregados campos id y combinadas a info_apuesta para poder compilar interfaz
+----------------------------
+revision 1.2
+date: 2007/12/02 01:56:45;  author: ismasg;  state: Exp;  lines: +47 -2
+Actualizacion
+----------------------------
+revision 1.1
+date: 2007/12/01 16:38:27;  author: jj_colomer;  state: Exp;
+fichero de definicion de tipos
+=============================================================================
+
+RCS file: /cvsroot/hj47x98/labprog/Attic/zlogin,v
+Working file: zlogin
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+keyword substitution: kv
+total revisions: 2;	selected revisions: 2
+description:
+----------------------------
+revision 1.2
+date: 2007/11/27 12:38:39;  author: ismasg;  state: dead;  lines: +0 -0
+ya no sirven
+----------------------------
+revision 1.1
+date: 2007/11/24 14:58:55;  author: mmainar;  state: Exp;
+para Isma
+=============================================================================

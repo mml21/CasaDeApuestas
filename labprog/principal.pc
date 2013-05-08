@@ -1,0 +1,1615 @@
+/* PROGRAMA PRINCIPAL
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Programa principal. */
+
+
+/* Includes de librerias */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <termio.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+#include <sys/types.h>
+#include <signal.h>
+#include <synch.h>
+
+EXEC SQL INCLUDE informes;
+
+/* Fin de la seccion de Includes */
+
+
+/* Variables globales */
+
+sema_t mutex; 
+lista_dinamica lista_res;
+int idioma;
+
+
+/* Inicio de declaracion de prototipos de funciones y procedimientos. */
+
+int  menu_principal ();
+void menu_cliente(struct usuario *usuario);
+void menu_admin(struct usuario *usuario);
+void gestion_ingresos (struct usuario *user);
+void gestion_cobros (struct usuario *user);
+int  menu_login(struct usuario *user);
+void iniciar_registro();
+void revisar_historico(struct usuario *user);
+void detalle_personales(struct usuario *user);
+void mostrar_preferencias(struct usuario *user);
+void cambiar_password(struct usuario *user);
+void cambiar_pregunta_secreta(struct usuario *user);
+void eventos_apuestas(struct usuario *user);
+void poner_al_dia(struct usuario *user);
+void introducir_eventos(struct usuario *user);
+void gestionar_usuarios(struct usuario *user);
+void informes_negocios(struct usuario *user);
+void gestionar_bonos(struct usuario *user);
+void tareas_pendientes(struct usuario *user);
+void iniciar_recuperacion_pass(struct usuario *user);
+int darse_de_baja (struct usuario * user);
+void mostrar_novedades();
+void mostrar_adv_legales();
+void conectarOracle(char *usuario, char *contrasena);
+void desconectarOracle();
+void gestion_apuestas(struct usuario *user);
+void juegos_azar (struct usuario *user);
+void cambio_datos (struct usuario *user);
+void actualizacion_reloj (int idioma);
+
+/* Fin de declaracion de prototipos de funciones y procedimientos. */
+
+
+/* Inicio del programa principal */
+
+
+main()
+
+{
+
+  int opcion, tipo_user, salir = 0, exito;
+  int hijo;
+  struct usuario user;
+  lista_dinamica mi;
+     
+  sema_init(&mutex,1,NULL,NULL);
+  
+  /* Cargar el fichero de idioma que corresponda */
+  idioma = pantalla_inicial();
+  configurar_idioma(idioma);
+
+  if (!(hijo = fork())) 
+  /* Ponemos a un proceso hijo a actualizar el reloj de forma concurrente */
+    actualizacion_reloj(idioma); 
+  
+  /* Nos conectamos a la base de datos del sistema */
+  conectarOracle("m6921579","lalala");
+ 
+  /* Gestion interna de la aplicacion */
+  efectuar_promociones(); 
+  eventos_a_resolver();  
+  usuarios_a_dar_de_alta();   
+  administrar_ofertas();
+
+  while ( !salir )
+  {
+    opcion = menu_principal();
+    switch(opcion)
+    {
+      case 1:  iniciar_registro();
+               break;
+      case 2:  exito = menu_login(&user);
+               if (exito)
+	       {
+	         actualizarFechaUltLogin(user.nick);
+                 switch (user.tipo_user)
+                 {
+	            case 1: nueva_lista_dinam(&lista_res,sizeof(int));
+		            menu_cliente(&user);
+  		            break;
+
+		    case 2: menu_admin(&user);
+		            break;
+
+	            default: ;
+	         } /* switch (user.tipo_user) */
+	       }
+	       break;
+       case 3: iniciar_recuperacion_pass(&user);
+               break;
+
+       case 4: mostrar_novedades();
+               break;
+
+       case 5: mostrar_adv_legales();
+               break;
+
+       case 6: salir = 1;
+               kill(hijo,SIGKILL);
+	       sema_destroy(&mutex);
+	       limpiar_pantalla();
+	       printf("\n\n\t\t\t");
+	       negrita();
+	       subrayado();
+	       printf("%s\n\n\n\n",frase("vuelva_pronto"));
+	       no_negrita();
+	       no_subrayado();
+               desconectarOracle();
+               break;
+       case 7: if (idioma == ESP) system("xemacs ayuda.txt &");
+               else if (idioma == ING) system("xemacs help.txt &");
+	       else system("xemacs hilfe.txt &");
+       default: ;
+    } /* switch (opcion) */
+  } /* while (!salir) */
+} /* main */
+
+
+/* Fin del programa principal */
+
+
+/* Procedimientos y funciones que utiliza el programa principal */
+
+
+void iniciar_registro()
+/* Interactua con el usuario para permitir registrarse
+   en la aplicacion */
+{
+  int resp;
+  tuplaUsuario datos;
+
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+  
+  if (preguntar_datos_personales(&datos))
+  {  
+    resp = solicitarAlta(datos);
+    if (resp == 1) 
+    {
+      datos.nickUser.arr[datos.nickUser.len] = '\0';
+      resp = completar_preguntas_iniciales(datos.nickUser.arr);
+    }
+    csem();
+    if (resp == 1) printf("\n\n%s\n",frase("fin_registro"));
+    else if (resp == 0) printf("Esto no deberia ocurrir\n");
+    else printf("Ha habido algun error\n");
+    printf("\n%s\n",frase("puls_enter"));
+    leer_caracter_oculto();
+    lsem();
+  }
+}
+
+
+int menu_login(struct usuario *user)
+/* Muestra el menu de entrada en la aplicacion */
+{
+
+  char pass[PASS_LEN], opcion;
+  int correcto, tipo;
+
+   while(1)
+   {
+     limpiar_pantalla();
+     mostrar_cabecera_sin_login();
+     obtener_nick_pass(user->nick,pass);
+     
+     if((obtener_datos_globales(user->nick,&(user->tipo_user),&(user->divisa),&(user->saldo))!= ERROR)
+         && (validarLogin(user->nick,pass)!= ERROR))
+     {
+       configurar_idioma(obtener_idioma(user->nick));
+       idioma = obtener_idioma(user->nick);
+       csem();
+       printf("\n\n%s\n",frase("log_correcto"));
+       printf("\n%s\n",frase("idioma_configurado"));
+       printf("%s\n",frase("puls_enter"));
+       lsem();
+       leer_caracter_oculto();       
+       return 1;
+     } /* if  */
+     else
+       if(!seguir(frase("log_mal"))) return 0;
+   } /* while */
+} /* menu_login */
+
+
+void menu_cliente (struct usuario *user)
+/*  Muestra el menu del usuario. */
+  {
+    int opcion, logout = 0;
+
+    while (!logout)
+    { 
+      opcion = opcion_menu_cliente(user);
+      switch(opcion)
+      {
+        case 1:  gestion_ingresos(user);             break;
+        case 2:  gestion_cobros(user);               break;
+        case 3:  revisar_historico(user);            break;
+        case 4:  detalle_personales(user);           break;
+        case 5:  mostrar_preferencias(user);         break;
+        case 6:  cambiar_password(user);             break;
+        case 7:  cambiar_pregunta_secreta(user);     break;
+        case 8:  eventos_apuestas(user);             break;
+	case 9:  juegos_azar(user);                  break;
+	case 10: cambio_datos(user);                 break;
+	case 11: mostrar_eventos_antiguos(user);     break;
+        case 12: logout = darse_de_baja(user);       break;
+	case 13: if (idioma == ESP) system("xemacs ayuda.txt &");
+                  else if (idioma == ING) system("xemacs help.txt &");
+		  else system("xemacs hilfe.txt");
+		  break;
+	case 14: logout = 1;                         break;
+        default: ;
+      } /* switch(opcion) */
+  } /* while ( !logout ) */
+} /* mostrar_menu_cliente */
+
+
+void menu_admin(struct usuario *user)
+/*  Muestra el menu del administrador. */
+  {
+    int opcion, logout = 0;
+
+    while (!logout)
+    {
+      opcion = opcion_menu_admin(user);
+      switch(opcion)
+      {
+        case 1: introducir_eventos(user);  break;
+        case 2: gestionar_usuarios(user);  break;
+        case 3: informes_negocios(user);   break;
+        case 4: gestionar_bonos(user);     break;
+        case 5: tareas_pendientes(user);   break;
+	case 6: if (idioma == ESP) system("xemacs ayuda.txt &");
+                 else if (idioma == ING) system("xemacs help.txt &");
+		 else system("xemacs hilfe.txt");
+		 break;
+        case 7: logout = 1;                break;
+      } /* switch(opcion) */
+  } /* while ( !logout ) */
+} /* mostrar_menu_admin */
+
+
+void gestion_ingresos (struct usuario *user)
+/* Gestiona los ingresos de dinero de los usuarios. */
+{
+   float cantidad;
+
+   if (pedir_datos_ingresos(user,&cantidad))
+   {
+     csem();
+     if(insertar_credito(user->nick,&cantidad,user->divisa))
+     {
+       if (user->divisa == DOLAR) cantidad = a_euros(cantidad);
+       user->saldo = user-> saldo + cantidad;
+       printf("\t\t%s\n",frase("exito_transferencia"));
+     }
+     else
+     {
+       printf("\t\t%s\n",frase("transferencia_mal"));
+     }
+     __fpurge(stdin);
+     printf("\n%s",frase("puls_enter"));
+     fflush(stdout);
+     lsem();
+     leer_caracter_oculto();
+   }
+} /* gestion_ingresos */
+
+
+void gestion_cobros (struct usuario *user)
+/* Gestiona los cobros de dinero de los usuarios. */
+{
+   float cantidad;
+
+   if (pedir_datos_cobros(user,&cantidad))
+   {
+     csem(); 
+     if(retirar_credito(user->nick,&cantidad,user->divisa))
+     {
+       if (user->divisa == DOLAR) cantidad = a_euros(cantidad);
+       user->saldo = user->saldo - cantidad;
+       printf("\t\t%s\n",frase("exito_transferencia"));
+     }
+     else
+     {
+       printf("\t\t%s\n",frase("transferencia_mal"));
+     }
+     __fpurge(stdin);
+     printf("\n%s",frase("puls_enter"));
+     fflush(stdout);
+     lsem();
+     leer_caracter_oculto();    
+   }
+} /* gestion_cobros */
+
+
+void revisar_historico(struct usuario *user)
+/* Accede al historico de apuestas del usuario */
+{
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  if (historico_usuario(user) == -1)
+  {
+    csem();
+    printf("\n\n\t%s\n",frase("error_historico"));
+    printf("\n%s",frase("puls_enter"));
+    lsem();
+    leer_caracter_oculto();
+  }
+}
+
+
+void detalle_personales(struct usuario *datos_user)
+/* Muestra los datos personales del usuario */
+{
+  int resp;
+  tuplaUsuario user;
+  
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,datos_user);
+  resp = accederDatosPersonales(datos_user->nick, &user);
+  if (resp == 1) {
+    csem();
+    printf("\n\n%s\n\n",frase("mostrando_datos"));
+    lsem();
+    mostrar_datos_personales(&user);
+  }
+  else if (resp == 0) printf("Esto no deberia ocurrir\n");
+  else { csem(); printf("Ha habido algun error\n"); lsem();}
+  csem();
+  __fpurge(stdin);
+  printf("\n%s",frase("puls_enter")); fflush(stdout);
+  lsem();
+  leer_caracter_oculto();
+}
+
+
+void mostrar_preferencias(struct usuario *user)
+/* Muestra las preferencias del usuario */
+{
+  perfilUsuario pref;
+
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  if (accederPerfilUsuario(user,&pref))
+  {
+    mostrar_perfil(&pref);
+  }
+  else
+  {
+    csem();
+    printf("\n\n\t%s\n",frase("error_preferencias"));
+    lsem();
+  }
+  csem();
+  printf("\n%s",frase("puls_enter"));
+  lsem();
+  leer_caracter_oculto();
+}
+
+
+void cambiar_password(struct usuario *user)
+/* Permite al usuario cambiar su password. */
+{
+  
+  char pass[PASS_LEN], nueva[PASS_LEN];
+  int salir = 0;
+  
+  while(!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    csem();
+    posicionar_cursor(1,8);
+    printf("\t\t%s: ",frase("pon_pass_actual")); fflush(stdout);
+    lsem();
+    leer_pass(pass,47,8);
+    csem(); printf("\n"); lsem();
+    if ((validarLogin(user->nick,pass))!= -1)
+    {
+      csem(); 
+      posicionar_cursor(1,9);
+      printf("\t\t%s: ",frase("pon_pass_nuevo")); fflush(stdout);
+      lsem();
+      leer_pass(nueva,54,9);
+      csem();
+      printf("\n");
+      lsem();
+      if (strlen(pass) == 0)
+      {
+        if (!seguir(frase("pass_mal"))) salir = 1; 
+      }
+      else
+      {
+        if(modificarPassUsuario(user->nick,pass,nueva) == 1) salir = 1;
+        else if (!seguir("Error")) salir = 1;
+      }
+    }
+  }
+}
+
+
+void cambiar_pregunta_secreta(struct usuario *user)
+/* Permite al usuario cambiar su pregunta secreta */
+{
+
+  char pass[PASS_LEN], pregunta[PREG_PRIVADA_LEN],respuesta[RESP_PRIVADA_LEN];
+  int salir = 0;
+
+  while (!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    csem();
+    posicionar_cursor(1,8);
+    printf("      %s: ",frase("pon_pass")); 
+    lsem();
+    leer_pass(pass,43,8);
+    csem(); printf("\n"); lsem();
+    if((validarLogin(user->nick,pass))!=-1)
+    {
+      csem();
+      printf("\n      %s: ",frase("pon_nueva_preg")); fflush(stdout); 
+      lsem();
+      leer_cadena_cota(pregunta,PREG_PRIVADA_LEN);
+      csem();
+      printf("      %s: ",frase("pon_nueva_resp")); fflush(stdout);
+      lsem();
+      leer_cadena_cota(respuesta,RESP_PRIVADA_LEN);
+      modificarDatosRecordatorioPass(user->nick,pregunta,respuesta);
+      salir = 1;
+    }
+    else
+     if (!seguir(frase("pass_mal"))) salir = 1;
+  }
+}
+
+
+void eventos_apuestas(struct usuario *user)
+/* Muestra el menu de eventos y apuestas */
+{
+
+  lista_opciones l;
+  int opcion = 0, i, numap, salir = 0;
+  lista_dinamica li;
+
+  nueva_lista(&l);
+  agregar_opcion(&l,frase("most_ev"));
+  agregar_opcion(&l,frase("most_ap_pend"));
+  agregar_opcion(&l,frase("volv_menu_ant"));
+  while (!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    opcion = elegir_opcion(l); 
+    if (opcion == 3) return;
+    if (opcion == 2)	
+    {
+      numap = apuestas_pendientes(user->nick,&li);
+      if (numap == 0)
+      {
+        limpiar_pantalla();
+        mostrar_cabecera(cliente,user);
+        csem();
+        printf("\n\n\n\t%s\n",frase("no_ap_pen"));
+        printf("\n\n\t%s\n",frase("puls_enter"));
+        lsem();
+        leer_caracter_oculto();
+      }
+      else
+        mostrar_info_apuestas(&li,user);
+      destruir_lista(&li);
+    }
+    else
+      gestion_apuestas(user);
+  }
+  destruir_lista_op(&l);
+}
+
+
+int se_puede_agregar (lista_dinamica *l, int id_res)
+{
+/* Post: devuelve 1 si el identificador de resultado se puede agregar
+   a los que se tienen hasta ahora en una apuesta combinada, esto es, 
+   que el resultado sea apostable y que no haya ningun resultado en la
+   lista que referencie al mismo evento. Devuelve 0 en caso contrario */
+  int i, mi_id;
+
+  if (numdatos(*l) == 8) return 0;  
+  if (!resultado_apostable(id_res)) return 0;
+  for (i=1; i<=numdatos(*l);i++)
+  {
+    dato_posicion(l,i,(char *)&mi_id);
+    if(evento_resultado(id_res) == evento_resultado(mi_id))  return 0;
+  }
+  return 1;
+}
+
+
+void pedir_cantidad_apostada(float *cantidad, float cotizacion)
+/* Solicita al usuario la cantidad a apostar */
+{
+
+   char leido = 0, numero[20];
+   int tope = 0, i; /* Pos a escribir */
+   int x = 65,y = 20;
+   int x2 = 62, y2 = 21;
+   
+   csem(); 
+   posicionar_cursor(20,20);
+   printf("%s: \n",frase("pon_cant_apostar")); 
+   posicionar_cursor(20,21);
+   printf("%s: ",frase("ganancia_potencial")); 
+   fflush(stdout);
+   lsem();
+   
+   numero[0]='\0';
+   while (leido != '\n')
+   {
+     leido = leer_caracter_oculto();
+     if(leido == 127)
+     {
+       if (tope !=0)
+       {
+	 x--;
+	 csem();
+         posicionar_cursor(x,y);
+	 putchar(' ');
+	 posicionar_cursor(x,y);
+	 fflush(stdout);
+	 lsem();
+	 tope--;
+	 numero[tope]='\0';
+       }
+     }
+     else if(((leido >='0' && leido <='9') || leido == '.') && (!(tope - pos_punto(numero) > 2)
+     || pos_punto(numero) == -1))
+     {
+       if(tope<=9)
+       {
+         csem();
+         posicionar_cursor(x,y);
+	 putchar(leido);
+	 x++;
+         numero[tope] = leido;
+	 tope++;
+	 fflush(stdout);
+	 lsem();
+	 numero[tope]='\0';
+       }
+     }
+     csem();
+     posicionar_cursor(x2,y2);
+     for(i=0;i<=20;i++) putchar(' ');
+     posicionar_cursor(x2,y2);
+     printf("%.2f\n",cotizacion*atof(numero));  
+     lsem();
+   }   
+  *cantidad = atof(numero);
+}
+
+
+void apostar (struct usuario *user, lista_dinamica *l_res)
+/* Permite al usuario realizar una apuesta */
+{
+   int opcion, correcta, res, i, combinadas;
+   float cotizacion,cantidad;
+   int j,k,ant;
+   int id, elems[8];
+   float ganancia,apostado_ind;
+   char descripcion[300];
+   Combinations cc;
+
+
+   if (numdatos(*l_res) == 0) return;
+   limpiar_pantalla();
+   mostrar_cabecera(cliente,user);
+   csem();
+   printf("\n\n\n\t%s",frase("ha_selecc"));
+   printf(" %d %s\n",numdatos(*l_res),frase("result"));
+   printf("\t%s: \n",frase("puede_realizar"));
+   if (numdatos(*l_res) == 1)
+     printf("\t1 - %s\n",frase("ap_simple"));
+   if (numdatos(*l_res)>1)
+     printf("\t1 - %s\n",frase("ap_comb"));
+   if (numdatos(*l_res)>2)
+     printf("\t2 - %s\n",frase("ap_sis"));
+   printf("  %s: ",frase("escoge_opcion")); fflush(stdout);
+   lsem();
+   leer_entero(&opcion);
+   correcta = (opcion==1 || (opcion == 1 && numdatos(*l_res)>1) || (opcion == 2 && numdatos(*l_res)>2));
+   if (!correcta)
+     if (!seguir(frase("opcion_mal"))) return;
+   while (!correcta)
+   {
+     csem();
+     printf("  %s\n",frase("opcion_mal"));
+     printf("  %s: ",frase("escoge_opcion")); fflush(stdout);
+     lsem();
+     leer_entero(&opcion);
+     correcta = (opcion==1 || (opcion == 1 && numdatos(*l_res)>1) || (opcion == 2 && numdatos(*l_res)>2));
+     if (!correcta)
+       if (!seguir(frase("opcion_mal"))) return;
+   }
+   if (numdatos(*l_res) == 1 && opcion == 1)  /*Apuesta simple. Solo hay un resultado*/
+   {
+     primero(l_res,(char *)&res);
+     if ((cotizacion = cotizacion_resultado(res)) == -1) return;
+     while (1)
+     {
+       pedir_cantidad_apostada(&cantidad,cotizacion);
+       if (cantidad > 0.0)
+       {
+         if (user->divisa == DOLAR) cantidad = a_euros(cantidad);
+         if (efectuar_apuesta_simple(res,user->nick,cantidad))
+	 {
+	   user -> saldo -= cantidad;
+	   csem();
+	   printf("\n\n%s.\n",frase("apuesta_ok"));
+	   printf("%s",frase("puls_enter")); fflush(stdout);
+	   lsem();
+	   __fpurge(stdin);
+	   leer_caracter_oculto();
+	   return;
+         }
+	 else
+	 {
+	   csem();
+	   printf("\n\n%s\n",frase("apuesta_mal"));
+           printf("%s",frase("puls_enter")); fflush(stdout);
+	   lsem(); 
+	   __fpurge(stdin);
+	   leer_caracter_oculto();
+	   return;
+	 }
+       }
+       else
+         if (!seguir(frase("dinero_mal"))) return;
+     }       
+   }
+   else if ((numdatos(*l_res) > 1)  && opcion == 1) /* Apuesta combinada */
+   {
+     cotizacion = 1.0;
+     for (i=1;i<=numdatos(*l_res);i++)
+     {
+        dato_posicion(l_res,i,(char *)&res);
+        cotizacion = cotizacion * cotizacion_resultado(res);
+     }
+     while (1)
+     {
+       pedir_cantidad_apostada(&cantidad,cotizacion);
+       if (cantidad > 0.0)
+       {
+         /* Las apuestas combinadas no tienen sistema */
+	 if (user->divisa == DOLAR) cantidad = a_euros(cantidad);
+         if (efectuar_apuesta_multiple(l_res,user->nick,cantidad,1,0))
+         {
+	   user->saldo -= cantidad;
+	   csem();
+	   printf("\n\n%s\n",frase("apuesta_ok"));
+	   printf("%s",frase("puls_enter")); fflush(stdout);
+	   lsem();
+         }
+         else
+	 {
+	   csem();
+	   printf("\n\t%s\n",frase("apuesta_mal"));
+	   printf("%s\n",frase("puls_enter"));
+	   lsem();
+	 }
+	 leer_caracter_oculto();
+	 return;
+       }
+       else
+         if (!seguir(frase("dinero_mal"))) return;
+     }  
+   }
+   else  /*Apuesta pos sistema*/
+   {
+     while (1)
+     {
+       csem();
+       printf("\t%s: ",frase("cuanto_apostar")); fflush(stdout);
+       lsem();
+       leer_float(&cantidad);
+       if (cantidad<=0.0)
+       {
+         if (!seguir(frase("dinero_mal"))) return;
+       }
+       else 
+       {
+         if (user->divisa == DOLAR) cantidad = a_euros(cantidad);
+         break;
+       }
+     }
+     while (1)
+     {
+       csem();
+       printf("\t%s (2 - %d): ",frase("intro_min_resul"),numdatos(*l_res)-1);
+       fflush(stdout);
+       lsem();
+       leer_entero(&combinadas);
+       if (!(combinadas>=2 && combinadas<=(numdatos(*l_res)-1)))
+       {
+         if (!seguir(frase("num_resul_mal"))) return;
+       }
+       else break;
+     }
+     /* En este punto los datos seran correctos */
+     if (efectuar_apuesta_multiple(l_res,user->nick,cantidad,2,combinadas))
+     {
+       user->saldo -= cantidad;
+       csem();
+       printf("\n\n%s.\n",frase("apuesta_ok"));
+       printf("%s",frase("puls_enter")); fflush(stdout);
+       __fpurge(stdin);
+       lsem();
+       leer_caracter_oculto();
+       limpiar_pantalla();
+       mostrar_cabecera(cliente,user);
+       csem();
+       printf("\n\n\t%s: \n\n",frase("ganancias_son"));
+       
+	/* Mostrar los nombres de los eventos */       
+	for (i = 1; i<=numdatos(*l_res); i++)
+	{
+	  dato_posicion(l_res,i,(char *)&id);
+	  if (descripcion_evento(descripcion,id))
+	    printf("\t%d - %s\n",i,descripcion);
+	  if (descripcion_resultado(descripcion,id))
+	    printf("\t\t %s\n",descripcion);
+	}	
+	posicionar_cursor(1,28);
+	printf("\t\t");
+	for (i = 1; i<=numdatos(*l_res); i++)
+	{
+	  printf("%d\t",i);
+	}
+	printf("\n\t");
+	for (i = 1; i<=numdatos(*l_res); i++)
+	{
+	  printf("---------");
+	}
+	putchar('\n');
+	fflush(stdout);
+	if (user->divisa == DOLAR) cantidad = a_dolar(cantidad);
+        cc = (Combinations)init_combinations(numdatos(*l_res), combinadas);
+        apostado_ind = cantidad/(float)num_combinations(cc);
+        for (i = 0; i<=num_combinations(cc) - 1; i++)
+        {
+          get_combination(cc,i,elems);
+          ganancia = 1.0;
+          for (j=0; j<=combinadas-1; j++)
+          {
+            if (j>0) ant = elems[j-1];
+            else ant = 0;
+            /* En elems[j] esta el elemento del subconjunto */
+            dato_posicion(l_res,elems[j]+1,(char *)&id);
+            fflush(stdout);
+            /* En id tenemos el identificador de resultado */
+       
+            ganancia = ganancia * cotizacion_resultado(id);
+	    posicionar_cursor(9+8*elems[j],30+i);
+            putchar('X');
+          }
+	  posicionar_cursor(9 + 7*(numdatos(*l_res)+1),30+i);
+          printf("\t %.2f\n",ganancia*apostado_ind);
+        }
+	printf("\n\n\n\t%s\n",frase("puls_enter"));
+	lsem();
+        free_combinations(cc);     
+     }
+     else
+     {
+       csem();
+       printf("\n\t%s\n",frase("apuesta_mal"));
+       printf("\n%s\n",frase("puls_enter"));
+       lsem();
+     }
+     leer_caracter_oculto();
+     return;
+  }
+}
+
+
+void seleccion_eventos_asesor (lista_dinamica *la, lista_dinamica *lres, struct usuario *user)
+/*  Pre: la es la lista proporcionada por el asesor y lres la lista de resultados a apostar
+    Post: lista una serie de resultados al usuario preguntandole si los quiere agregar a una
+          apuesta */
+{
+  int i, quiere;
+  char eleccion;
+  resulProb dato;
+  if (numdatos(*la) == 0)
+   {
+     limpiar_pantalla();
+     mostrar_cabecera(cliente,user);
+     csem();
+     printf("\n\n\t%s\n",frase("no_ev_asesor"));
+     printf("\n\t%s\n",frase("puls_enter"));
+     lsem();
+     leer_caracter_oculto();
+     return;
+   }
+   for (i=1; i<= numdatos(*la); i++)
+   {
+      dato_posicion(la,i,(char *)&dato);
+      quiere = mostrar_resultado_prob(&dato,user);
+      if (quiere)
+      {
+        if(se_puede_agregar(lres,dato.idResul))
+          agregar(lres,(char *)&dato.idResul);
+	else
+        {
+          csem();
+          printf("%s.\n",frase("lo_sentimos_resul"));
+	  lsem();
+        }
+      }
+      csem();
+      printf("\n\n%s\n",frase("ver_mas_resul"));
+      lsem();
+      eleccion = leer_caracter_oculto();
+      if (es_no(eleccion)) break;
+   }
+}
+
+
+
+void gestion_apuestas (struct usuario *user) 
+/* Realiza la gestion de los eventos y apuestas */
+{
+ lista_dinamica le, lista;
+ int opcion, id_ev, id_res, salir = 0, tipo_apuesta, resultado, i, seguir = 1;
+ int tipo, combinadas, criterio = -1, se_puede_apostar;
+ char c;
+ float apostado, cantidad;
+ perfilUsuario perfil;
+
+  se_puede_apostar = (numdatos(lista_res)>0);
+  while (seguir)
+  {
+    menu_evento_criterio(user,&opcion,&criterio,se_puede_apostar);
+   
+    criterio--;
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    switch ( opcion )
+    {
+      case 1: listar_eventos(criterio, FUTBOL, user, &lista);  
+              break;
+      case 2: listar_eventos(criterio, F1, user, &lista);
+              break;
+      case 3: listar_eventos(criterio, SOCIAL, user, &lista); 
+              break;
+      case 4: listar_eventos(criterio, FUTBOL_F1, user, &lista);
+              break;
+      case 5: listar_eventos(criterio, FUTBOL_SOCIAL, user, &lista);
+              break;
+      case 6: listar_eventos(criterio, F1_SOCIAL, user, &lista);
+              break;
+      case 7: listar_eventos(criterio, TODOS, user, &lista);
+              break; 
+      case 8: i = accederPerfilUsuario(user,&perfil);
+              if (i != TRUE) 
+	         {csem(); fprintf(stderr, "Ha ocurrido algun error al acceder al perfil del usuario"); lsem();}
+              listar_eventos_por_perfil(perfil, &le);
+	      /* Tendremos una lisa de resulProb */
+	      seleccion_eventos_asesor(&le,&lista_res,user);
+	      if (numdatos(lista_res) > 0) se_puede_apostar = 1;
+	      continue;
+      case 9: if (se_puede_apostar) 
+              {
+		  apostar(user,&lista_res);
+		  destruir_lista(&lista_res);
+  	          nueva_lista_dinam(&lista_res,sizeof(int));
+		  se_puede_apostar = 0;
+              }
+              return;
+      case 10: return;
+      default: ; 
+     }
+     if (opcion != 8)
+     {
+       id_ev = mostrar_eventos(&lista,user);
+       destruir_lista(&lista); 
+       if (id_ev == 0) continue; /* Ha seleccionado la opcion salir */
+       csem();
+       __fpurge(stdin);
+       printf("\n%s: ",frase("incluir_mas_resul"));
+       c = leer_caracter_oculto();
+       lsem();
+       if (es_si(c))
+       {
+         id_res = seleccionar_res(user,id_ev); 
+         if (id_res != 0 && se_puede_agregar(&lista_res,id_res)) /* Ha seleccionado que  quiere apostar */
+         {
+           agregar(&lista_res,(char *)&id_res);  /* Si ha seleccionado que si, agregamos el resultado a la lista */
+           se_puede_apostar = 1;
+	   limpiar_pantalla();
+           mostrar_cabecera(cliente,user);
+           csem();
+           printf("\n\n\n\t%s: ",frase("agregar_mas_resul"));
+           fflush(stdout);
+           __fpurge(stdin);
+           c = leer_caracter_oculto();
+           lsem();  
+           if (es_no(c))
+           {
+             apostar(user,&lista_res);
+	     destruir_lista(&lista_res);
+             nueva_lista_dinam(&lista_res,sizeof(int));
+	     seguir = 0;
+           }
+         }
+       }
+     }
+  }
+}
+
+
+void poner_al_dia(struct usuario *user)
+/* Muestra al usuario su cabecera */
+{
+  mostrar_cabecera(user->tipo_user,user);
+}
+
+
+void introducir_eventos(struct usuario *user)
+/* Introduce nuevos eventos a los que apostar.
+   Funcion del administrador. */
+{
+  int res;
+
+  limpiar_pantalla();
+  mostrar_cabecera(admin,user);
+  res = introducir_evento_manualmente();
+  
+  if (res>0) 
+  {
+    csem();
+    printf("%s\n",frase("evento_ok")); 
+    printf("\n\n\t%s\n",frase("evento_ok"));
+    lsem();
+  }
+  else {csem(); printf("\n\tHa habido algun error al introducir el evento\n"); lsem(); }
+ 
+  leer_caracter_oculto();
+}
+
+
+void gestionar_usuarios(struct usuario *user)
+/* Gestiona a los usuarios de la aplicacion */
+{
+  int salir = 0, opcion = 0, resp, exito;
+  tuplaUsuario tupla_user;
+  lista_opciones l;
+  lista_dinamica lusuarios;
+  char nick[NICK_LEN];
+  
+  while(!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(admin,user);
+    nueva_lista(&l);
+    agregar_opcion(&l,frase("cons_datos_us"));
+    agregar_opcion(&l,frase("dar_baja_us"));
+    agregar_opcion(&l,frase("list_us_fech"));
+    agregar_opcion(&l,frase("ir_menu_anterior"));
+    opcion = elegir_opcion(l);
+    destruir_lista_op(&l);
+    if (opcion == 4) return;
+    limpiar_pantalla();
+    mostrar_cabecera(admin,user);
+    if (opcion == 1)
+    {
+      csem();
+      printf("\n\n\t%s: ",frase("nick_us_consult"));
+      fflush(stdout);
+      lsem();
+      leer_cadena_cota(nick,NICK_LEN);
+      resp = accederDatosPersonales(nick, &tupla_user);
+      if (resp == 1) 
+      {
+        csem();
+        printf("\n\n%s:\n\n",frase("mostrando_datos"));
+        lsem();
+        mostrar_datos_personales(&tupla_user);
+      }
+      else if (resp == 0) { csem(); printf("%s\n",frase("no_existe_us")); lsem(); }
+      else { csem(); printf("Ha habido algun error\n"); lsem();}
+    }
+    else if (opcion == 2)
+    {
+       csem();
+       printf("\n\n\t%s: ",frase("pon_nick"));
+       fflush(stdout);
+       lsem();
+       leer_cadena_cota(nick,NICK_LEN);
+       resp = darBajaUsuario(nick);
+       if (resp == 1) { csem(); printf("%s\n",frase("dado_baja_ok")); lsem(); }
+       else if (resp < 0) { csem(); printf("Esto no deberia ocurrir\n"); lsem(); }
+       else {csem(); printf("%s\n",frase("ya_existe_nick")); lsem(); }
+    }
+    else if (opcion == 3)
+    {
+      exito = listadoUsuarios(&lusuarios);
+      if (exito != TRUE) return;
+      csem();
+      printf("\n\n\t%s\n\n",frase("mostrando_registrados"));
+      lsem();
+      mostrar_listado_usuarios(&lusuarios,user);
+      destruir_lista(&lusuarios);
+    }
+    csem();
+    __fpurge(stdin);
+    printf("\n\n%s",frase("puls_enter")); fflush(stdout);
+    lsem();
+    leer_caracter_oculto();     
+  }
+}
+
+
+void informes_negocios(struct usuario *user)
+/* Muestra los informes de negocios */
+{
+  lista_opciones l;
+  tpInforme informe;
+  int mes, anyo, opcion;
+  char eleccion;
+
+  limpiar_pantalla();
+  mostrar_cabecera(admin,user);
+  nueva_lista(&l);
+  agregar_opcion(&l,frase("informe_mensual"));
+  agregar_opcion(&l,frase("informe_global"));
+  agregar_opcion(&l,frase("ir_menu_anterior"));
+  opcion = elegir_opcion(l);
+  destruir_lista_op(&l);
+  /* con la opcion escogida interactuar con informes */
+  switch (opcion)
+  {
+    case 1:  limpiar_pantalla();
+	    mostrar_cabecera(user->tipo_user,user);
+	    csem();
+            printf("\n\n\t%s: ",frase("intro_mes")); 
+	    fflush(stdout);
+	    lsem();
+            leer_entero(&mes);
+	    csem();
+	    printf("\n\t%s: ",frase("intro_anyo"));
+	    fflush(stdout);
+	    lsem();
+	    leer_entero(&anyo);
+	    /* Creamos el informe vacio por si aun no existia */
+	    actualizarDatosOfertas(0); 
+            informe = acceder_informe_mensual(mes, anyo);
+	    mostrar_informe(informe, MENSUAL, user); 
+	    csem();
+	    printf("%s: ",frase("recibir_informe_mail"));
+	    fflush(stdout);
+	    lsem();
+	    eleccion = leer_caracter_oculto();
+	    if (es_si(eleccion))
+	      enviar_informe(informe, MENSUAL);
+	    break;
+    case 2: actualizarDatosOfertas(0); /* por si no existia aun ningun informe */
+            informe = acceder_informe_global();
+            mostrar_informe(informe, GLOBAL, user);
+	    csem();
+	    printf("%s: ",frase("recibir_informe_mail"));
+	    fflush(stdout);
+	    lsem();
+	    eleccion = leer_caracter_oculto();
+	    if (es_si(eleccion))
+	    
+	      enviar_informe(informe, GLOBAL);
+            break;
+    case 3: return;
+    default: ;
+  }
+}
+
+
+void gestionar_bonos(struct usuario *user)
+/* Gestiona los bonos y promociones */
+{
+  int opcion, exito = 0;
+  lista_opciones l;
+  float perdidas;
+  
+  limpiar_pantalla();
+  mostrar_cabecera(admin,user);
+  nueva_lista(&l);
+  agregar_opcion(&l,frase("intro_ofert"));
+  agregar_opcion(&l,frase("retirar_ofertas"));
+  agregar_opcion(&l,frase("listar_ofertas"));
+  agregar_opcion(&l,frase("of_reg_us"));
+  agregar_opcion(&l,frase("ir_menu_anterior"));
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user, user);
+  opcion = elegir_opcion(l);
+  destruir_lista_op(&l);
+  switch ( opcion )
+  { 
+    case 1: exito = introducir_oferta_manualmente();
+             limpiar_pantalla();
+	     mostrar_cabecera(admin, user);
+	     csem();
+	     if ( !exito )
+	       printf("\n%s\n",frase("oferta_no_introducida"));
+             else 
+	       printf("\n%s\n",frase("oferta_introducida"));
+	     printf("\n\n\t%s\n",frase("puls_enter"));
+	     lsem();
+	     leer_caracter_oculto();
+	     break;
+	     
+    case 2: exito = borrar_oferta_manualmente();
+             limpiar_pantalla();
+	     mostrar_cabecera(admin, user);
+	     csem();
+	     if ( exito && (exito > 0) )
+	       printf("\n%s\n",frase("oferta_borrada"));
+	     if ( !exito )
+	       printf("\n%s\n",frase("oferta_no_borrada"));
+	     printf("\n\n\t%s\n",frase("puls_enter"));
+	     lsem();
+	     leer_caracter_oculto();
+	     break;
+	     
+    case 3: listar_ofertas(user); 
+             break;
+	     
+    case 4: extender_cheque_usuario(user);	 
+	     break;
+	     
+    case 5: return;
+  }
+}
+
+
+void tareas_pendientes(struct usuario *user)
+/* Muestra las tareas pendientes de los administradores. */
+{
+  lista_opciones l;
+  tuplaEvento evento;
+  lista_dinamica lista;
+  lista_dinamica altas;
+  tuplaUsuario datos_usuario;
+  VARCHAR nick[NICK_LEN];
+  struct tm *fecha_str;
+  char fecha_cad[20], eleccion, mail[MAIL_LEN];
+  int opcion = 0, num_eventos = 0, max_id, min_id, salir, i;
+  char *mensaje_alta = "Ha sido dado de alta en el sistema\n\nYou have been accepted in the system";
+  
+  nueva_lista(&l);
+  agregar_opcion(&l, frase("introducir_resultados"));
+  agregar_opcion(&l, frase("altas_pendientes"));
+  agregar_opcion(&l, frase("ir_menu_anterior"));
+  limpiar_pantalla();
+  mostrar_cabecera(user->tipo_user,user);
+  opcion = elegir_opcion(l);
+  destruir_lista_op(&l);
+  
+  if ( opcion == 3 ) return;
+  if ( opcion == 1 ) /* Introduccion de resultados */
+  {
+    /* Obtenemos la fecha a la que mas pronto pueden terminar los eventos, es
+    * decir, una fecha tres horas superior a la actual, para obtener un listado
+    * de los eventos que ya han terminado.
+    */
+    fecha_str = desplazar_fecha(MAX_DURACION_EVENTOS);
+    sprintf(fecha_cad,"%d-%d-%d %d:%d:%d",fecha_str->tm_mday, fecha_str->tm_mon,
+            fecha_str->tm_year, fecha_str->tm_hour, fecha_str->tm_min,
+            fecha_str->tm_sec);
+
+
+    opcion = 1;
+    
+    while (!opcion == 0)
+    {
+      nueva_lista_dinam(&lista, sizeof(tuplaEvento));
+      num_eventos = 0;
+   
+      EXEC SQL DECLARE lista_eventos CURSOR for
+      SELECT *
+      FROM Evento
+      WHERE ( ( fechaInicio < (to_date(:fecha_cad, 'DD-MM-YYYY HH24:MI:SS')))
+           AND haSucedido = 0 )
+      ORDER BY fechaInicio ASC; 
+
+      EXEC SQL OPEN lista_eventos;
+      EXEC SQL WHENEVER not found DO break;
+      for (;;) 
+      {
+        EXEC SQL FETCH lista_eventos INTO :evento;
+        agregar(&lista,(char *)&evento);
+        num_eventos++;  
+      }
+      EXEC SQL CLOSE lista_eventos;
+      if ( num_eventos > 0 )
+      {
+        limpiar_pantalla();
+        mostrar_cabecera(user-> tipo_user, user);
+        csem();
+        printf("\n\n%s:\n",frase("eventos_resul_intro"));
+        lsem();
+        opcion = mostrar_eventos(&lista,user);
+	if (opcion == 0)  return;
+        definir_resultados_evento(opcion,user);
+        destruir_lista(&lista);
+	leer_caracter_oculto();
+      }
+      else
+      {
+        limpiar_pantalla();
+        mostrar_cabecera(user->tipo_user,user);
+        csem();
+        printf("\n\n\t%s.\n",frase("no_eventos_termin"));
+        lsem();
+	leer_caracter_oculto();
+	return;
+      }
+    }
+  }
+  else  /* opcion == 2. Altas de usuarios */
+  {
+    salir = 0;
+    i = 1;
+    listaNicksUsuariosPendientes(&altas);
+    if (numdatos(altas) != 0)
+    {
+      while (!salir)
+      {
+        limpiar_pantalla();
+        mostrar_cabecera(user-> tipo_user, user);
+        dato_posicion(&altas,i,(char *)&nick);
+        nick.arr[nick.len] = '\0';
+	accederDatosPersonales(nick.arr,&datos_usuario);
+	csem();
+	printf("\n\n\n");
+	lsem();
+        mostrar_datos_personales(&datos_usuario);
+	csem();
+	if (esMayorEdad(nick.arr) != TRUE)
+	  printf("\n\n%s\n",frase("usuario_menor_edad"));
+	else if (esMayorEdad(nick.arr) == ERROR)
+	  printf("\n\nError en mayor de edad\n");
+	printf("\n\n%s",frase("quiere_dar_alta"));
+	fflush(stdout);
+	lsem();
+	eleccion = leer_caracter_oculto();
+	if (es_si(eleccion))
+	{
+	  darAltaUsuario(nick.arr);
+	  if (obtener_direccion_email(mail,nick.arr))
+	    enviar_mensaje(mail,mensaje_alta);
+	  oferta_regalo_inicial(nick.arr);
+	}
+        i++;
+	if (i > numdatos(altas)) break;
+	csem();
+	printf("\n\n%s",frase("comprobar_mas_us"));
+	fflush(stdout);
+	lsem();
+	eleccion = leer_caracter_oculto();
+	if (es_no(eleccion))
+	{
+	  salir = 1;
+	}
+      }
+    }
+    else
+    {
+      limpiar_pantalla();
+      mostrar_cabecera(user -> tipo_user, user);
+      csem();
+      printf("\n\n\t%s\n",frase("no_altas_pend"));
+      lsem();
+    }
+  }
+  csem();
+  printf("\n\n\t%s\n",frase("puls_enter"));
+  lsem();
+  __fpurge(stdin);
+  leer_caracter_oculto();
+}
+
+
+void iniciar_recuperacion_pass(struct usuario *user)
+/* Inicia el sistema de recuperacion de contraseñas
+   olvidadas. */
+{
+  char nick[NICK_LEN], respuesta[RESP_PRIVADA_LEN];
+  char respondida[RESP_PRIVADA_LEN], mail[MAIL_LEN];
+  VARCHAR pass[PASS_LEN], pregunta[PREG_PRIVADA_LEN];
+  int salir = 0;
+
+  while (!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera_sin_login();
+    csem();
+    posicionar_cursor(1,6);
+    printf("\t\t%s: ",frase("pon_nick")); 
+    fflush(stdout);
+    lsem();
+    leer_cadena_cota(nick,NICK_LEN);
+    if (existeNick(nick))
+    {
+      accederPregRecordatorioPass(nick,(VARCHAR *)&pregunta);
+      pregunta.arr[pregunta.len] = '\0'; 
+      lsem();
+      printf("\n\t\t%s: %s\n",frase("poner_preg"),pregunta.arr);
+      printf("\t\t%s: ",frase("pon_resp")); fflush(stdout); 
+      csem();
+      leer_cadena_cota(respondida,RESP_PRIVADA_LEN);
+      if (validarRecordatorioPass(nick,respondida,(VARCHAR *)&pass) == 1)
+      {
+        pass.arr[pass.len]='\0';
+	csem();
+	if (obtener_direccion_email(mail, nick))
+        {
+	  enviar_mensaje(mail, pass.arr);
+          printf("\t\t%s\n",frase("pass_enviado_mail")); 
+	  salir = 1;
+          printf("\t\t%s",frase("puls_enter")); fflush(stdout);
+	  lsem();
+          leer_caracter_oculto();
+	}
+	else printf("Error al obtener la direccion de mail\n");
+      }
+      else if(!seguir(frase("resp_inc"))) salir = 1;
+    }
+    else
+    {
+      if(!seguir(frase("ya_existe_nick"))) salir = 1;
+    }
+  }
+}
+
+
+int darse_de_baja (struct usuario * user)
+/* Permite a un usuario darse de baja. */
+{
+
+  int salir = 0;
+  char pass[PASS_LEN], sino;
+  
+  while(!salir)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(cliente,user);
+    csem();
+    posicionar_cursor(1,8);
+    printf("\t%s: ",frase("pon_pass")); 
+    lsem();
+    leer_pass(pass,26,8);
+    if(validarLogin(user->nick,pass) != ERROR)
+    {
+      csem();
+      printf("\n\t%s: ",frase("seguro_baja")); 
+      lsem();
+      __fpurge(stdin);
+      sino = leer_caracter_oculto();
+      if (es_si(sino))
+      { 
+        darseBaja(user->nick);
+        salir = 1;
+	csem();
+	printf("\n\t%s\n",frase("baja_ok"));
+	printf("%s",frase("puls_enter"));
+	fflush(stdout);
+	lsem();
+	leer_caracter_oculto();
+	return 1;
+      }
+      else return 0;
+    }
+    else
+      if(!seguir(frase("pass_mal"))) { salir = 1; return 0; }
+  }
+}
+
+
+void mostrar_novedades()
+/* Muestras las ultimas novedades en cuanto a eventos. */
+{
+ 
+  char c;
+  lista_opciones l;
+  int opcion, id_ev;
+  struct usuario mi_user;
+  lista_dinamica l_dinam;
+  
+  
+  strcpy(mi_user.nick,frase("invitado"));
+  nueva_lista(&l);
+  agregar_opcion(&l,frase("futbol"));
+  agregar_opcion(&l,frase("f1"));
+  agregar_opcion(&l,frase("social"));
+  agregar_opcion(&l,frase("ir_menu_anterior"));
+  while(1)
+  {
+    limpiar_pantalla();
+    mostrar_cabecera(principal,&mi_user);
+    opcion = elegir_opcion(l);
+    if (opcion == 4) return;
+    listar_eventos(ev_menos_recientes,opcion-1,&mi_user,&l_dinam);
+    id_ev = mostrar_eventos(&l_dinam,&mi_user);
+    destruir_lista(&l_dinam);
+    if (id_ev == 0) return;
+    csem();
+    printf("\n\n\t%s",frase("puls_enter"));
+    lsem();
+    leer_caracter_oculto();
+  }
+    destruir_lista_op(&l);	  
+  
+}
+
+
+void mostrar_adv_legales()
+/* Muestra las advertencias legales. */
+{
+  
+  int opcion;
+  
+  limpiar_pantalla();
+  mostrar_cabecera_sin_login();
+  posicionar_cursor(1,6);
+  csem();
+  printf("\t %s\n",frase("adv1"));
+  printf("\t %s\n",frase("adv2"));
+  printf("\t %s\n",frase("adv3"));
+  printf("\t %s\n",frase("adv4"));
+  printf("\t %s\n",frase("adv5"));
+  printf("\t %s\n",frase("adv6"));
+  printf("\n\n\t\t%s\n",frase("puls_enter")); 
+  lsem();
+  __fpurge(stdin);
+  leer_caracter_oculto();
+  
+}
+
+
+void conectarOracle(char *usuario, char *contrasena)
+/* Conecta a la base de datos Oracle con el nombre de usuario
+   y contraseña especificados. */
+{
+  /* Declaración de variables para la interaccion con Oracle */
+
+  VARCHAR username[NICK_LEN];  /* VARCHAR es un estructura suministrada por Oracle */
+  VARCHAR password[PASS_LEN];   /* varchar es válido también en minúsculas */
+  VARCHAR host[HOST_LEN];
+
+  /* Conexión a Oracle. Copiar el nombre de usuario a la variable 'username' 
+     y establecer la longitud. */
+     
+  strncpy((char *) username.arr, usuario, NICK_LEN);
+  username.len = strlen((char *) username.arr);
+  
+  /* Copiar la contraseña a la variable 'password'. */
+  
+  strncpy((char *) password.arr, contrasena, PASS_LEN);
+  password.len = strlen((char *) password.arr);
+  
+  /* Copiar el host a la variable 'host'. */
+  
+  strncpy((char *) host.arr, "vicious.den.cps.unizar.es", HOST_LEN);
+  host.len = strlen((char *) host.arr); 
+
+  /* Conectar a Oracle */
+  
+  EXEC SQL CONNECT :username IDENTIFIED BY :password USING :host;
+  
+}
+
+
+void desconectarOracle()
+/* Desconecta de la base de datos Oracle. */
+{
+
+  /* Ejecutar las SQL pendientes (que estén en el buffer) */
+
+  EXEC SQL COMMIT WORK RELEASE;
+  exit(0);
+}
+
+
+void actualizacion_reloj(int idioma)
+/* Actualiza el reloj de la aplicacion */
+{ 
+  while(1)
+  {
+  
+    csem();
+      printf("\33[s");
+      posicionar_cursor(1,1);
+      escribir_hora(idioma);
+      printf("\33[u");
+      fflush(stdout);
+    lsem();
+    sleep(1);
+  }
+} 
+
+
+void juegos_azar (struct usuario *user)
+/* Interactua con el usuario para permitirle jugar
+   a los juegos de azar. */
+{
+  int opcion, exito;
+  perfilUsuario perfil;
+  datosJuegos datos;
+  
+  exito = accederPerfilUsuario(user, &perfil);
+  if (exito != TRUE) printf("Error al acceder al perfil del usuario\n");
+  exito = accederDatosJuegos(user, &datos);
+  if (exito != TRUE) printf("Error al acceder a los datos de juegos del user\n");
+  opcion = mostrarPantJuegos(user);
+
+  switch(opcion)
+  {
+    case 1:  
+       opcion = mostrarPantRuleta(user);       
+       if (opcion != 9) jugarRuleta(user,&perfil,opcion,&datos);
+       break;
+    case 2:  
+       opcion = mostrarPantDados(user);       
+       if (opcion != 4) jugarDados(user,&perfil,opcion,&datos);
+      break;
+    case 3:  jugarCartaMasAlta(user,&perfil,opcion,&datos); break;
+    case 4:  jugarBlackJack(user,&perfil,opcion,&datos);  break;                       
+    default: ;
+  } /* switch(opcion) */
+  
+  exito = actualizarDatosJuegos(user,datos); /* Para los informes economicos */
+  if (exito != TRUE) printf("Error al actualizar datos juegos\n");
+}
+
+
+void cambio_datos (struct usuario *user)
+/* Permite al usuario modificar sus datos personales. */
+{
+  tuplaUsuario datos;
+  int exito;
+
+  limpiar_pantalla();
+  mostrar_cabecera(cliente,user);
+  exito = accederDatosPersonales(user->nick,&datos);
+  if (!exito)
+  {
+    csem();
+    printf("\n\nError al acceder a sus datos personales.\n");
+    lsem();
+  }
+  pedir_datos_nuevos(&datos);
+  exito = modificarDatosPersonales(user->nick,datos);
+  if (!exito)
+  {
+    csem();
+    printf("\n\nError al acceder a sus datos personales.\n");
+    lsem();
+  }
+  else
+  {
+    user->divisa = datos.divisa;
+    csem();
+    printf("\n\n%s.\n",frase("datos_act_ok"));
+    lsem();
+  }
+  csem();
+  configurar_idioma(obtener_idioma(user->nick));
+  printf("\n\t%s\n",frase("puls_enter"));
+  lsem();
+  leer_caracter_oculto();  
+}

@@ -1,0 +1,271 @@
+/* MODULO DE INFORMES DE LA CASA DE APUESTAS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Fichero de definicion del modulo de informes
+                economicos de la Casa de Apuestas orientados a los 
+                administradores. 
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+
+EXEC SQL INCLUDE informes;
+
+EXEC SQL WHENEVER SQLERROR DO sql_error("Error en Oracle:\n");
+
+
+/* Orientadas al administrador */
+
+
+tpInforme acceder_informe_mensual(int mes, int anyo)
+{ 
+  tpInforme informeMensual;
+  int anyoAux, anyoAux2;
+  
+  anyoAux = anyo % 10; anyoAux2 = anyo / 10;
+  anyoAux += (anyoAux2 % 10)*10;
+   
+  EXEC SQL SELECT to_char(fecha, 'DD-MM-YYYY'), ingresosApuestas, perdidasApuestas,
+                  ingresosJuegos, perdidasJuegos, perdidasOfertas
+  INTO :informeMensual
+  FROM Informe
+  WHERE (to_char(fecha, 'mm')) = :mes AND
+        (to_char(fecha, 'yy')) = :anyoAux;
+
+  return informeMensual;
+}
+
+
+tpInforme acceder_informe_global(void)
+{
+
+  tpInforme informeGlobal;
+  float ingresosApuestas, perdidasApuestas, ingresosJuegos, perdidasJuegos,
+        perdidasOfertas;
+ 
+  EXEC SQL SELECT sum(ingresosApuestas), sum(perdidasApuestas),
+    sum(ingresosJuegos), sum(perdidasJuegos), sum(perdidasOfertas)
+  INTO :ingresosApuestas, :perdidasApuestas, :ingresosJuegos, :perdidasJuegos,
+       :perdidasOfertas
+  FROM Informe;
+  
+  informeGlobal.ingresosApuestas = ingresosApuestas;
+  informeGlobal.perdidasApuestas = perdidasApuestas;
+  informeGlobal.ingresosJuegos = ingresosJuegos;
+  informeGlobal.perdidasJuegos = perdidasJuegos;
+  informeGlobal.perdidasOfertas = perdidasOfertas;
+
+  return informeGlobal;
+}
+ 
+
+
+int listadoUsuarios(lista_dinamica *l)
+{
+  
+  datos_listado aux;
+
+  nueva_lista_dinam(l, sizeof(datos_listado)); 
+ 
+ /* Declaracion del cursor. Todos los cursores estaticos y explicitos
+    de SQL contienen sentencias SELECT. 'usuariosRegistrados' es un
+    identificador SQL, no una variable C. */
+  EXEC SQL DECLARE usuariosRegistrados CURSOR for
+    SELECT DISTINCT nickUser, fechaCreacion, fechaUltLogin
+    FROM Usuario
+    WHERE dadoAlta = 1
+    ORDER BY fechaCreacion;
+
+  /* Iniciar (abrir) el cursor */
+  EXEC SQL OPEN usuariosRegistrados;
+
+  /* Construimos un bucle con una sentencia FETCH con el CURSOR 
+     usuariosRegistrados para obtener la informacion de los
+     usuarios registrados en la casa de apuestas. 
+     Especificamos que el bucle termina (break) cuando se han 
+     recorrido todas las tuplas de la tabla Usuario (es decir, 
+     se produce el error de "tupla no encontrada" al ejecutar 
+     la sentencia FETCH) */
+
+  EXEC SQL WHENEVER not found DO BREAK;
+
+  for (;;) {
+    EXEC SQL FETCH usuariosRegistrados 
+    INTO :aux;
+    agregar(l, (char *) &aux);
+  } 
+
+  /* Cerrar el cursor */
+  EXEC SQL CLOSE usuariosRegistrados;  
+
+  if (sqlca.sqlcode == 0) return TRUE;
+  else if (sqlca.sqlcode > 0) return FALSE;
+  else return ERROR;
+}
+
+
+int accederDatosJuegos(struct usuario *user, datosJuegos *datos)
+{
+  int exito;
+  datosJuegos aux;
+  VARCHAR nick_sql[NICK_LEN];
+  
+  strcpy(nick_sql.arr, user->nick);
+  nick_sql.len = strlen(user->nick);
+  
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+  
+  EXEC SQL SELECT gananciasJuegos, totalJuegos
+  INTO :aux
+  FROM Usuario
+  WHERE (nickUser = :nick_sql);
+  
+  if (sqlca.sqlcode == 0)
+  {
+    exito = TRUE;      
+    datos->totalJuegos = aux.totalJuegos;
+    datos->gananciasJuegos = aux.gananciasJuegos; 
+  }
+  else if (sqlca.sqlcode > 0) exito = FALSE;
+  else exito = ERROR;
+  
+  return exito;
+}
+
+
+int actualizarDatosJuegos(struct usuario *user, datosJuegos datos)
+{
+  VARCHAR nick_sql[NICK_LEN];
+  tpInforme informe;
+  
+  strcpy(nick_sql.arr, user->nick);
+  nick_sql.len = strlen(user->nick);
+  
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+
+  EXEC SQL UPDATE Usuario SET
+    gananciasJuegos = :datos.gananciasJuegos,
+    totalJuegos = :datos.totalJuegos
+  WHERE (nickUser = :nick_sql);
+  
+  
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  { 
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  }
+  
+  EXEC SQL SELECT *
+  INTO :informe
+  FROM Informe
+  WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+        (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+	
+  if (sqlca.sqlcode == 0) /* Consulta correcta, ya existe el informe */
+  {
+    EXEC SQL UPDATE Informe SET
+      ingresosJuegos = :datos.totalJuegos,
+      perdidasJuegos = :datos.gananciasJuegos
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+
+    if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+    {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return TRUE;
+    }
+    else /* Error al actualizar */
+    {
+      EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+      return ERROR;
+    }
+  }	
+  else /* No existe el informe, hay que crearlo nuevo */
+  { 
+    EXEC SQL INSERT INTO Informe VALUES(to_date(sysdate, 'DD-MM-YYYY'),0,0,0,0,0);
+    EXEC SQL UPDATE Informe SET
+      ingresosJuegos = :datos.totalJuegos,
+      perdidasJuegos = :datos.gananciasJuegos
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+	  
+    if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+    {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return TRUE;
+    }
+    else /* Error al actualizar */
+    {
+      EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+      return ERROR;
+    }
+  } 
+}
+
+
+int enviar_informe(tpInforme informe, int tipo)
+{
+  float ingresosGlobales, perdidasGlobales, resultadoGlobal;
+  int mes, anyo;
+  FILE *f_temp;
+  char dest[MAIL_LEN], mensaje[500], n_fich[1000];
+  VARCHAR fecha[FECHA_LEN];
+  
+  strncpy(fecha.arr, informe.fecha.arr, FECHA_LEN);
+  fecha.len = informe.fecha.len;
+   
+  if ( !obtener_direccion_email(dest, "admin") )
+    return; 
+
+  /* Creamos un fichero temporal en el que almacenar el informe */
+  tmpnam (n_fich);
+  if ( (f_temp = fopen(n_fich, "w")) == NULL ) return; 
+
+  ingresosGlobales = informe.ingresosApuestas + informe.ingresosJuegos;
+  perdidasGlobales = informe.perdidasApuestas + informe.perdidasJuegos + informe.perdidasOfertas;
+  resultadoGlobal = ingresosGlobales - perdidasGlobales;
+
+  mes = obtener_mes((VARCHAR *) &informe.fecha); 
+  anyo = obtener_anyo((VARCHAR *) &informe.fecha);
+  
+  if (tipo == MENSUAL) 
+    fprintf(f_temp, "Informe economico referente al mes %d del anyo %d\n", mes, 2000+anyo);
+  else fprintf(f_temp, "Informe economico global\n");
+  
+  fprintf(f_temp, "\tResultado global del mes: %7.2f\n", resultadoGlobal);
+  fprintf(f_temp, "\tIngresos globales del mes: %7.2f\n", ingresosGlobales);
+  fprintf(f_temp, "\tPerdidas globales del mes: %7.2f\n", perdidasGlobales);
+  fprintf(f_temp, "\tResultado global de apuestas: %7.2f\n", informe.ingresosApuestas - informe.perdidasApuestas);
+  fprintf(f_temp, "\tIngresos derivadas de apuestas: %7.2f.\n", informe.ingresosApuestas);
+  fprintf(f_temp, "\tPerdidas derivadas de apuestas: %7.2f.\n", informe.perdidasApuestas);
+  fprintf(f_temp, "\tResultado global de juegos: %7.2f\n", informe.ingresosJuegos- informe.perdidasJuegos);
+  fprintf(f_temp, "\tIngresos derivadas de juegos: %7.2f.\n", informe.ingresosJuegos);
+  fprintf(f_temp, "\tPerdidas derivadas de juegos: %7.2f.\n", informe.perdidasJuegos);
+  fprintf(f_temp, "\tPerdidas derivadas de ofertas: %7.2f.\n", informe.perdidasOfertas);
+
+  if ( (fclose(f_temp)) == EOF )
+  {  
+    remove(n_fich);
+    return;
+  }
+  /* Preparamos la orden al shell */  
+  sprintf(mensaje, "mailx -s Apostopolis ");
+  strcat(mensaje, dest);
+  sprintf(dest, " < %s", n_fich);
+  strcat(mensaje, dest);
+  system(mensaje);
+  /* Borramos el fichero temporal */
+  remove(n_fich);
+}

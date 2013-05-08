@@ -1,0 +1,853 @@
+/* MODULO DE GESTION DE EVENTOS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Definicion del modulo de gestion de eventos 
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include "macros.h"
+#include "escape.h"
+#include <synch.h>
+
+EXEC SQL INCLUDE gestion_eventos; 
+
+extern sema_t mutex; /* Definida en interfaz.pc */
+
+
+void listar_eventos(int criterio, int tipo, struct usuario *user, lista_dinamica *lista)
+  {
+    int total_eventos, gr1, gr2, gr3;
+    tuplaEvento evento;
+    lista_dinamica lista_favoritos;
+    
+    switch ( tipo )
+    {
+      case FUTBOL: 
+        gr1 = 0; gr2 = 0; gr3 = 0;
+	break;
+      
+      case F1: 
+        gr1 = 1; gr2 = 1; gr3 = 1;
+	break;
+	
+      case SOCIAL: 
+        gr1 = 2; gr2 = 2; gr3 = 2;
+	break;
+	
+      case FUTBOL_F1: 
+        gr1 = 0; gr2 = 1; gr3 = 0;
+	break;
+      
+      case FUTBOL_SOCIAL: 
+        gr1 = 0; gr2 = 0; gr3 = 2;
+	break;
+	
+      case F1_SOCIAL: 
+        gr1 = 1; gr2 = 1; gr3 = 2;
+	break;
+	
+      case TODOS:
+        gr1 = 0; gr2 = 1; gr3 = 2;	
+        break;
+	
+      default:
+        printf("Valor de tipo invalido en la llamada a listar_eventos.\n");
+    } /* switch ( tipo ) */
+    
+    
+    /* Creamos la lista en que almacenaremos los datos obtenidos de la BD */
+    nueva_lista_dinam (lista, sizeof(tuplaEvento));
+    switch ( criterio )
+    {
+      case ev_pref_usuario: 
+        EXEC SQL DECLARE listaEventos01 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR 
+                 (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+	ORDER BY tipoEvento; 
+	
+	EXEC SQL OPEN listaEventos01;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos01 INTO :evento;
+           agregar_al_final(lista,(char *)&evento);
+	   total_eventos++;
+        }
+	EXEC SQL CLOSE listaEventos01;  
+        nueva_lista_dinam(&lista_favoritos, MAX_DESC_LEN);
+	obtener_favoritos(user, &lista_favoritos);
+	if ( detectar_favoritos(lista, &lista_favoritos) )
+	  reordenar_lista(lista, &lista_favoritos);
+	destruir_lista(&lista_favoritos);
+	break;
+	
+      case ev_mas_recientes:
+	EXEC SQL DECLARE listaEventos02 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio ) )
+	ORDER BY fechaIntroduccion DESC; 
+	
+	EXEC SQL OPEN listaEventos02;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+        {
+           EXEC SQL FETCH listaEventos02 INTO :evento;
+           agregar(lista,(char *)&evento); 	
+           total_eventos++;
+        }
+        
+        EXEC SQL CLOSE listaEventos02;  
+        break;
+	
+      case ev_menos_recientes:
+        EXEC SQL DECLARE listaEventos03 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+        ORDER BY fechaIntroduccion; 
+	
+        EXEC SQL OPEN listaEventos03;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos03 INTO :evento;
+           agregar(lista,(char *)&evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos03;  
+	break;
+      
+      case ev_mas_populares: 
+        EXEC SQL DECLARE listaEventos04 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) ) 
+        ORDER BY popularidad ASC; 
+	
+	EXEC SQL OPEN listaEventos04;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+        {
+           EXEC SQL FETCH listaEventos04 INTO :evento;
+           agregar(lista,(char *) &evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos04;  
+	break;
+      
+      case ev_menos_populares:  
+        EXEC SQL DECLARE listaEventos05 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+        ORDER BY popularidad DESC; 
+	
+	EXEC SQL OPEN listaEventos05;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos05 INTO :evento;
+           agregar(lista,(char *)&evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos05;  
+	break;
+      
+      case ev_caducan_antes:        
+        EXEC SQL DECLARE listaEventos06 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+        ORDER BY fechaInicio DESC; 
+     	
+	EXEC SQL OPEN listaEventos06;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos06 INTO :evento;
+           agregar(lista,(char *)&evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos06;  
+	break;
+	
+      case ev_caducan_despues:
+        EXEC SQL DECLARE listaEventos07 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+        ORDER BY fechaInicio ASC; 
+	
+	EXEC SQL OPEN listaEventos07;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos07 INTO :evento;
+           agregar(lista,(char *)&evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos07;
+	break;
+      
+      case ev_max_tope_apostable:
+        EXEC SQL DECLARE listaEventos08 CURSOR for
+        SELECT *
+        FROM Evento
+        WHERE ( ((tipoEvento = :gr1) OR (tipoEvento = :gr2) OR
+	         (tipoEvento = :gr3)) AND (sysdate < fechaInicio) )
+        ORDER BY maxApostable ASC; 
+	
+	EXEC SQL OPEN listaEventos08;
+        EXEC SQL WHENEVER not found DO break;
+        total_eventos = 0;
+        for (;;) 
+	{
+           EXEC SQL FETCH listaEventos08 INTO :evento;
+           agregar(lista,(char *)&evento);
+	   total_eventos++;
+        }
+        EXEC SQL CLOSE listaEventos08;
+	     
+    } /* switch (criterio) */
+  } /* listar_eventos */   
+
+
+int introducir_evento(tuplaEvento *evento) 
+{
+     tuplaEvento mi_evento = *evento;
+     int id_resul = -1;
+     
+     /* Insertamos en la BD */	
+     
+     EXEC SQL WHENEVER NOT FOUND CONTINUE;
+	
+     EXEC SQL INSERT INTO Evento
+     VALUES ( :mi_evento.idEvento, :mi_evento.nickAdmin, 
+              :mi_evento.descripcion, to_date(sysdate, 'DD-MM-YY HH24:MI:SS'),
+	      :mi_evento.tipoEvento, :mi_evento.popularidad, 
+	      :mi_evento.haSucedido, :mi_evento.maxApostable,
+	      to_date(:mi_evento.fechaInicio, 'DD-MM-YY HH24:MI:SS'));
+      	
+     /* Comprobacion de correcion de la insercion */
+     if (sqlca.sqlcode == 0) EXEC SQL COMMIT WORK;
+     else 
+     { 
+       EXEC SQL ROLLBACK;
+       return id_resul;
+     }
+     return mi_evento.idEvento;
+} /* introducir_evento */
+
+
+int introducir_evento_manualmente() 
+  {
+     tuplaEvento evento;
+     int mi_id, dias, meses, anyos, horas, mins, segs, correcto;
+     char fecha[FECHA_HORA_LEN], resp_aux[200], respuesta[NAME_LEN], fecha_aux[30];
+     
+     /* Asignamos el id. de evento pertinente */
+        evento.idEvento = generar_id_evento();
+	
+     /* Administrador */
+	strcpy(evento.nickAdmin.arr, "admin"); 
+	evento.nickAdmin.len = strlen(evento.nickAdmin.arr);
+		
+     /* Nombre evento */
+	correcto = 0;
+	while ( !correcto )
+	{ 
+	  csem();
+	  printf("\n\n\t%s: ",frase("preg_desc_ev")); 
+	  fflush(stdout);
+	  lsem();
+	  __fpurge(stdin);
+	  leer_cadena_cota(resp_aux,200);
+	  if ( strlen(resp_aux) <= NAME_LEN && strlen(resp_aux) > 0)
+	  {
+	    correcto = 1;
+	    strcpy(respuesta, resp_aux);
+	  }
+	  else
+	    if (!seguir(frase("desc_inc"))) return -1;
+	}
+	strcpy(evento.descripcion.arr, respuesta);
+	evento.descripcion.len = strlen(evento.descripcion.arr);
+	     
+     /* Tipo evento */
+         correcto = 0;
+	 while ( !correcto )
+	 {
+	   csem();
+	   printf("\t%s: ",frase("preg_tipo_ev"));
+	   fflush(stdout);
+	   lsem();
+	   leer_cadena(respuesta);
+	   if ( !strcmp(respuesta, "futbol") || !strcmp(respuesta,"soccer")
+	        || !strcmp(respuesta,"fussbal"))
+	   {
+	     evento.tipoEvento = FUTBOL;
+	     correcto = 1;
+	   } /* if */  
+	   else
+	   {
+	     if ( !strcmp(respuesta, "f1") )
+	     { 
+	       evento.tipoEvento = F1;
+	       correcto = 1;
+	     }  
+	     else 
+	     {
+	       if ( !strcmp(respuesta, "social") || !strcmp(respuesta,"sozial"))
+	       {
+	         evento.tipoEvento = 2;
+		 correcto = 1;
+	       }
+	       else
+	        {
+	          if (!seguir(frase("tip_mal"))) return 0;
+		}
+	     } /* else */
+	   } /* else */
+	 } /* while */	
+     /* Popularidad */
+	correcto = 0;
+	while ( !correcto )
+	{
+	  csem();
+	  printf("\t%s: ",frase("pop"));
+	  fflush(stdout);
+	  lsem();
+	  leer_entero(&evento.popularidad);
+          correcto = ( (evento.popularidad >= 0) && (evento.popularidad <= 10) );
+          if ( !correcto )
+	  {
+	    if (!seguir(frase("pop_mal"))) return 0;
+	  }
+	} /* while */
+     /* Ha sucedido */
+        evento.haSucedido = 0;
+		
+     /* Tope maximo apuesta */
+        correcto = 0;
+	while ( !correcto )
+	{ 
+	  csem();
+          printf("\t%s: ",frase("max_ap"));
+	  fflush(stdout);
+	  lsem();
+	  leer_float(&evento.maxApostable);
+	  correcto = evento.maxApostable > 0.0;
+	  if ( !correcto )
+	  {
+	     if (!seguir(frase("max_mal"))) return 0;
+	  }
+	}
+	
+     /* Fecha fin evento */
+        correcto = 0;
+	while (!correcto)
+	{
+          csem();
+	  printf("\t%s: ",frase("fecha_hora"));
+	  fflush(stdout);
+	  lsem();
+	  leer_cadena_cota(fecha_aux,17);
+	  correcto = fecha_hora_correctas(fecha_aux);
+	  if (correcto)
+	  {
+	    dias =  (fecha_aux[0]-'0')*10+(fecha_aux[1]-'0');
+	    meses = (fecha_aux[3]-'0')*10+(fecha_aux[4]-'0');
+	    anyos = (fecha_aux[6]-'0')*10+(fecha_aux[7]-'0');
+	    horas = (fecha_aux[9]-'0')*10+(fecha_aux[10]-'0');
+	    mins = (fecha_aux[12]-'0')*10+(fecha_aux[13]-'0');
+	    segs = (fecha_aux[15]-'0')*10+(fecha_aux[16]-'0');
+            sprintf(fecha, "%d-%d-%d %d:%d:%d", dias, meses, anyos, horas, mins, segs);
+	  }
+	  else
+	  {
+	    if (!seguir(frase("fecha_hora_mal"))) return -1;
+	  }
+	}
+     /* Insertamos en la BD */	
+        strcpy(evento.fechaInicio, fecha);
+	if ( (mi_id = introducir_evento(&evento)) < 0 ) return -1;
+	if ( introducir_pos_resultado_manualmente(mi_id) < 0)
+	{
+          /* Borramos el evento de la BD */
+	  EXEC SQL DELETE FROM evento
+	  WHERE idEvento = :mi_id;
+	  
+	  EXEC SQL COMMIT WORK;
+	  return -1;
+	} /* Fallo en la introduccion de posibles resultados */
+	return mi_id;
+  } /* introducir_evento_manualmente */
+
+
+int introducir_pos_resultado(tuplaResul *resul)
+{
+     tuplaResul mi_resul = *resul;
+     int id_resul = -1;
+     
+     /* Insertamos en la BD */	
+     
+     EXEC SQL WHENEVER NOT FOUND CONTINUE;
+	
+     EXEC SQL INSERT INTO Resultado
+     VALUES ( :mi_resul.idPosResul, :mi_resul.idEvento, 
+              :mi_resul.infoResul, :mi_resul.cotizacion,
+	      :mi_resul.haOcurrido);
+      	
+     /* Comprobacion de correcion de la insercion */
+     if (sqlca.sqlcode == 0) EXEC SQL COMMIT WORK;
+     else 
+     { 
+       EXEC SQL ROLLBACK;
+       return id_resul;
+     }     
+     return mi_resul.idPosResul;
+  } /* introducir_pos_resultado */	
+
+
+int introducir_pos_resultado_manualmente (int id_evento)
+  {
+    int salir = 0, correcto;
+    char *p, resp[NAME_LEN], c;
+    float cotizacion;
+    tuplaResul resultado;
+          
+    while ( !salir )
+    {
+      resultado.idEvento = id_evento;
+      resultado.idPosResul = generar_id_resultado();
+      correcto = 0;
+      while (!correcto)
+      {
+        csem();
+        printf("\n%s: ",frase("preg_desc_res"));
+        fflush(stdout);
+        __fpurge(stdin);
+        lsem();
+        leer_cadena_cota(resp,NAME_LEN);
+        correcto = (strlen(resp) > 0);
+	if (correcto)
+	{
+         strcpy(resultado.infoResul.arr, resp);
+         resultado.infoResul.len = strlen(resultado.infoResul.arr);
+	}
+	else
+	  if (!seguir(frase("desc_mal"))) return 0; 
+      }	 
+      __fpurge(stdin);
+      correcto = 0;
+      while ( !correcto )
+      {
+        csem();
+        printf("\n%s: ",frase("preg_cot"));
+	fflush(stdout);
+	lsem();
+        leer_float(&resultado.cotizacion);
+        correcto = (resultado.cotizacion > 0.0);
+	if ( !correcto )
+	{
+	  if (!seguir(frase("cot_mal"))) return 0;
+	}
+      }
+      resultado.haOcurrido = NO;
+      if ( (introducir_pos_resultado(&resultado)) < 0 )
+        return 0;
+       	  
+      correcto = 0;
+      while ( !correcto )
+      {
+        csem();
+        printf("\n\n%s: ",frase("preg_intro_mas"));
+	lsem();
+        c = leer_caracter_oculto();
+        if (es_si(c) || es_no(c))
+	  correcto = 1;
+	else
+	{
+	  csem();
+	  printf("%s.\n",frase("intro_resp_bien"));
+	  lsem();
+        }
+      }
+      if (es_si(c))
+      {
+        csem();
+	printf("%s\n",frase("sig_res"));
+	lsem();
+	continue;
+      } /* if */
+      else 
+      {
+        csem();
+	printf("%s.\n",frase("fin_intro_ev"));
+	lsem();
+	break;
+      }  /* else */
+    } /* while ( !salir ) */
+    return 1; 
+  } /* introducir_pos_resultado_manualmente */
+
+
+int definir_resultados_evento (int id_evento, struct usuario *user)
+{
+   tuplaResul resultado;
+   int min_id, max_id, total_resultados, correcto = 0, sol, mi_code, repetir;
+   lista_dinamica lista;
+   char respuesta[10];
+   
+   nueva_lista_dinam(&lista, sizeof(tuplaResul));
+   
+   /* Mostramos todos los resultados asociados al evento con identificador 
+      'id_evento' en la BD */
+  
+   EXEC SQL DECLARE listaResultados CURSOR for
+   SELECT *
+   FROM Resultado
+   WHERE ( idEvento = :id_evento )
+   ORDER BY idPosResul; 
+	
+   EXEC SQL OPEN listaResultados;
+
+   EXEC SQL WHENEVER not found DO break;
+
+   total_resultados = 0;
+  
+   for (;;) 
+   {
+     EXEC SQL FETCH listaResultados INTO :resultado;
+   
+     agregar(&lista,(char *)&resultado);
+     total_resultados++;
+     
+    /* Actualizacion del maximo y minimo identificador de posible resultado
+      de entre los posibles resultados listados */
+   } /* for (;;) */
+
+   if ( total_resultados == 0 )
+   {
+     csem();
+     printf("No hay entradas en la BD para el evento con id '%d'\n", id_evento);
+     lsem();
+     return 0;
+   }
+
+   EXEC SQL CLOSE listaResultados;
+   
+
+   limpiar_pantalla();
+   mostrar_cabecera(user->tipo_user,user);
+   
+   sol = elegir_resultado(&lista,user);
+   
+   /* Modificacion del campo 'haOcurrido' del posible resultado. */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL UPDATE Resultado
+   SET haOcurrido = 1
+   WHERE ( idPosResul = :sol AND idEvento = :id_evento );
+   
+   /* Comprobacion de correcion de la modificacion */
+   if ( (mi_code = sqlca.sqlcode) == 0)
+   {
+     csem();
+     limpiar_pantalla();
+     mostrar_cabecera(user->tipo_user,user);
+     printf("\n\n%s.\n",frase("res_mod_ok"));
+     lsem();
+   }
+   else 
+   { 
+     EXEC SQL ROLLBACK;
+     if ( mi_code > 0)  
+     {
+       csem();
+       printf("%s.\n",frase("fallo_mod"));
+       lsem();
+     }
+     else 
+     {
+       csem();
+       printf("Codigo de error: %d\n", mi_code);
+       printf("Error al ejecutar la sentencia SQL\n");
+       lsem();
+     }
+     return 0;
+   }
+     
+   /* Modificacion del campo 'haSucedido' del evento correspondiente */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL UPDATE Evento
+   SET haSucedido = 1
+   WHERE idEvento = :id_evento;
+   
+   /* Comprobacion de correcion de la modificacion */
+   if ( (mi_code = sqlca.sqlcode) == 0)
+   {
+     csem();
+     printf("%s.\n",frase("ev_marc_ok"));
+     lsem();
+   }
+   else 
+   { 
+     EXEC SQL ROLLBACK;
+     if ( mi_code > 0 )  
+     {
+       csem();
+       printf("El evento no pudo modificarse.\n");
+       lsem();
+     }
+     else 
+     {
+       csem();
+       printf("Codigo de error: %d\n", mi_code);
+       printf("Error al ejecutar la sentencia SQL\n");
+       lsem();
+     }
+     return 0;
+   }
+   EXEC SQL COMMIT WORK;  
+   resolver_evento(id_evento);
+   return 1;
+} /* definir_resultados_evento */
+
+
+int generar_id_evento()
+{
+    int mi_id = 0;
+    
+    EXEC SQL WHENEVER NOT FOUND CONTINUE;
+    
+    EXEC SQL SELECT max(idEvento)
+    INTO :mi_id
+    FROM Evento;
+
+    return mi_id+1;
+}
+
+
+int generar_id_resultado()
+{
+    int mi_id = 0;
+  
+    EXEC SQL WHENEVER NOT FOUND CONTINUE;
+    
+    EXEC SQL SELECT max(idPosResul)
+    INTO :mi_id
+    FROM Resultado;
+
+    return mi_id+1;
+}
+
+
+int referencia (lista_dinamica *l_favoritos, char cadena[MAX_DESC_LEN])
+{
+  int n_favoritos, exito = 0;
+  char cad[MAX_DESC_LEN];
+  char *p = NULL;
+  
+  for ( n_favoritos = 1; n_favoritos <= numdatos(*l_favoritos); n_favoritos++ )
+  {
+    if ( !dato_posicion(l_favoritos, n_favoritos, (char *)&cad) )
+      return -1;
+    if ( (p = strstr(cadena, cad)) != NULL)
+    {
+      exito = 1;
+      break;
+    }
+  }
+  return exito;
+}
+
+
+
+int detectar_favoritos (lista_dinamica *l_eventos, lista_dinamica *l_favor)
+{
+   int exito = 0, n_eventos, res;
+   tuplaEvento evento;
+   char cadena[MAX_DESC_LEN];
+   
+   
+   for ( n_eventos = 1; n_eventos <= numdatos(*l_eventos); n_eventos++ )
+   {
+      /* En cuanto encontramos una ocurrencia, terminamos la busqueda */
+      if ( exito )
+        break;
+      if ( !dato_posicion(l_eventos, n_eventos, (char *)&evento) )
+        return -1;
+      evento.descripcion.arr[evento.descripcion.len] = '\0';
+      strcpy(cadena, evento.descripcion.arr);
+      if ( (res = referencia(l_favor, cadena )) > 0 )
+        exito = 1;
+      else
+        if ( res < 0 )
+	  return -1;
+   }
+   return exito;
+} 
+ 
+ 
+ 
+void reordenar_lista (lista_dinamica *l_eventos, lista_dinamica *l_favoritos)
+{
+/* Pre: l_eventos y l_favoritos son listas inicializadas, la primera de elemen-
+ *      tos de tipo tuplaEvento y la segunda de elementos de tipo cadena de
+ *      caracteres.
+ *
+ * Post: l_eventos contiene los mismos elementos que antes, pero aunque siguen
+ *       ordenados en funcion de su tipo (futbol, f1 o social) si alguno de di-
+ *       chos elementos hace referencia a alguno de los favoritos de la lista
+ *       l_favor, estos elementos se colocan en la lista por delante de los ele-
+ *       mentos de su mismo tipo que no hacen referencia a los favoritos de la
+ *       lista l_favor.
+ */
+ 
+   int tipo;
+   tuplaEvento evento;
+   lista_dinamica l_aux, l_final;
+   
+   nueva_lista_dinam(&l_aux, sizeof(tuplaEvento));
+   nueva_lista_dinam(&l_final, sizeof(tuplaEvento));
+   if ( numdatos(*l_eventos) )
+   {
+     primero(l_eventos, (char *)&evento);
+     tipo = evento.tipoEvento;     
+   }     
+   while ( numdatos(*l_eventos) )
+   {
+      primero(l_eventos, (char *)&evento);
+      if ( tipo != evento.tipoEvento )
+      {
+        tipo = evento.tipoEvento; 
+	reordenar_sublista(&l_aux, l_favoritos);
+	while ( numdatos(l_aux) )
+        {
+          primero(&l_aux, (char *)&evento);
+	  agregar_al_final(&l_final, (char *)&evento); 
+          eliminar(&l_aux, (char *)&evento);     
+        }      
+      }     
+      else
+      {
+        agregar_al_final(&l_aux, (char *)&evento);
+        eliminar(l_eventos, (char *)&evento);
+	if ( !numdatos(*l_eventos) )  /* Fin de la lista original */
+	{ 
+	  reordenar_sublista(&l_aux, l_favoritos);
+	  while ( numdatos(l_aux) )
+	  {
+	    primero(&l_aux, (char *)&evento);
+	    agregar_al_final(&l_final, (char *)&evento);
+	    eliminar(&l_aux, (char *)&evento);
+	  }  
+	}     
+      }
+   }
+   while ( numdatos (l_final) )
+   {
+     primero(&l_final, (char *)&evento);
+     agregar_al_final(l_eventos, (char *)&evento);
+     eliminar(&l_final, (char *)&evento);
+   }
+   destruir_lista(&l_aux);
+   destruir_lista(&l_final);
+} /* reordenar_lista */
+   
+   
+   
+   
+void reordenar_sublista (lista_dinamica *l_eventos, lista_dinamica *l_favoritos)
+{
+/* Pre: l_eventos y l_favoritos son listas inicializadas, la primera de elemen-
+ *      tos de tipo tuplaEvento y la segunda de elementos de tipo cadena de
+ *      caracteres.
+ *
+ * Post: l_eventos contiene los mismos elementos que antes, pero si existia 
+ *       algun elemento que hiciera referencia a alguno de los favoritos de la 
+ *       lista l_favoritos, estos elementos se colocan en la lista por delante 
+ *       de los elementos que no hicieran referencia a los favoritos de la lis-
+ *       lista l_favoritos.
+ */
+ 
+  struct nodo *pnodo, *pnodo_ant, *pnodo_ref;
+  int ref_encontrada = 0, num_datos, aux;
+  char desc_evento[MAX_DESC_LEN];
+  tuplaEvento evento;
+  
+
+  if ( numdatos(*l_eventos) )
+  {
+    primero(l_eventos, (char *)&evento);
+    evento.descripcion.arr[evento.descripcion.len] = '\0';
+    strcpy(desc_evento, evento.descripcion.arr);
+    aux = referencia(l_favoritos, desc_evento);  
+    if ( aux < 0 )      /* Error fatal accediendo a las preferencias */
+      return;
+    ref_encontrada = aux;
+    if ( ref_encontrada )
+      pnodo_ref = l_eventos->primero;
+    pnodo = l_eventos->primero;
+    pnodo_ant = l_eventos->primero;
+  }
+  for ( num_datos = 1; num_datos < numdatos(*l_eventos); num_datos++ )
+  {
+    dato_posicion(l_eventos, num_datos, (char *)&evento);
+    evento.descripcion.arr[evento.descripcion.len] = '\0';
+    strcpy(desc_evento, evento.descripcion.arr);
+    aux = referencia(l_favoritos, desc_evento);  
+    if ( aux < 0 )
+      return;
+    if ( aux ) /* El evento tiene relacion con un favorito */
+    {
+      if ( ref_encontrada)
+      {
+        if ( num_datos != 1 )
+        { 
+          pnodo_ant->siguiente = pnodo->siguiente;
+          pnodo->siguiente = pnodo_ref->siguiente;
+          pnodo_ref->siguiente = pnodo; 
+          pnodo_ref = pnodo;
+          pnodo = pnodo_ant; 
+        }
+      }
+      else /* Es el primer evento que hace referencia a un favorito */
+      {
+        ref_encontrada = 1;
+        pnodo_ant->siguiente = pnodo->siguiente;
+        pnodo->siguiente = l_eventos->primero;
+        l_eventos->primero = pnodo;
+        pnodo_ref = pnodo;
+        pnodo = pnodo_ant;
+      }      
+    }
+    pnodo_ant = pnodo;
+    pnodo = pnodo->siguiente;
+  }     
+} /* reordenar_sublista */

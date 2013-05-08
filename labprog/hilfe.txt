@@ -1,0 +1,323 @@
+USER GUIDE
+
+
+Die Verwendung dieser Dokumentation ist unter den folgenden Bedingungen: Sie können eine Kopie dieser Dokumentation nur für den persönlichen Gebrauch.
+Die Umwandlung in andere Formate ist erlaubt, solange die Inhalte nicht verändert oder in irgendeiner Weise bearbeitet werden.
+Du sollst nicht zu veröffentlichen oder zu verbreiten dieser Dokumentation in irgendeiner Form oder mit irgendwelchen Mitteln, außer wenn Sie die Dokumentation in einer Art und Weise ähnlich
+Mit dem für die Verbreitung Apostópolis (dh elektronisch heruntergeladen werden, mit der Software) oder einer CD-ROM oder auf ähnliche Weise, solange die
+Dokumentation ist verbreitet zusammen mit der Software in dem gleichen Medium. Für alle anderen Nutzungen, zum Beispiel die Verbreitung von gedruckten Exemplaren, oder
+Nutzung dieser Dokumentation, im Ganzen oder in Teilen, in einer anderen Publikation, müssen Sie die vorherige schriftliche Erlaubnis von einem autorisierten Vertreter
+Von Apostópolis. Apostópolis behält sich sämtliche Rechte an dieser Dokumentation.
+
+Dokument generiert: 18-01-2008 (Review: 3)
+
+
+Table of contents.
+1. Systemanforderungen.
+2. Installieren Apostópolis auf einer Unix-Maschine.
+3. Ausführung von apostópolis.
+4. Administrator-Funktionen.
+4,1 "Erste Schritte".
+4,2 Aspekte zu berücksichtigen.
+4,3 User Management.
+   4.3.1 Giving hoch.
+   Abmelden 4.3.2.
+   4.3.3 Die Nutzer-Daten.
+   4.3.4 Die Benutzer-Aktivität.
+4,4. Wirtschafts-Berichte
+   4.4.1 Wirtschafts-Bericht zu einer bestimmten Monat.
+   4.4.2 weltwirtschaftlichen Bericht.
+4,5 Promotionen / Bonds.
+   4.5.1 Einführung von neuen Angeboten.
+   Siehe 4.5.2 Promotions aktiv.
+   4.5.3 Entfernen Promotions.
+   4.5.4 Verlust von Werbeaktionen.
+4,6 Einführung von neuen Veranstaltungen.
+4,7 Auflösung von Veranstaltungen.
+
+5. Features Benutzer.
+   5,1. Anmeldung
+   5,2 View / Change persönlichen Daten.
+   5,3 Präferenzen anzeigen.
+   5,4 Income Kredit-und Auszahlungen.
+   5,5 abmelden.
+   5,6 Ihr Passwort vergessen?
+   5,7 Veränderung geheime Frage.
+   5,8 Passwort ändern.
+   5,9 Perform Wetten.
+   5,10 Brauchen Sie Hilfe bei der Entscheidung über seinen Einsatz?
+   5,11 Ansicht Wetten anhängig.
+   5,12 Ansicht historischen Wett-und wirtschaftliches Gleichgewicht.
+   5,13 Siehe historischen Ereignissen.
+   5,14 Gambling
+   5,15 Standards.
+  
+  
+1. Systemanforderungen.
+
+Sie müssen eine Maschine Apostópolis unter UNIX Solaris, um ihr ordnungsgemäßes Funktionieren. Die Maschine sollte sich aus den GCC-Compiler und precompiladors ProC und haben mindestens 3 MB freien Speicherplatz auf Ihrer Festplatte.
+Darüber hinaus müssen Sie eine Verbindung zu dem Oracle-Datenbank-Server.
+
+2. Apostópolis Installation auf einer Unix-Maschine.
+
+Kopieren Sie alle Dateien in dem Verzeichnis, in dem Sie die Anwendung installiert haben --
+Führen Sie den folgenden Befehl ein: make
+Warten Sie, bis das System wieder. Sie sehen verschiedene Meldungen auf dem Bildschirm erscheinen, aber machen Sie sich keine Sorgen, sind Teil der Installation.
+Führen Sie den Befehl: make clean
+Er ist bereit, die Anwendung ausführen, stellen Sie sicher, dass Sie die Dateien: german.txt, german.txt und deutsch.txt.
+Run Apostópolis immer in das Verzeichnis, in dem es installiert wurde.
+
+3. Ausführung von apostópolis.
+
+Für die Umsetzung der Apostópilis geben Sie den Befehl ein: führend in dem Verzeichnis, in dem die Anwendung installiert ist, um die korrekte Sicht der Anwendung wird empfohlen, ihre Umsetzung in einem maximierten Fenster des Terminals.
+4. Administrator-Funktionen.
+
+4,1 "Erste Schritte".
+
+Von nun an Ihre Aufgaben wird es sein, die Manager Apostópolis. Es gab nur einen Administrator-Account in dieser Version, aber die Anwendung ist bereit, den Wettbewerb und den Zugang zu der Datenbank, so dass mehrere Administratoren können mit dem selben Konto gleichzeitig.
+Hier ist der Einsatz aller Instrumente, die werden zu Ihrer Verfügung.
+
+Mit der Zeit, die Sie die Anwendung ausführen können, müssen Sie sich als Administrator ein, dies zu tun, wählen Sie zunächst die Sprache, in das Hauptmenü. Dann wählen Sie protokollieren und geben Sie Ihren Namen und Ihr Passwort ein.
+Der Benutzername für den Account Manager ist: admin
+Das Passwort lautet: 1234567
+
+Nach der Anmeldung ändern, die Umsetzung seiner Sprache Englisch.
+
+4,2 Aspekte zu berücksichtigen.
+
+Seien Sie sich bewusst, dass Sie eine Anwendung, die sich um die echtes Geld. Für die Sicherheit bei Veranstaltungen sind in der Datenbank konnte nicht geändert werden, so stellen Sie sicher, dass Sie Informationen in der geeigneten Form, es liegt in Ihrer Verantwortung.
+Für jedes Problem, können Sie sich an das Team Apostópolis.
+
+4,3 User Management.
+
+4.3.1 Giving hoch.
+
+Als Administrator, seine Pflicht ist verantwortlich für die Bestätigung der hohen Benutzer, die sich registrieren. Gehen Sie dazu zur Option verbleibenden Aufgaben. Dort wählen Sie Benutzer noch zu registrieren und es wird eins nach dem anderen, die Nutzer, die sich in Erwartung der Entlastung. Im Falle eines minderjährigen Antragsteller werden schriftlich benachrichtigt Bildschirm.
+Für jeden Benutzer müssen sich entscheiden, ob Sie möchten, geben Sie die hoch oder nicht. Wenn ja, drücken Sie die "J" und wenn nicht drücken Sie "N".
+Die Bewerber geben hoch und können die Anwendung in ihrer Gesamtheit als Nutzer. Diejenigen, die sich nicht entladen wird noch zu entladen.
+Wenn Sie möchten, dass ein Benutzer zu beenden oder entladen wollen jemanden, der hat sich nicht erledigt nicht weiter zu zeigen, sich auf hervorragende hohe 4.3.2 zu sehen, wie niedrig zu den Nutzern.
+
+Abmelden 4.3.2.
+
+Sie können jeden Benutzer, unabhängig davon, ob Sie ein registrierter Benutzer oder Benutzer herausragenden hoch. Opfer hängt von Ihrer persönlichen Meinung. Es wird empfohlen, vorsichtig zu sein, wenn sie niedrig, als Nutzer, die sich entladen und nicht verlieren Ihren Kredit erhalten Möglichkeit sich zu erholen.
+Apostópolis ist nicht verantwortlich für die zu Unrecht Opfer.
+-- Um die niedrigen gehe um die Verwaltung von Benutzern.
+-- Wählen Sie die Option zum Abbrechen eines Benutzers.
+-- Geben Sie den Spitznamen des Benutzers zu beenden.
+-- Wenn Sie eingeben, werden Sie entlassen. Wenn der Benutzer nicht vorhanden ist werden Sie informiert.
+
+4.3.3 Die Nutzer-Daten.
+
+Um die persönlichen Daten eines Benutzers im Menü Verwaltung von Benutzern
+-- Wählen Sie die Option, um zu sehen, Benutzer Daten
+-- Geben Sie die Benutzer-Nickname
+-- Wenn der Benutzer vorhanden ist, wird auf dem Bildschirm angezeigt werden alle Ihre persönlichen Informationen.
+
+Siehe 4.3.4 Benutzer-Tätigkeit.
+
+Wenn Sie möchten, dass die Nutzer zu konsultieren, sehen Sie eine Liste der Termine für die Konto-Erstellung und das Datum der letzten Anmeldung für alle Benutzer. Um dies zu tun, um die Verwaltung von Benutzern gehen
+Wählen Sie Benutzern die Möglichkeit, zu sehen und Termine
+Und die angeforderten Informationen angezeigt.
+
+Wirtschafts-Reports 4,4.
+
+Um zu verhindern, dass Rechnungen der Spielsucht Haus, können Sie Berichte über wirtschaftliche Verluste und Gewinne, die aufgrund der gewonnenen Wetten und Spielen der Nutzer. Es gibt zwei Arten von Berichten: ein Monat oder ein Ausdruck, dass die Entwicklung des vollen Haus des Glücksspiels.
+
+4.4.1 Wirtschafts-Bericht zu einer bestimmten Monat.
+
+-- Gehen Sie in das Menü Geschäftspartner.
+-- Wählen Sie die Option zum monatlichen wirtschaftlichen Bericht konsultieren.
+-- Geben Sie den Monat, dessen wirtschaftliche Bericht gesucht (in numerischer Form, mit zwei-stellig).
+-- Geben Sie das Jahr als vierstellige Zahl.
+-- Erscheint auf dem Bildschirm Bericht des gewünschten Monat. Drücken Sie eine beliebige Taste. Sie können dann auswählen, ob Sie den Bericht auf seiner wirtschaftlichen E-Mail. Klicken Sie auf "J" in der affirmative.
+
+4.4.2 weltwirtschaftlichen Bericht.
+
+-- Gehen Sie in das Menü Berichte Business
+-- Wählen Sie die Option zu konsultieren gesamtwirtschaftlichen Bericht
+-- Ist auf dem Bildschirm angezeigt, diesen Bericht. Drücken Sie eine beliebige Taste. Sie können dann auswählen, ob Sie den Bericht auf seiner wirtschaftlichen E-Mail. Klicken Sie auf "J" in der affirmative.
+
+
+4,5 Promotionen / Bonds.
+
+Als Manager Apostópolis Sie sind verantwortlich für die Aktivierung und Deaktivierung der Promotionen, die sie wünschen. Es verfügt über vier verschiedene Werbeaktionen: Gift erste Geschenk von Bargeld, Geschenk Geburtstag und Jubiläum. Die Angebote sind gültig für den Bereich der Benutzer spezifizieren Sie --
+
+4.5.1 Einführung von neuen Angeboten.
+
+-- Gehen Sie in das Menü Einführung / Entfernen Gebote.
+-- Wählen Sie die Option zur Einführung neuer Angebote.
+-- Wählen Sie Kennung Gebot zu aktivieren bei den zur Verfügung.
+-- Wählen Sie Ranking Benutzer aus dem das Angebot gültig ist.
+-- Nach der Eingabe dieser Daten liefern bereits aktiviert.
+
+
+Siehe 4.5.2 Promotions aktiv.
+
+-- Gehen Sie in das Menü Einführung / Entfernen Gebote.
+-- Wählen Sie die Option Listen Gebote.
+-- Sie können auf dem Bildschirm sehen die Auflistung aller aktiven Angebote.
+-- Drücken Sie eine Taste, und kehren Sie zurück zum vorherigen Menü.
+
+
+4.5.3 Entfernen Promotions.
+
+-- Gehen Sie in das Menü Einführung / Entfernen Gebote.
+-- Wählen Sie die Option zur Beseitigung Gebote.
+-- Sie können eine Liste der aktiven Angebote. Wählen Sie das gewünschte Angebot zu deaktivieren.
+-- Sobald das Angebot ist deaktiviert.
+
+4.5.4 Verlust von Werbeaktionen.
+
+-- Gehen Sie in das Menü Einführung / Entfernen Gebote.
+-- Wählen Sie die Option zur Beseitigung Gebote.
+-- Sie können sehen, einen Bericht über die wirtschaftlichen Verlusten geführt haben und Gebote.
+
+
+4,6 Einführung von neuen Veranstaltungen.
+
+Um neue Ereignisse gehen, neue Veranstaltungen.
+-- Geben Sie eine Beschreibung
+-- Legen Sie die Art der Veranstaltung: Fußball-, Sozial-oder f1
+-- Geben Sie den Grad der Popularität
+-- Geben Sie die maximale apostable Geld in Euro.
+-- Geben Sie die genaue Uhrzeit und das Datum für den Beginn der Veranstaltung
+Nach Eingabe dieser Daten beginnt das Einfügen möglicher Ergebnisse. Für jede Folge haben wird, um eine Beschreibung und ein Angebot.
+Geben Sie so viele, wie Sie möchten.
+
+Auflösung von 4,7 Veranstaltungen.
+
+Zur Behebung der Ereignisse, die bereits stattgefunden haben, gehen Sie zu unvollendet
+Wählen Sie die Option zur Einführung Ergebnisse.
+Sie erhalten eine Liste der Ereignisse, die gelöst werden müssen. Wählen Sie die gewünschte Veranstaltung zu regeln.
+Nach der Veranstaltung erhalten Sie eine Liste der möglichen Ergebnisse. Wählen Sie das Ergebnis geschehen ist.
+Danach, wird das Ereignis behandelt werden, und alle haben die Einsätze verknüpft.
+
+
+5. Features Benutzer.
+
+Im Folgenden finden Sie eine Beschreibung des Tools zur Verfügung, wie ein Benutzer von Apostópolis. Wenn Sie Fragen haben, wenden Sie sich bitte an einen der Administratoren.
+
+5,1 Registrierung.
+
+Der erste Schritt zu geben Apostópolis Benutzer registriert. Starten Sie das Programm und wählen Sie die Sprache, in die sie sehen wollen Umsetzung.
+Wählen Sie die Option, um sich anzumelden.
+Dann werden Sie Ihre persönlichen Daten, sobald sie dies getan hat, stellen einen kurzen Fragebogen über ihre Präferenzen im Hinblick auf einen besseren Service zu bieten. Der Fragebogen ist freiwillig und kann nicht abgelehnt werden, eine Antwort auf alle Fragen.
+Sobald Sie die Registrierung abgeschlossen haben, sollten mit der Anmeldung in Ihrem E-Mail-Bestätigung seiner hoch.
+Es ist wichtig zu beachten, dass zu der Zeit, dass Sie eine Sprache definieren, sofern sie mit der Implementierung beginnen wird angezeigt, in der Sprache, die Sie in der Registrierung. Um herauszufinden, wie Sie sehen, ändern Sie Ihre Sprache, die unter der 5,2-Anzeige und Änderung der persönlichen Daten.
+
+
+Für die folgenden Optionen werden in der Benutzer-Menü. Für den Zugriff auf das Menü Benutzer die Anwendung startet, wählen Sie Ihre Sprache und Zeichen. Sie können dies tun, indem Sie die Log-und dann die Eingabe, für die Nicht-Nutzung für so viel Sie Ihren Benutzernamen und Ihr Passwort ein.
+
+5,2 View / Change persönlichen Daten.
+
+Nach Beendigung der Registrierung und entladen, können Sie anzeigen und bearbeiten, ihre persönlichen Daten.
+Um Ihre persönlichen Daten sehen, wählen Sie persönliche Daten. Sie können sehen, der Bildschirm eine Liste aller ihrer persönlichen Daten.
+Um diese persönlichen Daten ändern, wählen Sie persönliche Daten des Anwenders aus. Sie werden gefragt, ob Sie ändern möchten, dass Ihre persönlichen Details, die Sie ändern können: Ihre Adresse, Postleitzahl, Stadt, Land, Sprache und Währung.
+
+
+5,3 Präferenzen anzeigen.
+
+Abhängig von ihrer Geschichte als Apostópolis Spieler, das System wird ein persönliches Profil ihrigen. Sie können diesem Profil.
+Um die Präferenzen wählen Sie Benutzer-Einstellungen im Menü zeigen. Ihnen wird eine Liste mit allen Ihren Wünschen an.
+
+5,4 Income Kredit-und Auszahlungen.
+
+Zur Eingabe oder Geld aus Apostópolis dríjase das Benutzermenü.
+Wählen Sie die Option Einkünfte oder Einnahmen, wie gewünscht.
+Beide Optionen müssen Sie Ihre Kontonummer und die Höhe der Geld Eingabe / zurückziehen.
+Wenn die Transaktion erfolgreich ist, werden Sie von dieser Anzeige.
+
+5,5 abmelden.
+
+Wenn Sie wollen sich von der Wett-Haus, gehen Sie auf den Benutzer und wählen Sie im Menü abmelden. Um das Wort zu validieren, müssen Sie Ihr Passwort eingeben. Sobald die einfügen, werden Sie noch einmal gefragt, ob wirklich wollen, werden verschrottet. Wenn Sie werden definitiv bestätigt, als gering.
+
+5,6 Ihr Passwort vergessen?
+
+Wenn Sie Ihr Passwort vergessen abrufen können es aus Ihrer geheimen Frage.
+Gehen Sie zum Hauptmenü und wählen Sie Ihr Passwort vergessen?.
+Um Ihr Passwort wird an Antwort auf seine Frage. Sobald eine Antwort richtig, wird eine E-Mail unter Beifügung Ihr Passwort ein.
+
+5,7 Veränderung geheime Frage.
+
+So ändern Sie Ihre geheime Frage, wenden Sie sich bitte an den Benutzer-Menü und wählen Sie ändern geheime Frage. So ändern Sie Ihre geheime Frage in erster Linie müssen Sie Ihr Passwort eingeben.
+Einmal eingeführt, geben Sie Ihr neues Passwort geheim Frage, dann geben Sie Ihre neue geheime Antwort. Dann Ihre Frage-und-Antwort-Geheimnis aktualisiert werden.
+
+5,8 Passwort ändern.
+
+So ändern Sie Ihr Kennwort ein, wählen Sie den Befehl change user Passwort. Zuerst müssen Sie Ihr aktuelles Passwort. Nachdem das geschafft ist, muss validiert geben Sie das neue Kennwort.
+
+Führen 5,9 Einsätze.
+
+Um Wetten können Sie eine oder mehrere Ergebnisse der Veranstaltungen, die in Apostópolis.
+Wählen Sie zunächst die Möglichkeit, Wetten Ereignisse und Benutzer-Menü und wählen Sie zeigen Ereignisse.
+-- Wählen Sie den Typ der Ereignisse, die Sie sehen möchten.
+-- Wählen Sie die Maßstäbe, nach denen gelistet werden wollen.
+-- Wählen Sie die Veranstaltung, die Sie wollen diese Wette angeboten.
+-- Wenn eines der Ergebnisse der ausgewählten Veranstaltung, die Sie interessiert sind, geben Sie bitte an, dass Sie wetten wollen eine von ihnen und wählen sie aus.
+Dann werden Sie gefragt, ob Sie hinzufügen möchten mehr Veranstaltungen zu den Ergebnissen der Beteiligung (für den Fall, dass Sie mehrere Abschluss einer Wette). Wenn Sie ja, können Sie wiederholen Sie die obigen Schritte, um die Ergebnisse von Ereignissen zu spielen, will bis zu einem Maximum von acht.
+Wenn nicht bereit, um weitere Ergebnisse zu der Wette, Sie haben bis zum Ende formalisieren. Es gibt zwei Möglichkeiten, den Zugriff auf die Formalisierung der Wette:
+Auswahl, die nicht hinzufügen möchten mehr Veranstaltungen zu wetten, wenn das Ergebnis der Wahl.
+Die Option des Wett-und Gewinnspiele im Menü Veranstaltungen.
+
+Nach Zugriff auf die Formalisierung der Wette, so müssen Sie den Betrag, den Sie wollen, zu spielen und im Falle einer Wette durch den Grad der Wette.
+Wenn alle Voraussetzungen für das Angebot sind die Wette korrigieren müssen korrekt.
+
+
+5,10 Brauchen Sie Hilfe bei der Entscheidung über seinen Einsatz?
+
+Aus dem Profil Apostópolis auf der Grundlage ihrer historischen als Spieler haben Sie die Möglichkeit, dass das System bietet eine Reihe von Ergebnissen, die Wahl zu spielen. Die Auswahl dieser Ergebnisse wird in Ihrem Einsatz, die sich formalisieren Wahlmenü Wett-und Gewinnspiele.
+Für den Zugriff auf diese Beratung wählen Sie den Berater des Wett-und Gewinnspiele im Menü Veranstaltungen.
+
+
+5,11 Ansicht Wetten anhängig.
+
+Wenn Sie sehen wollen, Ihre Wetten pending wählen Sie aus dem Menü Display ausstehenden Wett-und Gewinnspiele. Er wurde von allen seinen herausragenden Wetten, beginnend mit der einfachen, gefolgt von der Verbindung und schließlich die Wett-System.
+
+5,12 Ansicht historischen Wett-und wirtschaftliches Gleichgewicht.
+
+Wenn Sie sehen wollen, ihren historischen Wett-und wirtschaftliches Gleichgewicht in seinem Aufenthalt in Apostópolis wählen historischen Überprüfung der Benutzer-Menü.
+Sie werden mit allen ihren Wetten, die bereits gelöst worden, indem Sie, ob Sie gewonnen oder verloren, der die verdiente Geld in diesem Fall.
+Schließlich zeigen wir Ihnen eine umfassende Gewinn-und Verlustrechnung in Wettbüros, Spiele und Promotions.
+
+5,13 Siehe historischen Ereignissen.
+
+Um die Ereignisse, und wählen Sie alte Ereignisse der Benutzer-Menü. Sie erhalten eine Liste von Veranstaltungen bereits stattgefunden. Wählen Sie die gewünschte und Sie werden mit allen Informationen Hervorhebung der Ergebnisse der Veranstaltung geschehen.
+
+5,14 Glücksspiel.
+
+Neben Wetten Ereignisse, kann es spielen auch Glücksspiele. Für den Zugang wählen Sie Spielen Spiele in der Benutzer-Menü.
+Es gibt vier Spiele: Roulette, Würfel, Black-Jack und die höchste Karte und der Mindesteinsatz auf jedes Spiel ist 2,5 Euro.
+
+Anleitung Roulette
+Es besteht aus hit einige Daten über die Ergebnisse der Spin eines Roulette-Rad, die Einsätze sind möglich:
+* Ergebnis genauer: um herauszufinden, ist das Ergebnis der Einführung des Roulette-Rad, das ist nummeriert 0 bis 36. Das Bild wurde 35 mal das Geld investiert.
+       * Ergebnis ungerade oder sogar: vorhersagen, ob das Ergebnis ist ungerade oder sogar. Der Gewinn ist gleich
+         Geld gewettet
+       * Ergebnis rot oder schwarz: vorherzusagen, ob die Zahl ist im Zusammenhang mit der Farbe rot oder schwarz. Die
+          Gain ist gleich das Geld gewettet.
+        * Dozen: erraten, wenn das Ergebnis einer der Intervalle: [1-12] und [13,24]
+           [25-36]. Der Gewinn ist gleich zweimal das Geld gewettet.
+
+Anleitung der Würfel:
+Es besteht aus hit Daten über den Start von zwei Tatsachen. Alle Wetten sind:
+* Reusltado genauer: um herauszufinden, ist die Zahl, die der Würfel (zwischen 2 und 12). Der Gewinn ist gleich elf Mal das Geld gewettet.
+* Ergebnis ungerade oder sogar: festzustellen, ob die Summe der Würfel werden oder sogar eine ungerade Anzahl. Der Gewinn ist gleich das Geld gewettet.
+
+Anleitung für die höchste Karte:
+Dabei handelt es sich um einen Brief bekommen höher als Banking. Der Gewinn wird in Höhe der Geld gewettet.
+
+Black-Jack-Anleitung:
+Der Händler vertreibt 2 Karten an jeden Spieler. Der Spieler hat die Möglichkeit, den Aufenthalt mit diesen Buchstaben oder Schreiben mit dem Antrag ohne weiteres unter keinen Umständen mehr als die 21 Punkte in dem Fall, dass sie verlieren das Spiel. Gewinnt schließlich mit der höchsten Zahl oder einen Blackjack.
+Es wird in der ersten Black Jack Hand, wenn man einen Wert von 21 Punkten.
+Der Wert der Ass kann 1 oder 10 Punkte.
+Zahlen im Wert von 10 Punkten.
+Briefe zwischen 2 und 9 sind es wert, so viele Punkte wie ihre numerischen Wert.
+Der Gewinn ist gleich das Geld gewettet.
+
+5,15 Standards.
+
+Als Benutzer von Apostópolis sind folgende Regeln zu beachten:
+Sobald eine Wette kann nicht widerrufen werden.
+Der Manager ist hoch, und wer entscheidet, steht es frei, bei denen jedermann.
+Wenn Sie zu jeder Zeit ist es aufgedeckten Betrugsfälle zu seinem Teil wird automatisch erledigt.
+Wenn es geringe Geld, ohne Apostópolis, dass ein Teil des Geldes wird Apostópolis nicht das Recht haben, zu behaupten.

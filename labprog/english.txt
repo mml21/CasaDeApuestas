@@ -1,0 +1,434 @@
+ad_mas: Events that admit most stake bets
+adv1: Attention!: Gambling implies risks.
+adv2: Gambling without control can lead to loss of money and
+adv3: psychological disorder. You play under your responsability.
+adv4: 1. To play in the system you must be over 18.
+adv5: 2. Games can cause addiction.
+adv6: 3. The gambling system has no resposability of your loss.
+agreg_res_ap: Do you want to add this result to a bet? (Y/N)
+agregar_mas_resul: Do you want to add any additional result to your bet? (Y/N)
+aleman: German
+altas_pendientes: Pending Registers
+ap_arriesg: bet(s) considered risky
+ap_comb: Multi bet
+ap_combs: multi bet(s) 
+ap_conserv: bet(s) considered conservative
+ap_correcta: Bet succesfully completed
+ap_dados: Avaible bets for darts
+ap_form_dia: Bet formalized the day 
+ap_minima_es: The minimum bet is
+ap_rul: Avaible bets for the Roulette
+ap_simple: Single bet
+ap_simples: single bet(s) 
+ap_sis: System bet
+ap_siss: system bet(s) 
+apostar: Bet
+apuesta_mal: We can't complete your bet 
+apuesta_ok: Bet succesfully completed
+as: ace
+ayuda: Help
+baja_ok: Account deleted succesfully
+barajando: Shuffling cards
+bienv: Welcome
+bienvenido: WELCOME TO APOSTOPOLIS
+cab: queen
+cad_pron: Events that will finish soon
+cad_tad: Events that will finish late
+calificado_riesgo: You have been qualified with a risk grade of 
+camb_pass: Change your password
+camb_preg_seg: Change your question
+cant_apost: Stake bet
+cart_nuev_jug: New player card
+carta_maq: The machine card is a
+cheq_cant: Amount to be payed.
+cheq_cant_inc: This amount aint correct.
+cheq_no_reg: This user aint registered in Apostopolis.
+cheq_nom_us: Name of the user who will be given the cheque
+cob: Outpayments
+col: Colour
+color_negro: Black colour
+color_rojo: Red colour
+comen_black: Starting BlackJack
+comprobar_mas_us: Do you want to check more users? (Y/N)
+cons_as: Consult Bet Adviser
+cons_datos_us: Consult users data
+cot_mal: Incorrect quotation
+cp: Zip code
+cp_mal: Incorrect zip code
+credito: Credit
+cuanto_apostar: Please enter the desired stake for this bet
+cuenta_mal: Invalid data for bank transference
+dad_ex:  Bet to exact result
+dad_impar:  Bet to odd result
+dad_inst: Show game instructions
+dad_intro_cant: Introduce the amount of money you want to bet(minimum 2,5 EUR)
+dad_par:  Bet to even result
+dado: dart
+dado_baja_ok: User has been definitely resigned
+dar_baja_us: Remove a user account
+darse_baja: Delete your account
+datos_act_ok: Data succesfully updated
+datos_mal: Incorrect data introduced, Do you want to try again? (Y/N)
+de_cor: of hearts
+de_diam: of diamond
+de_pic: of picas
+de_treb: of clubs
+deb_ofert: due to offers
+del_an: of the year
+des_camb_cp: Do you want to change your Zip Code? (Y/N)
+des_camb_dir: Do you want to change you Address? (Y/N)
+des_camb_div: Do you want to change your currency? (Y/N)
+des_camb_id: Do you want to change your Language? (Y/N)
+des_camb_loc: Do you want to change your city? (Y/N)
+des_camb_pais: Do you want to change your living country? (Y/N)
+desc_inc: Incorrect description 
+desc_mal: Incorrect description
+desc_oferta_cumpleanyos: Apostopolis offer that will permit the user to fulfil his/her desires on his/her birthday
+desc_oferta_premiado_permanencia: Gift for all users that reach an anniversary as Apostopolis users
+desc_oferta_regalo_efectivo: Offers that will permit admin to deposit credit to users
+desc_oferta_regalo_inicial: Offers that will deposit credit to welcome users
+deu: Deutsch
+dinero_ap: Money gambled
+dinero_mal: Incorrect amount of money
+dir: Address 
+dir_mal: Invalid Address
+div: Currency
+divisa: Currency(1 for Euro, 2 for Dollars)
+divisa_mal: Incorrect currency
+dni_mal: Incorrect DNI
+dol_a: dollars to
+dolar: dollar
+dolares: (Dollars):
+dos_cart: We deal 2 cards to user
+dos_cart_maq: We deal 2 cards to machine
+elige_op: Choose your option: 
+email_mal: Incorrect email
+emp_black: Draw of BlackJacks!
+empate_punt: Draw with a score of
+en_ap: on bets
+en_jueg: on games
+en_su_est: In your time in APOSTOPOLIS
+eng: 1. English
+enter_carta: Press enter to get a card
+enter_cartas: Press enter to get cards
+equip_fav: Favourite soccer team
+error: Error
+error_apuesta: Error when completing your bet
+error_historico: There has been an error searching for your historical information
+error_intro_ev: Error when introducing the event
+error_por: Error due to
+error_preferencias: There has been an error acceding to your preferences.
+esc_fav: Favourite f1 team
+esc_pass: Type your password
+esc_user: Type your nickname
+escoge_opcion: Choose your option
+escribe_cantidad_ingresar: Type the amount of money to deposit 
+escribe_cantidad_retirar: Type the amount of money to outpay
+escribe_cuenta: Type your bank account number (20 digits)
+eur_a: euros to
+euros: (Euros)
+ev_aposto: Event you bet for
+ev_marc_ok: The event has been marked as succesfully happened  
+ev_soc: Social Events
+ev_viej: Oldest Events
+ev_viejos: Antiques Events
+ev_y_ap: Events and bets
+evento: Event
+evento_may: EVENT
+evento_ok: Event introduced succesfully
+eventos_resul_intro: Events whose results have to be introduced
+exist: Exist
+exito_transferencia: Transfer successfully completed
+f1: Formula 1
+f1_y_soc: Formula 1 and Social Events
+fallo_mod: Fail in the modification of the result
+fecha_creacion: Account creation date
+fecha_fin: End date
+fecha_hora: Date and time (format dd/mm/aa hh:mm:ss)
+fecha_hora_mal: Incorrect date and time
+fecha_nac: Date of birth (format DD-MM-YYYY)
+fecha_nac_mal: Incorrect Birthday
+fecha_ult_log: Last login date
+fin_black: BlackJack is over
+fin_intro_ev: End of introducing events
+fin_registro: Register completed. Please wait your email register confirmation.
+fut_y_f1: Soccer and Formula 1
+fut_y_soc: Football and Social Events
+futbol: Soccer
+g1_dad: The winning for this type of bet is twice the bet you do
+g1_rul: The winning for this type of bet is 35 times the bet you do
+g2_dad: The winning for this type of bet is 11 times the bet you do
+g2_rul: The winning for this type of bet is 3 times the bet you do
+ganado: won
+ganancia_potencial: Possible winnings
+ganancias_son: The potential winnings are the following
+gest_bonos: Introduce/remove bonds
+get_usu: Administer users
+ha_ganado: Congratulations! You have won
+ha_perdido: We are sorry :( Your have lost
+ha_realiz: You have done
+ha_sal: It has been
+ha_selecc: You have selected
+has_hecho: You have done
+has_jugado: You have played
+hay_error: There has been an error
+hombre: man
+id_invalido: Invalid id
+idio: language
+idioma: Language(0 for Spanish, 1 for English, 2 for German)
+idioma_configurado: Your profile language has been configured.
+idiomas_disp: Available languages
+incluir_mas_resul: Do you want to include any result of this event to bet? (Y/N)
+inf_ec_glob: Global Business Report
+inf_ec_ref: Monthly Business Report
+inf_nego: Business report
+informe_global: Consult global business report
+informe_mensual: Consult monthly business report
+ing: Deposits
+ing_der_ap: Deposits derived of bets
+ing_der_ju: Deposits derived of games
+ing_glob_mes: Global deposits of the month
+ingles: English
+ini_ses: Log in
+intro_anyo: Introduce year(format AAAA)
+intro_cant_ap: Stake per bet
+intro_idio: Type your number desired language
+intro_mes: Introduce month(format MM)
+intro_min_resul: Introduce the minimum number of results to guess correctly
+intro_nuevos_eventos: Introduce new events
+intro_ofert: Introduce new offers
+intro_resp_bien: Introduce a correct answer
+intro_sig_dat: Introduce the following data
+introducir_resultados: Introduce results
+invitado: Guest
+ir_menu_anterior: Go back to the previous menu
+jueg: Games
+jug_bj: Play BlackJack
+jug_cma: Play the Highest Card
+jug_dad: Play the Darts 
+jug_g_black: Player win(has BlackJack)
+jug_rul: Play the Roulette
+la_prob_es: The probability of the result is 
+list_ofer: Show offers
+list_ofer_int: Show offers between two dates
+list_pers: Personalized list
+list_us_fech: Show users and dates
+listar_ofertas: List offers
+lo_sentimos_resul: We are sorry, we can't add more results
+localidad: City
+localidad_mal: Incorrect city
+log_correcto: Login succesfull
+log_mal: Incorrect login, Do you want to try again? (Y/N)
+logout: Logout
+mal_nomap: Incorrect first and/or last name
+maq_blak: Machine has BlackJack!
+maq_g_punt: Machine wins with a score of
+maq_may: MACHINE
+maq_p_punt: Machine loses with a score of
+maq_pierde: Machine lose (has surpassed)
+mas: More
+mas_nuev: Newest Events
+mas_pop: Most popular Events
+max_ap: Maximum stake bet
+max_mal: Incorrect Maximum 
+menos_pop: Least popular Events
+minimo: minimum
+mod_dat_pers: Change personal data
+most_adv_leg: Responsible Gaming
+most_ap_pend: Show current bets 
+most_ev: Show events
+most_pref: Show my preferences 
+most_ult_nov: Show last news
+mostrando_datos: Showing personal details
+mostrando_datos: Showing your personal data
+mostrando_registrados: Showing registered users in the system
+mujer: woman
+nac: Nacionality
+nac_mal: Incorrect nacionality
+nick_us_consult: Introduce the nick of the user to consult
+nick_usado: Nick in use by another client
+no_altas_pend: There are not any client pending for register
+no_ap_pen: There aren't any pending bets
+no_dispone: You don't have enough money for the bet
+no_ev_asesor: We are sorry, there aren't any results that fit with your profile
+no_ev_viej: There aren't any antiques events to show
+no_eventos_termin: There isn't any event that has ended yet
+no_existe_us: The user does not exist
+no_gusta_f1: You said you don't like Formula 1
+no_gusta_futbol: You said you don't like soccer
+no_gusta_social: You said you don't like social events
+no_quiero_apostar: I don't want to bet to this event
+no_saldo: Not enough credit available or invalid amount typed
+nuev_cart_maq: New machine card
+nueva_carta: Do you want another card? (Y/N)
+num: Number
+num_impar: Odd number
+num_par: Even number
+num_resul_mal: Incorrect number of results
+of_mal: Oferta invalid.
+of_pued_act: Offers that can be activated in Apostopolis
+of_reg_us: Pay a client a cheque
+ofert_disp: offer(s) available now at
+oferta_borrada: Offer succesfully removed
+oferta_introducida: Offer succesfully introduced
+oferta_no_borrada: The offer couldn't been removed
+oferta_no_introducida: The offer couldn't be introduced
+olv_pass: Forgotten your password
+opcion_mal: Incorrect option
+otra_esc_fav: Do you have any other favourite f1 team? (Y/N)
+otra_vez: Incorrect data introduced, Do you want to try again? (Y/N)
+otra_vez_pass: Type your password again
+otro_eq_fav: Do you have any other preferred footaball team? (Y/N)
+otro_pil_fav: Do you have any other favourite f1 pilot? (Y/N)
+pais: Country
+pais_mal: Incorrect Country
+pass_enviado_mail: You have been emailed with your password
+pass_mal: Invalid password
+pass_mal: Invalid password
+ped_num_dad: Introduce the number you want to bet for(2-12)
+pedir_nomap: First and Last Name
+pedir_sexo: Sex (0 for woman, 1 for man)
+per_der_ap: Loss derived of bets
+per_der_ju: Loss derived of games
+per_der_of: Loss derived of offers
+perd_gan_of: Loss/Winnings offers
+perd_glob_mes: Global loss of the month
+perdido: lost
+pierde_jug: User loses (has surpassed)
+pierden_ambos: User and machine lose (both have surpassed)
+pil_fav: Favourite f1 pilot
+pon_cant_apostar: Type the amount of money you want to bet
+pon_nick: Type your nickname
+pon_nueva_preg: Type your new security question
+pon_nueva_resp: Type your new security answer
+pon_pass: Type your password
+pon_pass_actual: Type your old password
+pon_pass_nuevo: Type your new password
+pon_resp: Type your security answer
+pon_su_nom: Type your name
+poner_pass: Your password is
+poner_preg: Your security question es
+pop: Popularity
+pop_mal: Incorrect grade of popularity
+preg_cot: Introduce the quotation associated with the possible result
+preg_desc_ev: Description of the event
+preg_desc_res: Introduce the description of the possible result
+preg_gusta_f1: Do you like Formula 1? (Y/N)
+preg_gusta_fut: Do you like football? (Y/N)
+preg_gusta_soc: Do you like social events? (Y/N)
+preg_intro_mas: Do yo want to introduce more results? (Y/N)
+preg_pass: Password (only numbers and letters)
+preg_priv: Security question
+preg_priv_mal: Invalid security question
+preg_tipo_ev: Type of event (soccer, f1, social)
+prim_doc: First dozen (1-12)
+prom_ins: Promotion inserted in table DirigirPromo
+puede_realizar: You can do
+puls_ent_lanz: Press enter when you want to throw the darts
+puls_enter: Press enter to continue...
+puls_enter_maq: Press enter to draw the card machine
+punt_maq: The machine score is
+punt_us: The player score is
+pyg_of: 5. Winnings/loses offers
+que_evento: Which event interests you? (Type the id)
+que_resultado: Which result do you want to bet on?
+quiere_dar_alta: Do you want to register this user? (Y/N)
+quieres_apostar: Do you want to make bet on any of these events (Y/N)
+rank_mal: Incorrect ranking.
+recibir_informe_mail: Do you want to receive by email the last business report? (Y/N)
+reg: Register
+reg_an_ac: Anniversary gift (active)
+reg_an_no: Anniversary gift (inactive)
+reg_cump_ac: Birthday gift (active)
+reg_cump_no: Birthday gift (inactive)
+reg_ef_ac: Money gift (active)
+reg_ef_no: Money gift (inactive)
+reg_ini_ac: Welcome gift (active)
+reg_ini_no: Welcome gift (inactive)
+res_acert: correct result
+res_asoc_ev: Results associated with the selected event
+res_dados: The results for your throw have been
+res_glob_ap: Global result of bets
+res_glob_ju: Global result of games
+res_glob_mes: Global result of the month
+res_impar: odd result
+res_may: RESULT
+res_min_ac: Resultados minimos a acertar
+res_mod_ok: Result succesfully changed
+res_par: even result
+res_predijo: Result you predicted
+resp_inc: Invalid answer
+resp_priv: Security answer
+resp_priv_mal: Invalid security answer
+result: result(s)
+resultado: Result
+ret_ofert: Remove offers
+retirar_ofertas: Remove offer
+rev_hist: Check your historical info
+rey: king	
+rul_cant: Introduce the number you want to bet(0-36)
+rul_d1: Bet to first dozen (1-12)
+rul_d2: Bet to second dozen (13-24)
+rul_d3: Bet to third dozen (25-36)
+rul_ex: Bet to exact result
+rul_impar: Bet to odd result
+rul_inst: Show game instructions
+rul_negro: Bet to black result
+rul_par: Bet to even result
+rul_res: The results of the roulette have been
+rul_rojo: Bet to red result
+salir: Exit the application
+salir_2: Exit
+seg_doc: Second dozen (13-24)
+seguro_baja: Do you confirm that you want to remove your account? (Y/N)
+sel_of: Select an offer (ID between
+sel_rank: Select a valid ranking (between
+sig_res: Introducing next result...
+social: Social
+sot: jack
+span: Spanish
+su_ap_era: Your bet was
+su_carta_es: Your card is a
+tareas_pend: Do pending tasks
+te_gusta_f1: You said you like Formula 1 
+te_gusta_futbol: You said you like soccer
+te_gusta_social: You said you like social events
+ter_doc: Third dozen (25-36)
+tiene_eq_fav: Do you have any preferred football team? (Y/N)
+tiene_esc_fav: Do you have any favourite f1 team? (Y/N)
+tiene_pil_fav: Do you have any favourite f1 pilot? (Y/N)
+tip_mal: Incorrect type
+todos: Soccer, F1 and Social Events
+transferencia_mal: We couldn't complete the bank transfer correctly.
+tu_cumple: Birthday
+tu_dni: DNI
+tu_nick: Nick
+tu_saldo: Your credit is
+tu_sexo: Sex
+ult_nov: Last news
+us_black: User has BlackJack!
+us_g_punt: User wins with a score of
+us_may: USER
+us_pierde_punt: User loses with a score of
+ust_gano: You won
+ust_ha: You have
+ust_perdio: You lost the bet
+usuario_menor_edad: Attention! The user is less than 18
+veces_black: times Blackjack
+veces_carta: times the Highest Card
+veces_dad: times the Darts
+veces_rul: times the Roulette
+ver_altas_pend: Check altas pendientes
+ver_det_per: Show your personal details
+ver_mas_resul: Do you want to see more results? (Y/N)
+volv_jueg: Go back to the main games menu
+volv_menu_ant: Go back to the previous menu
+volver: Go back to the previous menu
+volver_menu: Go back to the menu
+volver_menu_ant: Go back to the previous menu
+vuelva_pronto: Thank you, come again soon and have a good day
+x_ap_f1: formula 1 bet(s) 
+x_ap_fut: soccer bet(s) 
+x_ap_soc: social bet(s)
+ya_existe_nick: Nick not found.
+idioma_mal: Bad language

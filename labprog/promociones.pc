@@ -1,0 +1,769 @@
+/* MODULO DE PROMOCIONES, OFERTAS Y BONOS
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer.
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Fichero de definicion del modulo de gestion
+                de bonos, ofertas y promociones */
+
+#include <stdio.h>
+#include <string.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include "macros.h"
+#include <synch.h>
+
+EXEC SQL INCLUDE promociones;
+
+
+extern sema_t mutex;
+
+
+/*****************    Funciones privadas del modulo   ******************/
+
+
+
+int actualizar_ganancias_ofertas (char nick[NICK_LEN], float cantidad)
+/*
+   Pre: 'nick' es el identificador de un usuario registrado de la BD.
+  
+   Post: Actualiza las ganancias por ofertas del usuario identificado mediante
+         'nick' anyadiendoles 'cantidad' euros. Devuelve un valor distinto de 
+         cero si concluye satisfactoriamente.
+ */
+{
+   int mi_code;
+   float aux;
+   
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT gananciasOfertas
+   INTO :aux
+   FROM Usuario
+   WHERE nickUser = :nick;
+   
+   if ( (mi_code = sqlca.sqlcode) != 0)
+     return 0;
+   aux += cantidad;
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL UPDATE Usuario
+   SET gananciasOfertas = :aux
+   WHERE nickUser = :nick;
+   
+   if ( (mi_code = sqlca.sqlcode) != 0 )
+   { 
+     EXEC SQL ROLLBACK;
+     return 0;
+   }
+   EXEC SQL COMMIT WORK;
+   return 1;  
+   
+} /* actualizar_ganancias_ofertas */
+
+ 
+int seleccionar_oferta (int *num_oferta, int *ranking)
+/*
+   Pre: -.
+  
+   Post: Devuelve en 'eleccion' el ID de oferta escogida y en 'ranking' el ran-
+         king requerido para disfrutar de la misma 
+ */
+{    
+     int eleccion = -1;
+     
+     limpiar_pantalla();
+     csem();
+     printf("\n\n%s:\n\n",frase("of_pued_act"));
+     printf("\n\n\t%s.\n",frase("desc_oferta_regalo_inicial"));
+     printf("\n\n\t%s.\n",frase("desc_oferta_regalo_efectivo"));
+     printf("\n\n\t%s.\n",frase("desc_oferta_premiado_permanencia"));
+     printf("\n\n\t%s.\n",frase("desc_oferta_cumpleanyos"));
+     lsem();
+     while ( !((eleccion >= 0) && ( eleccion <= (NUM_OFERTAS -1) )) )
+     {
+       __fpurge(stdin);
+       csem();
+       printf("\n\n%s 0 - %d): ",frase("sel_of"), NUM_OFERTAS-1);
+       fflush(stdout);
+       lsem();
+       leer_entero(&eleccion);
+       if (!((eleccion >= 0) && ( eleccion <= (NUM_OFERTAS -1) )))
+         if (!seguir(frase("of_mal"))) return -1;
+     }  
+     *num_oferta = eleccion;
+     eleccion = -1;
+     while ( !((eleccion >= 0) && (eleccion <= 10)) )
+     {
+       __fpurge(stdin);
+       csem();
+       printf("%s 0 - 10): ",frase("sel_rank"));
+       fflush(stdout);
+       lsem();
+       leer_entero(&eleccion);
+       if (!((eleccion >= 0) && (eleccion <= 10)))
+         if (!seguir(frase("rank_mal"))) return -1;
+     } 
+     *ranking = eleccion;
+     lsem();
+} /* seleccionar_oferta */ 
+
+
+void obtener_ofertas_activas(int v_ofertas[NUM_OFERTAS])
+/*
+   Pre: 'v_ofertas' es un vector de enteros de tantas componentes como ofertas
+         pueda llegar a haber activas en la BD (Este numero viene indicado por
+         'NUM_OFERTAS').
+  
+   POST: Todas las componentes de 'v_ofertas' tienen valor nulo salvo aquellas
+         cuyo indice se corresponde con el identificador de alguna oferta activa
+         en la BD.
+ */
+{
+    oferta mi_oferta;
+    int i;
+    
+    /* Inicializamos v_ofertas */
+    for ( i = 0; i < NUM_OFERTAS; i++ )
+      v_ofertas[i] = 0;
+         
+    EXEC SQL DECLARE lista_ofertas_activas CURSOR for
+    SELECT *
+    FROM Promocion;
+    
+    EXEC SQL OPEN lista_ofertas_activas;
+    EXEC SQL WHENEVER NOT FOUND DO break;
+   
+    for (;;) 
+    {
+       EXEC SQL FETCH lista_ofertas_activas INTO :mi_oferta;
+       v_ofertas[mi_oferta.idPromocion] = 1;   
+    }
+  
+    EXEC SQL CLOSE lista_ofertas_activas;  
+     
+} /* obtener_ofertas_activas */
+
+
+
+/*****************    Funciones publicas del modulo   ******************/
+
+
+
+void extender_cheque_usuario(struct usuario *user)
+{
+   char nick_user[NICK_LEN];
+   int exito = 0;
+   float cantidad = 0.0;
+   
+   limpiar_pantalla();
+   mostrar_cabecera(admin, user);
+   csem();
+   printf("\n\n\n%s: ", frase("cheq_nom_us"));
+   lsem();
+   scanf("%s", nick_user);
+   exito = existeNick(nick_user);
+   if ( (!exito) || (exito < 0) )
+   { 
+      csem();
+      __fpurge(stdin);
+      printf("\n%s\n", frase("cheq_no_reg"));
+      printf("\n%s", frase("puls_enter")); fflush(stdout);
+      lsem();
+      leer_caracter_oculto();
+      return;
+   }
+   exito = 0;
+   while ( !exito )
+   {
+     csem();
+     printf("\n%s: ", frase("cheq_cant"));
+     lsem();
+     scanf("%f", &cantidad);
+     if ( cantidad < 0.0 )
+     {
+       csem();
+       printf("\n%s.\n", frase("cheq_cant_inc"));
+       lsem();
+     }
+     else 
+       exito = 1;  
+   }
+   oferta_efectivo_usuario(nick_user, cantidad);
+} /* extender_cheque_usuario */
+
+
+int introducir_oferta (int id_oferta, char *nick_admin, char *info_promo,
+                         int min_rank)
+{
+   int mi_code;
+   oferta mi_oferta;
+   VARCHAR nickAdmin[NICK_LEN], infoPromo[INFO_PROMO_LEN];
+   
+   /* Comprobamos inicialmente si la oferta ya esta introducida en la BD */
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+    
+   EXEC SQL SELECT *
+   INTO :mi_oferta
+   FROM Promocion
+   WHERE (idPromocion = :id_oferta);
+    
+   if ( (mi_code = sqlca.sqlcode) == 0) /* Oferta previamente introducida */
+     return 1;
+
+   /* Introducimos la oferta en la BD */
+    strcpy(nickAdmin.arr, nick_admin);
+    nickAdmin.len = strlen(nick_admin);
+    strcpy(infoPromo.arr, info_promo);
+    infoPromo.len = strlen(info_promo);
+    
+    EXEC SQL INSERT INTO Promocion
+    VALUES (:id_oferta, :nickAdmin, :infoPromo, :min_rank);
+    
+   /* Comprobacion de correccion de la insercion */ 
+    if ( (mi_code = sqlca.sqlcode) == 0)
+    {
+      EXEC SQL COMMIT WORK;
+      return 1;
+    }  
+    else
+    {
+      EXEC SQL ROLLBACK; 
+      return 0;
+    }    
+
+} /* introducir_oferta */
+
+
+int introducir_oferta_manualmente()
+{
+    int exito = 0, mi_code, oferta2, ranking;
+    char desc_oferta[INFO_PROMO_LEN], nick_admin[NICK_LEN];
+    
+    
+    if (seleccionar_oferta(&oferta2, &ranking) == -1) return 0;
+    strcpy(nick_admin, "admin");
+    switch ( oferta2 )
+    {
+      case OF_REGALO_INICIAL: 
+        strcpy(desc_oferta, DESC_OFERTA_REGALO_INICIAL);
+	break;
+      case OF_REGALO_EFECTIVO:
+        strcpy(desc_oferta, DESC_OFERTA_REGALO_EFECTIVO);
+	break;
+      case OF_PREMIADO_PERMANENCIA:
+        strcpy(desc_oferta, DESC_OFERTA_PREMIADO_PERMANENCIA); 
+	break;
+      case OF_CUMPLEANYOS:
+        strcpy(desc_oferta, DESC_OFERTA_CUMPLEANYOS); 
+    } 
+    exito = introducir_oferta(oferta2, nick_admin, desc_oferta, ranking);      
+    return exito; 
+
+} /* introducir_oferta_manualmente */
+
+
+void listar_ofertas (struct usuario *user)
+{
+    oferta mi_oferta;
+    lista_dinamica  lista;
+     
+    nueva_lista_dinam(&lista, sizeof(oferta));
+    	
+    EXEC SQL DECLARE lista_ofertas CURSOR for
+    SELECT *
+    FROM Promocion;
+    
+    EXEC SQL OPEN lista_ofertas;
+    EXEC SQL WHENEVER NOT FOUND DO break;
+   
+    for (;;) 
+    {
+       EXEC SQL FETCH lista_ofertas INTO :mi_oferta;
+       agregar(&lista, (char *)&mi_oferta);   
+    }
+  
+    EXEC SQL CLOSE lista_ofertas;  
+    
+    limpiar_pantalla();
+    mostrar_cabecera(admin,user);
+    csem();
+    printf("\n\n\n\n\t%s",frase("exist"));
+    printf(" %d %s ", numdatos(lista),frase("ofert_disp"));
+    printf("Apostopolis:\n\n");
+    while ( numdatos(lista))
+    {
+       primero(&lista, (char *)&mi_oferta);
+       eliminar(&lista, (char *)&mi_oferta);           
+       mi_oferta.infoPromo.arr[mi_oferta.infoPromo.len] = '\0';
+       printf("\t- %s\n\n", mi_oferta.infoPromo.arr);
+    }
+    printf("\n\n\t%s\n",frase("puls_enter"));
+    lsem();
+    destruir_lista(&lista);
+    leer_caracter_oculto();
+} /* listar_ofertas */
+
+
+int borrar_oferta (int id_oferta)
+{
+   int mi_code, exito = -1;
+      
+   if ( id_oferta < 0 )
+     return exito;
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+      
+   EXEC SQL DELETE FROM Promocion
+   WHERE idPromocion = :id_oferta;
+   
+   if ( (mi_code = sqlca.sqlcode) == 0 )
+   {
+     EXEC SQL COMMIT WORK;
+     exito = 1;
+   }  
+   else 
+     EXEC SQL ROLLBACK;     
+   return exito;  
+   
+} /* borrar_oferta */   
+
+
+int borrar_oferta_manualmente()
+{
+   int id_oferta, exito = 0, ofertas_activas[NUM_OFERTAS];
+   lista_opciones l;
+   
+   obtener_ofertas_activas(ofertas_activas);
+   nueva_lista(&l);
+   if ( ofertas_activas[0] )
+     agregar_opcion(&l, "reg_ini_ac");
+   else
+     agregar_opcion(&l, frase("reg_ini_no"));
+   if ( ofertas_activas[1] )
+     agregar_opcion(&l, frase("reg_ef_ac"));
+   else
+     agregar_opcion(&l, frase("reg_ef_no"));
+   if ( ofertas_activas[2] )
+     agregar_opcion(&l, frase("reg_an_ac"));
+   else
+     agregar_opcion(&l, frase("reg_an_no"));
+   if ( ofertas_activas[3] )
+     agregar_opcion(&l, frase("reg_cump_ac"));
+   else
+     agregar_opcion(&l, frase("reg_cump_no"));
+   agregar_opcion(&l, frase("ir_menu_anterior"));
+
+   id_oferta = elegir_opcion(l);
+   destruir_lista_op(&l);   
+   
+   switch ( id_oferta )
+   {
+     case 1: if ( ofertas_activas[0] )
+                exito = borrar_oferta(0);
+              break;
+	      	
+     case 2: if ( ofertas_activas[1] )
+                exito = borrar_oferta(1);
+	      break;
+     
+     case 3: if ( ofertas_activas[2] )
+                exito = borrar_oferta(2);
+              break;
+	           
+     case 4: if ( ofertas_activas[3] )
+                exito = borrar_oferta(3);     
+   }
+   return exito; 
+
+} /* borrar_oferta_manualmente */
+
+
+void oferta_regalo_inicial (char n_user[NICK_LEN])
+{
+    int mi_code, exito;
+    float regalo_inicial = 10.0;
+    VARCHAR nick[NICK_LEN];
+    oferta mi_oferta;
+    tuplaUsuario user;
+
+    /* Comprobamos que la promocion se encuentre activa. */
+    EXEC SQL WHENEVER NOT FOUND continue;
+    
+    EXEC SQL SELECT *
+    INTO :mi_oferta
+    FROM Promocion
+    WHERE (idPromocion = 0);
+    
+    if ( (mi_code = sqlca.sqlcode) != 0) /* Oferta desactivada */
+      return; 
+    
+    /* Comprobamos que la promocion este orientada al usuario considerado */
+    EXEC SQL WHENEVER NOT FOUND continue;
+    
+    EXEC SQL SELECT *
+    INTO :user
+    FROM Usuario
+    WHERE ( nickUser = :n_user );
+    
+    if ( (mi_code = sqlca.sqlcode) != 0) /* Fallo en el acceso a la BD */
+      return; 
+    
+    if ( user.dadoAlta != 1 )
+      return;
+      
+    if ( user.ranking < mi_oferta.rankingPromo ) /* Ranking usuario insufic. */
+      return;
+    
+    /* Marcamos la promocion como ofertada al usuario de nick 'n_user' */
+    strcpy(nick.arr, n_user);
+    nick.len = strlen(n_user);
+    
+    EXEC SQL INSERT INTO DirigirPromo VALUES (0, :nick, sysdate);
+    
+   /* Comprobacion de correccion de la insercion */ 
+    if ( (mi_code = sqlca.sqlcode) != 0)
+    {
+       EXEC SQL ROLLBACK; 
+       return;
+    }     
+    
+   /* Actualizamos el campo que indica las ganancias por ofertas del usuario */
+   if ( !actualizar_ganancias_ofertas(n_user, regalo_inicial) )
+   {
+     EXEC SQL ROLLBACK;
+     return;  
+   }
+   
+   /* Actualizamos el informe mensual */
+   exito = actualizarDatosOfertas(regalo_inicial);
+   if (exito != TRUE) 
+   {
+     EXEC SQL ROLLBACK;
+     return;
+   }
+   
+   /* Actualizamos el saldo del cliente */
+   if ( ingresar_credito(n_user, regalo_inicial) )
+     EXEC SQL COMMIT WORK;
+   else
+     EXEC SQL ROLLBACK;   
+
+} /* oferta_regalo_inicial */
+
+	 
+void oferta_efectivo_usuario(char n_user[NICK_LEN], float cantidad)
+{
+   int mi_code, exito;
+   VARCHAR nick[NICK_LEN];
+   oferta mi_oferta;
+   tuplaUsuario user;
+      
+   /* Comprobamos que la promocion este activada */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT *
+   INTO :mi_oferta
+   FROM Promocion
+   WHERE (idPromocion = 1);
+   
+   if ( (mi_code = sqlca.sqlcode) != 0) /* Oferta desactivada */
+     return; 
+  
+   /* Comprobamos que la promocion este orientada al usuario considerado */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT *
+   INTO :user
+   FROM Usuario
+   WHERE ( nickUser = :n_user );
+   
+   if ( (mi_code = sqlca.sqlcode) != 0) /* Fallo en el acceso a la BD */
+     return; 
+     
+   if ( user.ranking < mi_oferta.rankingPromo ) /* Ranking usuario insufic. */
+     return;
+   
+   if ( user.dadoAlta != 1 )
+     return;
+        
+   /* Marcamos la promocion como ofertada al usuario de nick 'n_user' */
+   strcpy(nick.arr, n_user);
+   nick.len = strlen(n_user);
+    
+   EXEC SQL INSERT INTO DirigirPromo VALUES (1, :nick, sysdate);
+    
+   /* Comprobacion de correccion de la insercion */ 
+   if ( (mi_code = sqlca.sqlcode) != 0)
+   {
+      EXEC SQL ROLLBACK; 
+      return;
+   }     /* Introducimos la direccion de la oferta en la BD */
+    
+   /* Actualizamos el campo que indica las ganancias por ofertas del usuario */
+   if ( !actualizar_ganancias_ofertas(n_user, cantidad) )
+   {
+     EXEC SQL ROLLBACK;
+     return;  
+   }
+  
+   /* Actualizamos el informe mensual */
+   exito = actualizarDatosOfertas(cantidad);
+     
+   if ( exito != TRUE ) 
+   {
+     EXEC SQL ROLLBACK;
+     return;
+   }
+    
+   /* Actualizamos el saldo del cliente */
+   if ( ingresar_credito(n_user, cantidad) )
+     EXEC SQL COMMIT WORK;
+   else
+     EXEC SQL ROLLBACK;      
+} /* oferta_efectivo_usuario */
+
+
+void oferta_premiado_anyo_permanencia()
+{ 
+   int mi_code, rank_oferta, exito;
+   float bonificacion_anual = 10.0;
+   char nick[NICK_LEN];
+   tuplaUsuario usuario;
+   tuplaDirigirPromo mi_oferta_dirigida;
+   oferta mi_oferta;
+   
+  
+  /* Comprobamos que la promocion este activada */
+   EXEC SQL WHENEVER NOT FOUND continue;
+    
+   EXEC SQL SELECT *
+   INTO :mi_oferta
+   FROM Promocion
+   WHERE (idPromocion = 2);
+   	 
+   if ( (mi_code = sqlca.sqlcode) != 0) /* Oferta desactivada */
+     return; 
+  
+   /* Listado de los usuarios que cumplen hoy (o que lo han hecho desde la ulti-
+      ma vez que se conectaron) su aniversario como clientes de Apostopolis */
+   rank_oferta = mi_oferta.rankingPromo;
+   
+   EXEC SQL DECLARE lista_usuarios_anyo_per CURSOR for
+   SELECT DISTINCT *
+   FROM Usuario
+   WHERE  ( to_char(fechaCreacion, 'yyyy') < to_char (sysdate, 'yyyy')) AND 
+          ( to_char(fechaCreacion, 'dd') <= to_char(sysdate, 'dd'))     AND 
+          ( to_char(fechaCreacion, 'mm') <= to_char(sysdate, 'mm'))     AND 
+	  ( ranking >= :rank_oferta ) AND ( dadoAlta = 1 ) 
+   ORDER BY nickUser; 
+	
+   EXEC SQL OPEN lista_usuarios_anyo_per;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH lista_usuarios_anyo_per INTO :usuario;
+     usuario.nickUser.arr[usuario.nickUser.len] = '\0';
+     strcpy(nick, usuario.nickUser.arr);
+
+     /* Comprobamos que la promocion no se haya dirigido ya al usuario */
+     EXEC SQL WHENEVER NOT FOUND continue;
+    
+     EXEC SQL SELECT *
+     INTO :mi_oferta_dirigida
+     FROM DirigirPromo
+     WHERE (nickUser = :nick AND 
+           ( to_char(fechaPromo, 'yyyy') = to_char(sysdate, 'yyyy')));
+    
+     if ( (mi_code = sqlca.sqlcode) == 0) /* Oferta ya dirigida al usuario */
+       continue;
+ 
+      /* Aplicamos la oferta al usuario, ingresandole una cantidad simbolica */ 
+     if ( !ingresar_credito(nick, bonificacion_anual) )
+     { 
+        EXEC SQL ROLLBACK;
+	return;
+     }	   
+ 
+     /* Marcamos la promocion como ofertada al usuario de nick 'nick' */
+     EXEC SQL INSERT INTO DirigirPromo VALUES (2, :nick, sysdate);
+     
+     if ( (mi_code = sqlca.sqlcode) != 0 )
+     {
+        EXEC SQL ROLLBACK;
+	return;
+     }	
+ 
+     /* Actualizacion de las ganancias por ofertas del usuario */
+     if ( !actualizar_ganancias_ofertas(nick, bonificacion_anual) )
+     {
+        EXEC SQL ROLLBACK;
+        return;  
+     }
+ 
+     /* Actualizamos el informe mensual */
+     exito = actualizarDatosOfertas(bonificacion_anual);
+     if ( exito != TRUE ) 
+    {
+       EXEC SQL ROLLBACK;
+       return;
+    }
+  } /* for (;;) */
+  
+  EXEC SQL CLOSE lista_usuarios_anyo_per;
+  EXEC SQL COMMIT WORK;
+   
+} /* oferta_premiado_anyo_permanencia */
+
+ 
+void oferta_cumpleanyos ()
+{
+   int mi_code, rank_oferta, exito;
+   char nick[NICK_LEN];
+   float bonificacion_cumpleanyos = 5.0;
+   tuplaUsuario usuario;
+   oferta mi_oferta;
+   tuplaDirigirPromo mi_oferta_dirigida;
+   
+  
+   /* Comprobamos que la promocion este activada */
+   EXEC SQL WHENEVER NOT FOUND continue;
+    
+   EXEC SQL SELECT *
+   INTO :mi_oferta
+   FROM Promocion
+   WHERE (idPromocion = 3);
+    
+   if ( (mi_code = sqlca.sqlcode) != 0) /* Oferta desactivada */
+     return; 
+   
+   /* Listado de los miembros a los que se dirige la oferta y que cumplen anyos
+      hoy */
+   rank_oferta = mi_oferta.rankingPromo;
+  
+   EXEC SQL DECLARE lista_usuarios_cumple CURSOR for
+   SELECT DISTINCT *
+   FROM Usuario
+   WHERE (to_char(fechaNac, 'dd') = to_char(sysdate, 'dd')) AND 
+         (to_char(fechaNac, 'mm') = to_char(sysdate, 'mm')) AND
+	 (ranking >= :rank_oferta) AND (dadoAlta = 1)
+   ORDER BY nickUser; 
+	
+   EXEC SQL OPEN lista_usuarios_cumple;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH lista_usuarios_cumple INTO :usuario;
+     usuario.nickUser.arr[usuario.nickUser.len] = '\0';
+     strcpy(nick, usuario.nickUser.arr);
+     
+     /* Comprobamos que la promocion no se haya dirigido ya al usuario */
+     EXEC SQL WHENEVER NOT FOUND continue;
+    
+     EXEC SQL SELECT *
+     INTO :mi_oferta_dirigida
+     FROM DirigirPromo
+     WHERE ( nickUser = :nick 
+             AND to_char(fechaPromo, 'yyyy') = to_char(sysdate, 'yyyy')
+	     AND idPromocion = 3);
+    
+     if ( (mi_code = sqlca.sqlcode) == 0) /* Oferta ya dirigida al usuario */
+       continue;
+      
+     /* Aplicamos la oferta al usuario, ingresandole una cantidad simbolica */ 
+     ingresar_credito(nick, bonificacion_cumpleanyos);
+     
+     /* Marcamos la promocion como ofertada al usuario de nick 'n_user' */
+     EXEC SQL INSERT INTO DirigirPromo VALUES (3, :nick, sysdate);
+     
+     if ( (mi_code = sqlca.sqlcode) != 0 )
+     {
+        EXEC SQL ROLLBACK;
+	return;
+     }	
+     
+     /* Actualizamos las ganancias por ofertas del usuario */
+     if ( !actualizar_ganancias_ofertas(nick, bonificacion_cumpleanyos) )
+     {
+       EXEC SQL ROLLBACK;
+       return;  
+     }
+     
+     /* Actualizamos el informe mensual */
+     exito = actualizarDatosOfertas(bonificacion_cumpleanyos);
+     if ( exito != TRUE ) 
+     {
+        EXEC SQL ROLLBACK;
+        return;
+     }
+  }
+  
+   EXEC SQL CLOSE lista_usuarios_cumple;
+   EXEC SQL COMMIT WORK;
+  
+} /* oferta_cumpleanyos */	
+
+
+void administrar_ofertas()
+{
+    oferta_premiado_anyo_permanencia();
+    oferta_cumpleanyos();
+
+} /* administrar_ofertas */
+
+
+int actualizarDatosOfertas(float cantidad)
+{
+  tpInforme informe;
+  
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+
+  EXEC SQL SELECT *
+  INTO :informe
+  FROM Informe
+  WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+        (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+	
+  if (sqlca.sqlcode == 0) /* Consulta correcta, ya existe el informe */
+  {
+    EXEC SQL UPDATE Informe SET
+      perdidasOfertas = :cantidad + :informe.perdidasOfertas
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+
+    if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+    {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return 1;
+    }
+    else /* Error al actualizar */
+    {
+      EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+      return -1;
+    }
+  }	
+  else /* No existe el informe, hay que crearlo nuevo */
+  { 
+    EXEC SQL INSERT INTO Informe VALUES(to_date(sysdate, 'DD-MM-YYYY'),
+                                        0,0,0,0,0);
+    EXEC SQL UPDATE Informe SET
+      perdidasOfertas = :cantidad
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+	  
+    if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+    {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return 1;
+    }
+    else /* Error al actualizar */
+    {
+      EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+      return -1;
+    }
+  } 
+} /* actualizarDatosOfertas */

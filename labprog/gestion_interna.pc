@@ -1,0 +1,1005 @@
+/* MODULO DE GESTION INTERNA
+   AUTORES: Marcos Mainar, Ismael Saad y Jose Javier Colomer
+   PROYECTO: Casa de Apuestas Laboratorio de Programacion.
+   DESCRIPCION: Definicion del modulo de Gestion Interna */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sqlda.h>
+#include <sqlcpr.h>
+#include <sqlca.h>
+#include <oraca.h>
+#include <time.h>
+#include "macros.h"
+#include "escape.h"
+ 
+EXEC SQL INCLUDE gestion_interna;
+
+
+int resultado_ocurrido (int id_pos_resul)
+{
+/*
+ * PRE: id_pos_resul es el identificador de un posible resultado almacenado en 
+ *      la BD.
+ *
+ * POST: Devuelve '1' si el resultado esta marcado como ocurrido y '0' en caso 
+ *       contrario.
+ */
+
+    int ha_ocurrido = 0;
+    
+    EXEC SQL SELECT R.haOcurrido
+    INTO :ha_ocurrido
+    FROM  Resultado R
+    WHERE ( :id_pos_resul = R.idPosResul );
+
+    return ha_ocurrido;
+}    
+    
+
+int tipo_apuesta (int id_apuesta)
+{
+   int tipo_ap = -1, mi_code;
+      
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT tipo
+            INTO :tipo_ap
+	    FROM Apuesta
+	    WHERE ( idApuesta = :id_apuesta ); 
+   
+   /* Comprobacion de correcion de la consulta. */
+   if ( (mi_code = sqlca.sqlcode) != 0)
+     tipo_ap = -1;
+   return tipo_ap;
+} /* tipo_apuesta */	
+
+
+int status_miembro (char id_miembro[NICK_LEN])
+{
+   int status = -1, mi_code;
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT ranking
+            INTO :status
+	    FROM Usuario
+            WHERE ( nickUser = :id_miembro ); 
+   
+   /* Comprobacion de correcion de la consulta. */
+   if ( (mi_code = sqlca.sqlcode) != 0)
+     status = -1;
+   return status;
+} /* status_miembro */	
+  
+
+void efectuar_promociones()
+{
+   VARCHAR nick_vc[NICK_LEN];
+   char nick[NICK_LEN];
+    
+ 
+   EXEC SQL DECLARE listado_usuarios CURSOR FOR
+   SELECT DISTINCT nickUser
+   FROM Usuario; 
+	
+   EXEC SQL OPEN listado_usuarios;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH listado_usuarios INTO :nick_vc;
+     nick_vc.arr[nick_vc.len] = '\0';
+     strcpy(nick, nick_vc.arr);
+     if ( (detectar_promocion_miembro(nick)) < 0 )
+       break;
+  }
+  
+  EXEC SQL CLOSE listado_usuarios;
+ 
+}	
+
+
+int detectar_promocion_miembro (char id_miembro[NICK_LEN])
+{
+   int mi_code, nuevo_ranking;
+   float cant_apostada = 0.0, aux;
+   
+ 
+ /* Calculamos las cantidades apostadas a eventos por el usuario */
+   EXEC SQL DECLARE cantidades_apostadas_evento CURSOR FOR
+   SELECT cantidad
+   FROM Apuesta
+   WHERE ( nickUser = :id_miembro ); 
+	
+   EXEC SQL OPEN cantidades_apostadas_evento;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH cantidades_apostadas_evento INTO :aux;
+     cant_apostada += aux;
+  }
+  
+  EXEC SQL CLOSE cantidades_apostadas_evento;
+ 
+ /* Calculamos las cantidades apostadas a juegos por el usuario */
+  
+  EXEC SQL WHENEVER NOT FOUND continue;
+   
+  EXEC SQL SELECT totalJuegos
+           INTO :aux
+	   FROM Usuario
+           WHERE ( nickUser = :id_miembro ); 
+  
+  if ( (mi_code = sqlca.sqlcode) != 0)
+    return -1;
+   
+  cant_apostada += aux;
+  nuevo_ranking = 0;
+  if ( cant_apostada >= cant_rank1 )
+  {
+    nuevo_ranking = 1;
+    if ( cant_apostada >= cant_rank2 )
+    {
+      nuevo_ranking = 2;
+      if ( cant_apostada >= cant_rank3 )
+      {
+        nuevo_ranking = 3;
+	if ( cant_apostada >= cant_rank4 )
+	{
+	  nuevo_ranking = 4;
+	  if ( cant_apostada >= cant_rank5 )
+	  {
+	    nuevo_ranking = 5;
+	    if ( cant_apostada >= cant_rank6 )
+	    {
+	      nuevo_ranking = 6;
+	      if ( cant_apostada >= cant_rank7 )
+	      {
+	        nuevo_ranking = 7;
+		if ( cant_apostada >= cant_rank8 )
+		{
+		  nuevo_ranking = 8;
+		  if ( cant_apostada >= cant_rank9 )
+		  {
+		    nuevo_ranking = 9;
+		    if ( cant_apostada >= cant_rank10 )
+		      nuevo_ranking = 10;
+		  }
+		}
+	      }
+	    }
+	  }
+	}
+      } 
+    }
+  } 
+  
+  /* Modificacion del campo 'ranking' del usuario. */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL UPDATE Usuario
+            SET ranking = :nuevo_ranking
+            WHERE ( nickUser = :id_miembro );
+   
+   /* Comprobacion de correcion de la modificacion */
+   if ( (mi_code = sqlca.sqlcode) != 0)
+   { 
+      EXEC SQL ROLLBACK;
+      return -1;
+   }
+   EXEC SQL COMMIT WORK;  
+   return nuevo_ranking;
+} /* promocionar_miembro */	
+
+
+int se_puede_resolver ( tupla_contabilidad *apuesta )
+{
+   int exito = 0, id_apuesta, id_evento, continuar = 1;
+   tupla_contabilidad info_contab;
+   tuplaEvento evento;
+   tuplaPreverResul info_resul;
+   lista_dinamica lista_ids_evento;
+   
+    
+   id_apuesta = apuesta->idApuesta;
+   nueva_lista_dinam(&lista_ids_evento, sizeof(int));
+  
+  /* Listado de los eventos considerados en la apuesta */
+   EXEC SQL DECLARE lista_ids_evento_sql CURSOR for
+   SELECT idEvento
+   FROM PreverResul
+   WHERE ( idApuesta = :id_apuesta )
+   ORDER BY idEvento; 
+	
+   EXEC SQL OPEN lista_ids_evento_sql;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH lista_ids_evento_sql INTO :id_evento;
+     agregar(&lista_ids_evento, (char *) &id_evento);
+  }
+  
+  EXEC SQL CLOSE lista_ids_evento_sql;
+  
+  /* Comprobamos si alguno de los eventos cuyo identificador tenemos en la 
+     lista todavia no ha terminado. */
+ 
+  EXEC SQL WHENEVER NOT FOUND DO break;
+  
+  while ( numdatos(lista_ids_evento) && !exito && continuar)
+  {
+    primero(&lista_ids_evento, (char *)&id_evento);
+    
+    EXEC SQL SELECT haSucedido
+    INTO :continuar
+    FROM Evento
+    WHERE ( idEvento = :id_evento );
+    
+    eliminar(&lista_ids_evento, (char *)&id_evento);
+    if ( !numdatos(lista_ids_evento) && continuar)
+      exito = 1;	    
+  }
+  destruir_lista(&lista_ids_evento);
+  return exito;  
+} /* se_puede_resolver */
+
+ 
+void eventos_a_resolver()
+{
+   char mensaje[500], dest[MAIL_LEN], n_fich[1000], fecha_cad[20];
+   int num_eventos = 0, desplazamiento = MAX_DURACION_EVENTOS;
+   lista_dinamica lista;
+   tuplaEvento evento, eventoAux;
+   FILE *f_temp;
+   struct tm *fecha_str;
+   
+   if ( !obtener_direccion_email(dest, "admin") )
+     return; 
+   nueva_lista_dinam(&lista, sizeof(tuplaEvento));
+   
+   /* Definimos un cursor a traves del cual obtener los eventos a tratar. */
+   fecha_str = desplazar_fecha(desplazamiento);
+   sprintf(fecha_cad,"%d-%d-%d %d:%d:%d",fecha_str->tm_mday, fecha_str->tm_mon,
+            fecha_str->tm_year, fecha_str->tm_hour, fecha_str->tm_min,
+            fecha_str->tm_sec);
+  
+   EXEC SQL DECLARE lista_eventos CURSOR for
+   SELECT *
+   FROM Evento
+   WHERE ( ( fechaInicio < (to_date(:fecha_cad, 'DD-MM-YYYY HH24:MI:SS')))
+         AND haSucedido = 0 )
+   ORDER BY idEvento; 
+	
+   EXEC SQL OPEN lista_eventos;
+   EXEC SQL WHENEVER not found DO break;
+   for (;;) 
+   {
+      EXEC SQL FETCH lista_eventos INTO :evento;
+      agregar(&lista, (char *)&evento);
+      num_eventos++;
+   }
+  
+   EXEC SQL CLOSE lista_eventos;
+   if ( num_eventos > 0 )
+   {
+     /* Creamos un fichero temporal en el que almacenar las notificaciones. */
+     tmpnam (n_fich);
+     if ( (f_temp = fopen(n_fich, "w")) == NULL )
+     {
+       destruir_lista(&lista);
+       return;
+     }  
+     fprintf(f_temp, "Listado de los eventos cuyos resultados han de ser ");
+     fprintf(f_temp, "introducidos:\n\n");
+     while ( numdatos(lista) )
+     {
+        primero(&lista, (char *)&evento);
+	primero(&lista, (char *)&eventoAux);
+	evento.descripcion.arr[evento.descripcion.len] = '\0';
+	fprintf(f_temp, "\tNombre del evento: %s", evento.descripcion.arr);
+	fprintf(f_temp, "\tIdentificador del evento: %d.\n\n", evento.idEvento);
+	eliminar(&lista, (char *)&eventoAux);
+     }
+     if ( (fclose(f_temp)) == EOF )
+     {  
+       remove(n_fich);
+       destruir_lista(&lista);
+       return;
+     }
+     /* Preparamos la orden al shell */  
+     sprintf(mensaje, "mailx -s Apostopolis ");
+     strcat(mensaje, dest);
+     sprintf(dest, " < %s", n_fich);
+     strcat(mensaje, dest);
+     system(mensaje);
+     /* Borramos el fichero temporal */
+     remove(n_fich);
+  } /* if ( num_eventos != 0 ) */
+} /* eventos_a_resolver */
+
+
+int usuarios_a_dar_de_alta ()
+{
+   char mensaje[500], dest[MAIL_LEN], n_fich[100];
+   int num_usuarios = 0;
+   lista_dinamica lista;
+   tuplaUsuario usuario, usuarioAux;
+   FILE *f_temp;
+   
+   if ( !obtener_direccion_email(dest, "admin") )
+     return;
+   nueva_lista_dinam(&lista, sizeof(tuplaUsuario));
+   
+   /* Definimos un cursor del que obtendremos los usuarios a dar de alta. */
+   
+   EXEC SQL DECLARE lista_usuarios CURSOR for
+   SELECT *
+   FROM Usuario
+   WHERE ( dadoAlta = 0 )
+   ORDER BY nickUser; 
+	
+   EXEC SQL OPEN lista_usuarios;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH lista_usuarios INTO :usuario;
+     agregar(&lista, (char *)&usuario);
+     num_usuarios++;
+  }
+  
+  EXEC SQL CLOSE lista_usuarios;
+  
+  if ( num_usuarios > 0 )
+  {
+     /* Creamos un fichero temporal en el que almacenar las notificaciones. */
+     tmpnam (n_fich);
+     if ( (f_temp = fopen(n_fich, "w")) == NULL )
+       return;
+     fprintf(f_temp, "Listado de los usuarios con alta pendiente de ");
+     fprintf(f_temp, "aprobacion:\n\n");
+     while ( numdatos(lista) )
+     {
+        primero(&lista, (char *)&usuario);
+	primero(&lista, (char *)&usuarioAux);
+	usuario.nickUser.arr[usuario.nickUser.len] = '\0';
+	fprintf(f_temp, "\tNick del usuario: %s\n", usuario.nickUser.arr);
+	eliminar(&lista, (char *)&usuarioAux);
+     }
+     if ( (fclose(f_temp)) == EOF )
+     {  
+       remove(n_fich);
+       return;
+     }
+     /* Preparamos la orden al shell */  
+     sprintf(mensaje, "mailx -s Apostopolis ");
+     strcat(mensaje, dest);
+     sprintf(dest, " < %s", n_fich);
+     strcat(mensaje, dest);
+     system(mensaje);
+     /* Borramos el fichero temporal */
+     remove(n_fich);
+  } /* if ( num_eventos != 0 ) */
+} /* usuarios_a_dar_de_alta */
+
+
+void enviar_mensaje (char dest[MAIL_LEN], char mens[MAX_LEN])
+/*
+ * PRE: - 
+ *
+ * POST: Envia a la direccion de correo 'dest' un mensaje que contiene la
+ *       cadena 'mens'.
+ */
+{
+   char mensaje[500], n_fich[100];
+   FILE *f_temp;
+   
+   /* Almacenamos el mensaje 'mens' en un fichero temporal */
+   tmpnam (n_fich);
+   if ( (f_temp = fopen(n_fich, "w")) == NULL )
+     return;
+   if ( (fwrite(mens, sizeof(char), strlen(mens), f_temp)) != strlen(mens) )
+   {
+     remove(n_fich);
+     return;
+   }   
+   if ( (fclose(f_temp)) == EOF )
+   {  
+     remove(n_fich);
+     return;
+   }
+   /* Preparamos la orden al shell */  
+   sprintf(mensaje, "mailx -s Apostopolis ");
+   strcat(mensaje, dest);
+   sprintf(dest, " < %s", n_fich);
+   strcat(mensaje, dest);
+   system(mensaje);
+   /* Borramos el fichero temporal */
+   remove(n_fich);
+} /* enviar_mensaje */ 
+
+
+void resolver_evento (int id_evento)
+{
+   char mens[MAX_LEN], cad_aux[MAX_LEN], mi_desc[MAX_DESC_LEN];
+   float ganancias;
+   tupla_inf_usuario datos_user;
+     
+   /* Obtenemos un listado de los usuarios que apostaron en este evento */  
+   EXEC SQL DECLARE listaUsuarios CURSOR for
+   SELECT DISTINCT U.nickUser, U.email, U.divisa
+   FROM PreverResul P, usuario U
+   WHERE ( P.idEvento = :id_evento AND U.nickUser = P.nickUser)
+   ORDER BY nickUser; 
+	
+   EXEC SQL OPEN listaUsuarios;
+
+   EXEC SQL WHENEVER not found DO break;
+   
+   for (;;)  /* Bucle de tratamiento de apostantes */ 
+   {
+     ganancias = 0.0;
+     EXEC SQL FETCH listaUsuarios INTO :datos_user;
+     datos_user.nickUser.arr[datos_user.nickUser.len] = '\0';
+     ganancias = calcular_ganancias_usuario(datos_user.nickUser.arr, id_evento);
+     desc_evento(mi_desc,id_evento);
+     if ( ganancias > 0.0 )
+     { 
+       datos_user.email.arr[datos_user.email.len] = '\0';
+       if (datos_user.divisa == EURO)
+         sprintf(mens, "Ha ganado ud. %.2f euros gracias a sus ", ganancias);
+       else 
+         sprintf(mens, "Ha ganado ud. %.2f dolares gracias a sus ", a_dolar(ganancias));  
+       sprintf(cad_aux, "apuestas referidas al evento: \n\t%s.\n", mi_desc);
+       strcat(mens, cad_aux);
+       if (datos_user.divisa == EURO)
+         sprintf(cad_aux, "You have won %.2f euros because of your ", ganancias);
+       else
+         sprintf(cad_aux, "You have won %.2f dollars because of your ", a_dolar(ganancias));
+       strcat(mens, cad_aux);
+       sprintf(cad_aux, "spens referred to event: \n\t%s.\n", mi_desc);
+       strcat(mens, cad_aux);
+       sprintf(cad_aux, "\nDurch ihren Wetten %s Gereignis ", mi_desc);
+       strcat(mens, cad_aux);
+       if (datos_user.divisa == EURO)
+         sprintf(cad_aux, "haben Sie %.2f euros gewonnen.", ganancias);
+       else
+         sprintf(cad_aux, "haben Sie %.2f dolars gewonnen.", a_dolar(ganancias));
+       strcat(mens, cad_aux);
+       enviar_mensaje(datos_user.email.arr, mens);
+       ingresar_credito(datos_user.nickUser.arr, ganancias);
+     }
+   } /* for (;;) */ 
+   
+   EXEC SQL CLOSE listaUsuarios;
+} /* resolver_evento */
+	
+
+float calcular_ganancias_usuario (char nick[NICK_LEN], int id_evento)
+{
+   float ganancias = 0.0, ganancias_globales = 0.0;
+   tupla_contabilidad info_contab;
+       
+    /* Obtenemos un listado de las apuestas simples que el usuario haya podido
+    * realizar para este evento y calculamos que ganancias le suponen. 
+    * Al final, actualizamos las ganancias globales obtenidas para todas 
+    * las apuestas hechas para este evento
+    */
+    
+   EXEC SQL DECLARE listado_apuestas_simples CURSOR for
+   SELECT A.idApuesta, A.cantidad, R.cotizacion, R.haOcurrido, A.combinadas
+   FROM PreverResul P, Apuesta A, Resultado R
+   WHERE ( P.idEvento = :id_evento AND P.nickUser = :nick AND
+           R.idEvento = :id_evento AND R.idPosResul = P.idPosResul AND 
+           A.idApuesta = P.idApuesta AND A.tipo = 0)
+   ORDER BY idApuesta; 
+	
+   ganancias = 0.0;
+     
+   EXEC SQL OPEN listado_apuestas_simples;
+
+   EXEC SQL WHENEVER not found DO break;
+   
+   for (;;)  /* Bucle de calculo de ganancias relativas a apuestas simples. */ 
+   {
+     EXEC SQL FETCH listado_apuestas_simples INTO :info_contab;
+     ganancias += resolver_apuesta_simple(&info_contab);
+   } /* for (;;) */ 
+   
+   EXEC SQL CLOSE listado_apuestas_simples;
+   ganancias_globales += ganancias;
+  
+   /* Obtenemos un listado de las apuestas combinadas que el usuario haya 
+    * podido efectuar para este evento y calculamos que ganancias le suponen. 
+    * Al final, actualizamos las ganancias globales obtenidas para todas 
+    * las apuestas hechas para este evento
+    */
+    
+   ganancias = 0.0;
+   
+   EXEC SQL DECLARE listado_apuestas_combinadas CURSOR for
+   SELECT A.idApuesta, A.cantidad, R.cotizacion, R.haOcurrido, A.combinadas
+   FROM PreverResul P, Apuesta A, Resultado R
+   WHERE ( P.idEvento = :id_evento AND P.nickUser = :nick AND
+           R.idEvento = :id_evento AND R.idPosResul = P.idPosResul AND 
+           A.idApuesta = P.idApuesta AND A.tipo = 1)
+   ORDER BY idApuesta; 
+	
+   EXEC SQL OPEN listado_apuestas_combinadas;
+
+   EXEC SQL WHENEVER not found DO break;
+   
+   for (;;)   
+   /* Bucle de calculo de ganancias debidas a apuestas combinadas. */ 
+   {
+     EXEC SQL FETCH listado_apuestas_combinadas INTO :info_contab;
+     if ( se_puede_resolver(&info_contab) )
+       ganancias += resolver_apuesta_combinada(&info_contab); 
+   } /* for (;;) */ 
+     
+   EXEC SQL CLOSE listado_apuestas_combinadas;
+   ganancias_globales += ganancias;
+    
+    /* Obtenemos un listado de las apuestas por sistema que el usuario haya 
+    * podido efectuar para este evento y calculamos que ganancias le suponen. 
+    * Al final, actualizamos las ganancias globales obtenidas para todas 
+    * las apuestas hechas para este evento
+    */
+    
+   ganancias = 0.0;
+   
+   EXEC SQL DECLARE listado_apuestas_sistema CURSOR for
+   SELECT A.idApuesta, A.cantidad, R.cotizacion, R.haOcurrido, A.combinadas
+   FROM PreverResul P, Apuesta A, Resultado R
+   WHERE ( P.idEvento = :id_evento AND P.nickUser = :nick AND
+           R.idEvento = :id_evento AND R.idPosResul = P.idPosResul AND 
+           A.idApuesta = P.idApuesta AND A.tipo = 2)
+   ORDER BY idApuesta; 
+	
+   EXEC SQL OPEN listado_apuestas_sistema;
+
+   EXEC SQL WHENEVER not found DO break;
+   
+   for (;;)   
+   /* Bucle de calculo de ganancias debidas a apuestas por sistema. */ 
+   {
+     EXEC SQL FETCH listado_apuestas_sistema INTO :info_contab;
+     if ( se_puede_resolver(&info_contab) )
+       ganancias += resolver_apuesta_sistema(&info_contab); 
+   } /* for (;;) */ 
+
+   EXEC SQL CLOSE listado_apuestas_sistema;
+   ganancias_globales += ganancias;
+   return ganancias_globales;
+} /* calcular_ganancias_usuario */
+
+
+float resolver_apuesta_simple (tupla_contabilidad *info_contab)
+{
+   float resultado = 0.0;
+   int exito;
+   
+   if ( info_contab-> haOcurrido )
+     resultado = info_contab-> cotizacion * info_contab-> cantidad;
+   exito = actualizarDatosAlResolverApuesta(resultado);
+   if (exito != TRUE) printf("Error al actualizar informe al resolver apuesta\n");
+   return resultado;
+   	
+} /* resolver_apuesta_simple */
+	
+ 
+float resolver_apuesta_sistema(tupla_contabilidad *apuesta)
+{
+   float resultado = 0.0, ganancia, apostado_ind = 0.0;
+   int id_apuesta, id_resultado, elems[8], i, j, continuar, combinadas, exito;
+   lista_dinamica lista_ids_resultado;
+   Combinations cc;   
+    
+   id_apuesta = apuesta->idApuesta;
+   nueva_lista_dinam(&lista_ids_resultado, sizeof(int));
+   combinadas = apuesta->combinadas;
+   /* Listado de los posibles resultados pronosticados en la apuesta */
+
+   EXEC SQL DECLARE lista_ids_resultado_sql CURSOR for
+   SELECT idPosResul
+   FROM PreverResul
+   WHERE ( idApuesta = :id_apuesta )
+   ORDER BY idPosResul; 
+
+   EXEC SQL OPEN lista_ids_resultado_sql;
+   EXEC SQL WHENEVER not found DO break;
+  for (;;) 	
+  {
+     EXEC SQL FETCH lista_ids_resultado_sql INTO :id_resultado;
+     agregar(&lista_ids_resultado, (char *)&id_resultado);
+  }
+  
+  EXEC SQL CLOSE lista_ids_resultado_sql;
+  /* Comprobamos si todos los pronosticos realizados se han cumplido. */
+  /* Iniciamos las combinaciones */
+  cc = (Combinations)init_combinations(numdatos(lista_ids_resultado), combinadas); 
+  apostado_ind = (apuesta->cantidad)/(float)num_combinations(cc); 
+  for (i = 0; i<=num_combinations(cc) - 1; i++)
+  {  
+    get_combination(cc,i,elems);
+    ganancia = 1.0;
+    continuar = 1;
+    for (j=0; j<=combinadas-1; j++)
+    {
+      /* En elems[j] esta el elemento del subconjunto */
+      dato_posicion(&lista_ids_resultado,elems[j]+1,(char *)&id_resultado);
+      /* En id tenemos el identificador de resultado */
+      ganancia = ganancia * cotizacion_resultado(id_resultado);
+      continuar &=  resultado_ocurrido(id_resultado);
+    }
+    if ( continuar )
+      resultado = resultado + ganancia * apostado_ind;
+  }
+  free_combinations(cc);     
+  exito = actualizarDatosAlResolverApuesta(resultado);
+  if (exito != TRUE) printf("Error al actualizar informe al resolver apuesta\n");
+  return resultado;
+} /* resolver_apuesta_sistema */	 
+ 
+ 
+float resolver_apuesta_combinada(tupla_contabilidad *apuesta)
+{
+   float resultado = 0.0, cotizacion = 1.0, cant_apostada = 0.0, aux;
+   int continuar = 1, id_apuesta, id_evento, exito;
+   tuplaPreverResul pronostico;
+   lista_dinamica lista_ids_evento;
+   tupla_exito_cotiz  res_pronostico;  
+    
+   id_apuesta = apuesta->idApuesta;
+   cant_apostada = apuesta->cantidad;
+   nueva_lista_dinam(&lista_ids_evento, sizeof(int));
+   
+  /* Listado de los eventos considerados en la apuesta */
+   EXEC SQL DECLARE lista_ids_eventos_sql CURSOR for
+   SELECT idEvento
+   FROM PreverResul
+   WHERE ( idApuesta = :id_apuesta )
+   ORDER BY idEvento; 
+	
+   EXEC SQL OPEN lista_ids_eventos_sql;
+   EXEC SQL WHENEVER not found DO break;
+  
+  for (;;) 
+  {
+     EXEC SQL FETCH lista_ids_eventos_sql INTO :id_evento;
+     agregar(&lista_ids_evento, (char *)&id_evento);
+  }
+  
+  EXEC SQL CLOSE lista_ids_eventos_sql;
+  
+  /* Comprobamos si todos los pronosticos realizados se han cumplido. */
+ 
+  EXEC SQL WHENEVER NOT FOUND DO break;
+  
+  while ( numdatos(lista_ids_evento) && continuar)
+  {
+    primero(&lista_ids_evento, (char *)&id_evento);
+       
+    EXEC SQL SELECT R.haOcurrido, R.cotizacion
+    INTO :res_pronostico
+    FROM PreverResul P, Resultado R
+    WHERE ( P.idApuesta = :id_apuesta AND P.idEvento = :id_evento AND
+            P.idPosResul = R.idPosResul );
+    
+    continuar &= res_pronostico.haOcurrido;
+    cotizacion*=res_pronostico.cotizacion;
+    eliminar(&lista_ids_evento, (char *)&id_evento);
+  }
+  destruir_lista(&lista_ids_evento);
+  if ( continuar )
+    resultado = cant_apostada * cotizacion;
+  exito = actualizarDatosAlResolverApuesta(resultado);
+  if (exito != TRUE) printf("Error al actualizar informe al resolver apuesta\n");
+  return resultado;
+} /* resolver_apuesta_combinada */
+
+	
+int ingresar_credito (char id_usuario[NICK_LEN], float ganancias )
+{
+   float credito_aux;   
+   int mi_code;  
+   char nick_usuario[NICK_LEN];
+   
+   strcpy(nick_usuario, id_usuario);
+   if ( ganancias < 0.0 )
+     return 0;
+      
+   /* Obtenemos el credito del miembro con nickUser = id_usuario */
+   
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL SELECT credito
+            INTO :credito_aux
+	    FROM Usuario
+            WHERE ( nickUser = :nick_usuario ); 
+   
+   /* Comprobacion de correcion de la consulta. */
+     if ( (mi_code = sqlca.sqlcode) != 0)
+       return 0;
+   
+   /* Modificacion del credito */
+     credito_aux += ganancias;
+  
+   /* Modificacion del campo 'credito' del usuario. */
+   EXEC SQL WHENEVER NOT FOUND continue;
+   
+   EXEC SQL UPDATE Usuario
+            SET credito = :credito_aux
+            WHERE ( nickUser = :nick_usuario );
+   
+   /* Comprobacion de correcion de la modificacion */
+     if ( (mi_code = sqlca.sqlcode) != 0)
+     { 
+        EXEC SQL ROLLBACK;
+        return 0;
+     }
+     EXEC SQL COMMIT WORK;  
+     return 1;
+} /* ingresar_credito */	
+
+
+struct tm* desplazar_fecha(int desfase)
+{
+ time_t t_epoch;
+ struct tm *tiempo_local;
+ int seg, min, hor, aux = 0, dias_mes = 30;
+ 
+  /* Traducimos el desplazamiento a horas, minutos y segundos */
+  min = desfase / 60;
+  seg = desfase % 60;
+  hor = min / 60;
+  min = min % 60;
+    
+  /* Hora a desplazar */
+  t_epoch = time(NULL);
+  tiempo_local = localtime (&t_epoch);
+   
+  /* Desplazamos la hora */
+  aux = tiempo_local->tm_sec + seg;
+  tiempo_local->tm_sec = aux % 60;                /* segundos */
+  aux = aux / 60;
+  aux += tiempo_local->tm_min + min; 
+  tiempo_local->tm_min = aux % 60;                /* minutos */
+  aux = aux / 60;
+  aux += tiempo_local->tm_hour + hor; 
+  tiempo_local->tm_hour = aux % 24;               /* horas */
+  aux = aux / 24;
+  aux += tiempo_local->tm_mday;
+  
+  /* Numero de meses */
+  switch ( tiempo_local->tm_mon ) 
+  {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12: dias_mes = 31; break;
+    case 4:
+    case 6:
+    case 9:
+    case 11: dias_mes = 30; break;
+    case 2: if ( (tiempo_local->tm_year % 4) == 0 )
+               dias_mes = 29;
+	    else 
+	       dias_mes = 28;
+  }
+  tiempo_local->tm_mday = aux % dias_mes;         /* dias */
+  aux = aux / dias_mes;
+  aux += tiempo_local->tm_mon; 
+  tiempo_local->tm_mon = (aux % 12)+1;            /* meses */
+  aux = aux / 12;
+  tiempo_local->tm_year += aux + 1900;            /* anyos */
+  return tiempo_local;     
+}
+
+
+int actualizarPerfilUsuario(perfilUsuario *aux)
+{
+  perfilUsuario perfil;
+  
+  strcpy((char *) perfil.nickUser.arr, aux->nickUser.arr);
+  perfil.nickUser.len = strlen((char *) aux->nickUser.arr);
+  
+  perfil.numApuestasFutbol = aux->numApuestasFutbol;
+  perfil.numApuestasF1 = aux->numApuestasF1;
+  perfil.numApuestasSocial = aux->numApuestasSocial;
+  perfil.numVecesRuleta = aux->numVecesRuleta;
+  perfil.numVecesDados = aux->numVecesDados;
+  perfil.numVecesCarta = aux->numVecesCarta;
+  perfil.numVecesBlackJack = aux->numVecesBlackJack;
+  perfil.numApuestasArriesgadas = aux->numApuestasArriesgadas;
+  perfil.numApuestasConservadoras = aux->numApuestasConservadoras;
+  perfil.numApuestasSimples = aux->numApuestasSimples;
+  perfil.numApuestasCombinadas = aux->numApuestasCombinadas;
+  perfil.numApuestasSistema = aux->numApuestasSistema;
+  perfil.riesgo = aux->riesgo;
+
+  EXEC SQL UPDATE PreferenciasUsuario SET 
+    numApuestasFutbol = :perfil.numApuestasFutbol, 
+    numApuestasF1 = :perfil.numApuestasF1,
+    numApuestasSocial = :perfil.numApuestasSocial,
+    numVecesRuleta = :perfil.numVecesRuleta, 
+    numVecesDados = :perfil.numVecesDados,
+    numVecesCarta = :perfil.numVecesCarta,
+    numVecesBlackJack = :perfil.numVecesBlackJack,
+    numApuestasArriesgadas = :perfil.numApuestasArriesgadas,
+    numApuestasConservadoras = :perfil.numApuestasConservadoras,
+    numApuestasSimples = :perfil.numApuestasSimples,
+    numApuestasCombinadas = :perfil.numApuestasCombinadas,
+    numApuestasSistema = :perfil.numApuestasSistema,
+    riesgo = :perfil.riesgo
+  WHERE (nickUser = :perfil.nickUser);
+
+
+  if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+  { 
+    EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+    return TRUE;
+  }
+  else if (sqlca.sqlcode > 0) return FALSE; /* No debe ocurrir */
+  else /* Se ha producido error */
+  {
+    EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+    return ERROR;
+  } 
+}
+
+
+int actualizarPerfilUsuarioTrasApostar(perfilUsuario *perfil, struct apuesta apuestaUser)
+{
+  int num_resultados, exito, res_aux, i = 0, id_aux, tipo_evento;
+  tuplaResul dato;
+  float cotizacion_max = 0.0, cotizacion_min = 10000.0, cot_aux;
+  int idResulMenosProbable, idResulMasProbable;
+  
+  tipo_evento = tipo_resultado(apuestaUser.id_res);
+
+  id_aux = apuestaUser.id_ev;
+  
+ /* Actualizamos contadores de riesgo de la apuesta */ 
+
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+
+ /* Ver si ha apostado al resultado con mayor o menor probabilidad */
+
+  EXEC SQL DECLARE cotMaxMin CURSOR for
+  SELECT idPosResul, cotizacion
+  FROM Resultado
+  WHERE (idEvento = :id_aux)
+  ORDER BY idPosResul;
+
+  EXEC SQL OPEN cotMaxMin;
+
+  EXEC SQL WHENEVER not found DO BREAK;
+
+  for (;;) 
+  {
+     EXEC SQL FETCH cotMaxMin INTO :res_aux, :cot_aux;
+     
+     i++;
+     if (i == 1) 
+     {
+       cotizacion_max = cot_aux;
+       cotizacion_min = cot_aux;	
+     }
+     else
+     {
+       if (cot_aux > cotizacion_max) 
+       {
+         cotizacion_max = cot_aux;
+       }
+       if (cot_aux < cotizacion_min) 
+       {
+         cotizacion_min = cot_aux;
+       }
+     }
+  }
+  
+  EXEC SQL CLOSE cotMaxMin;
+  
+  if (sqlca.sqlcode == 0) exito = TRUE; 
+  else return ERROR;
+  
+  if (cotizacion_min == cotizacion_resultado(apuestaUser.id_res)) 
+  {
+    /* Disminuir el riesgo del usuario si no es ya el minimo posible (0) */
+    if (perfil->riesgo > MIN_RIESGO) { perfil->riesgo--; perfil->numApuestasConservadoras++; }
+  }
+  else if (cotizacion_max == cotizacion_resultado(apuestaUser.id_res))
+  {
+    /* Aumentar el riesgo del usuario si no es ya el maximo posible (10) */  
+    if (perfil->riesgo < MAX_RIESGO) { perfil->riesgo++; perfil->numApuestasArriesgadas++; }
+  }
+
+  /* cotizacion_max = max(num_resultados, l); */
+  /* Seleccionamos el id del resultado con cotizacion = cotizacion_max */
+  /* Ver si ese id del resultado es el id del resultado al que ha apostado el usuario y
+     si lo es sumar uno a numApuestasArriesgadas y tambien a riesgo */ 
+  /* Idem con cotizacion_min */
+
+  /* Buscar el resultado al que ha apostado y ver si es el maximo */
+  /* Si no lo es, ver si es el minimo, sumar uno a numApuestasConservadoras y restar uno a riesgo */
+ 
+  exito = actualizarPerfilUsuario(perfil);
+  
+  return exito;
+
+}
+
+
+int actualizarPerfilUsuarioTrasJugar(perfilUsuario *perfil, int juego)
+{
+  int exito;
+
+  if (juego == DADOS) perfil->numVecesDados++;
+  else if (juego == RULETA) perfil->numVecesRuleta++;
+  else if (juego == BLACKJACK) perfil->numVecesBlackJack++;
+  else if (juego == CARTA) perfil->numVecesCarta++;
+
+  exito = actualizarPerfilUsuario(perfil);
+  
+  return exito;
+}
+
+
+int actualizarDatosAlResolverApuesta(int cantidad)
+{
+  tpInforme informe;
+  EXEC SQL WHENEVER NOT FOUND CONTINUE;
+
+  EXEC SQL SELECT *
+  INTO :informe
+  FROM Informe
+  WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+        (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+
+  if (sqlca.sqlcode == 0) /* Consulta correcta, ya existe el informe */
+  {
+    EXEC SQL UPDATE Informe SET
+      perdidasApuestas = :informe.perdidasApuestas + :cantidad
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+
+    if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+    {
+      EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+      return TRUE;
+    }
+    else /* Error al actualizar */
+    {
+      EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+      return ERROR;
+    }
+  }	
+  else /* No existe el informe, hay que crearlo nuevo */
+  { 
+    EXEC SQL INSERT INTO Informe VALUES(to_date(sysdate, 'DD-MM-YYYY'),0,0,0,0,0);
+    EXEC SQL UPDATE Informe SET
+      perdidasApuestas = :cantidad
+    WHERE (to_char(fecha, 'mm') = to_char(sysdate, 'mm')) AND
+          (to_char(fecha, 'yy') = to_char(sysdate,'yy'));
+
+      if (sqlca.sqlcode == 0) /* Actualizacion correcta */
+      {
+
+	EXEC SQL COMMIT WORK; /* Validamos la transaccion */
+	return TRUE;
+      }
+      else /* Error al actualizar */
+      {
+	EXEC SQL ROLLBACK WORK; /* Deshacemos la transaccion */
+	return ERROR;
+      }
+    } 
+  }
